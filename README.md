@@ -139,8 +139,8 @@ The voice and the recogniser are used in four more places (`app/voice.py`, `test
   is saved until the doctor sends it.
 
 Everything said to a patient is a fixed sentence with only the ticket number put in. The Shona
-voice read the digits "14" as "one four", so ticket numbers are written out in Shona words
-("gumi nemana"). Those number words and the nine new Shona sentences were written by an AI
+voice read the digits "14" as "one four", so ticket numbers are written out in words, in English as
+people say them in everyday Shona ("Ticket fourteen"). The nine new Shona sentences were written by an AI
 assistant and have not been read by a native speaker. None of the four has been tried in a
 waiting room, and the board, the instructions, the alarm and dictation have only been tested
 with the models replaced by fakes, not yet heard through a speaker.
@@ -188,6 +188,11 @@ it on a map of Zimbabwe (`app/prediction.py`, `app/national.py`, `web/outbreaks.
 **Who does what.** Our own arithmetic computes every number. CAIMEx puts the numbers into words,
 explains a warning, drafts the alert and reads the briefing aloud. A sentence from the model that
 holds a number we did not compute is not shown (`ai.numbers_ok`).
+
+The spoken briefing is read by an English voice model on the gateway (`tts-1`, voice Nova;
+`MUKOTI_STAFF_TTS_MODEL` and `MUKOTI_STAFF_TTS_VOICE`). The clinic's own voice is a Shona voice and read
+English numbers with Shona sounds: "between 0 and 11" came back as "zero endereveni" when its audio
+was transcribed. If the English voice does not answer, the clinic's own voice reads the briefing.
 
 **This clinic** (the Forecast page):
 

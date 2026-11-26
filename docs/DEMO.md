@@ -90,7 +90,7 @@ a browser recording is billed at three times its length."
 | The note says "could not be written" | Say it: "The model that writes the note timed out, so Mukoti put this patient ahead of the queue instead of guessing. That is the design." |
 | Everything is slow | The first calls after a start are slow. Run one patient before the judges arrive. |
 | The gateway is down | Open the queue you loaded earlier and walk through a finished visit. Do not pretend it is live. |
-| A judge wants to speak to it | Left side, **Ndinobvuma, tanga kutaura**. It listens by itself and stops when they stop. In a loud room, tap the red button to end their turn. They can choose English. |
+| A judge wants to speak to it | Left side, **Startai kutaura**. It listens by itself and stops when they stop. In a loud room, tap the red button to end their turn. They can choose English. |
 
 ## If a judge speaks to it themselves
 

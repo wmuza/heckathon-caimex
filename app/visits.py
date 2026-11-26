@@ -613,7 +613,7 @@ WORD_PICTURE = [
     (r"breath|kufema", "breathing"), (r"\bfit|convuls|seiz|pfari", "fits"), (r"pregnan|pamuviri", "pregnancy"),
     (r"tablet|pill|medic|refill|prescri|inject|immunis|mapiritsi", "medicines"),
     (r"bleed|blood(?! pressure| sugar| test)|ropa", "bleeding"), (r"vomit|rutsa", "vomiting"), (r"neck|mutsipa", "neck"),
-    (r"fever|\bhot\b|kupisa", "fever"),
+    (r"fever|temperature|\bhot\b|kupisa", "fever"),
     (r"drink|breastfe|yamwa", "drinking"), (r"pain|ache|hurt|sore|broken|burn|wound|rwadz", "where"),
     (r"child|baby|infant|mwana", "who"),
 ]

@@ -114,7 +114,7 @@
 
     <section class="panel clock" aria-label="Time and welcome">
       <div><div class="tm" id="tm"></div><div class="dt" id="dt"></div></div>
-      <div class="hi" lang="sn">Mauya kuClinic<small lang="en">Welcome to the clinic</small></div>
+      <div class="hi" lang="sn">Welcome kuClinic<small lang="en">Welcome to the clinic</small></div>
       <div class="wt"><b id="waiting">0</b><span id="waitingT">waiting to see the nurse</span></div>
     </section>
 
@@ -123,11 +123,11 @@
     <div class="lower wide">
       <div id="notices" style="display:contents"></div>
       <section class="panel steps" aria-labelledby="stepsT">
-        <h2 id="stepsT">How it works · Zvinoita sei</h2>
+        <h2 id="stepsT">How it works</h2>
         <ol>
-          <li><span class="art" id="st1"></span><b lang="sn">Taurai, mukurumidze kubatsirwa</b><span>Speak to the helper, and be helped sooner</span></li>
-          <li><span class="art" id="st2"></span><b lang="sn">Garai muchimirira</b><span>Take a seat and wait</span></li>
-          <li><span class="art" id="st3"></span><b lang="sn">Teererai nhamba yenyu</b><span>Listen for your number, then go where it says</span></li>
+          <li><span class="art" id="st1"></span><b lang="sn">Taurai neHelper, mubatsirwe fast</b><span>Speak to the helper, and be helped sooner</span></li>
+          <li><span class="art" id="st2"></span><b lang="sn">Garai pasi, mumirire turn yenyu</b><span>Take a seat and wait</span></li>
+          <li><span class="art" id="st3"></span><b lang="sn">Teererai ticket yenyu</b><span>Listen for your number, then go where it says</span></li>
         </ol>
       </section>
     </div>
@@ -140,9 +140,9 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // Where to go, in both languages, with the picture for it. Shona written by an AI assistant: to be read by a native speaker.
 const PLACE = {
-  nurse: { en: 'Go to the nurse', sn: 'Endai kuna mukoti', pic: 'nurse_coming', name: 'Nurse', snName: 'Mukoti' },
-  doctor: { en: 'Go to the doctor', sn: 'Endai kuna chiremba', pic: 'not_doctor', name: 'Doctor', snName: 'Chiremba' },
-  pharmacy: { en: 'Go to the pharmacy', sn: 'Endai kunotora mishonga', pic: 'medicines', name: 'Pharmacy', snName: 'Mishonga' },
+  nurse: { en: 'Go to the nurse', sn: 'Endai kuna nurse', pic: 'nurse_coming', name: 'Nurse', snName: '' },
+  doctor: { en: 'Go to the doctor', sn: 'Endai kuna doctor', pic: 'not_doctor', name: 'Doctor', snName: '' },
+  pharmacy: { en: 'Go to the pharmacy', sn: 'Endai kuPharmacy', pic: 'medicines', name: 'Pharmacy', snName: '' },
 };
 const pic = name => name === 'not_doctor' ? 'welcome' : name;      // the doctor's own picture says "not a doctor"
 const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
@@ -153,10 +153,10 @@ function render() {
   $('now').classList.toggle('calling', !!c);
   if (c) {
     const p = PLACE[c.to];
-    $('nowText').innerHTML = `<p class="lab">Nhamba · Ticket</p><p class="no">${c.number}</p><p class="to"><span lang="sn">${p.sn}</span><small>${p.en}</small></p>`;
+    $('nowText').innerHTML = `<p class="lab">Ticket</p><p class="no">${c.number}</p><p class="to"><span lang="sn">${p.sn}</span><small>${p.en}</small></p>`;
     Art.show($('nowArt'), pic(p.pic), p.en);
   } else {
-    $('nowText').innerHTML = `<p class="lab">Nhamba · Ticket</p><p class="idle-t" lang="sn">Garai muchimirira, mukoti achakudaidzai.</p>
+    $('nowText').innerHTML = `<p class="lab">Ticket</p><p class="idle-t" lang="sn">Garai mumirire, nurse achakudaidzai.</p>
       <p class="idle-en">Please stay seated. Your number will be shown and said here.</p>`;
     Art.show($('nowArt'), 'wait', 'Please stay seated');
   }
@@ -173,7 +173,7 @@ function render() {
   $('waitingT').textContent = waiting === 1 ? 'person waiting to see the nurse' : 'people waiting to see the nurse';
   $('notices').innerHTML = notices.map((n, i) => `<section class="panel notice-card ${n.level}" role="note">
       <span class="art" id="nt-${i}" aria-hidden="true"></span>
-      <div><p class="k">Health notice · Yambiro</p><p class="sn" lang="sn">${esc(cap(n.sn.replace(/^Yambiro:\s*/, '')))}</p><p class="en" lang="en">${esc(cap(n.en.replace(/^Warning:\s*/, '')))}</p></div></section>`).join('');
+      <div><p class="k">Health notice</p><p class="sn" lang="sn">${esc(cap(n.sn.replace(/^Warning:\s*/, '')))}</p><p class="en" lang="en">${esc(cap(n.en.replace(/^Warning:\s*/, '')))}</p></div></section>`).join('');
   notices.forEach((n, i) => Art.show($('nt-' + i), n.picture, ''));
 }
 function tick() {

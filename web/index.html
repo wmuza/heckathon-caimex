@@ -158,7 +158,7 @@
       </div>
       <div class="panel start-card">
       <div class="group">
-        <p class="lab" id="langLab">Mutauro / Language</p>
+        <p class="lab" id="langLab">Language</p>
         <div class="seg big" role="group" aria-labelledby="langLab">
           <button data-lang="sn" aria-pressed="true">ChiShona</button>
           <button data-lang="en" aria-pressed="false">English</button>
@@ -217,14 +217,14 @@
       <p id="status" class="status" role="status"></p>
       <div class="mic-wrap" id="micWrap">
         <span class="ring" id="ring"></span>
-        <button id="mic" class="mic" aria-label="Maikorofoni">
+        <button id="mic" class="mic" aria-label="Mic">
           <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
           <svg id="stopIcon" viewBox="0 0 24 24" fill="currentColor" hidden><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
           <svg id="earIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4zM15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
         </button>
       </div>
       <form id="typed" class="typed" hidden>
-        <input id="text" class="field" autocomplete="off" aria-label="Nyorai mhinduro yenyu">
+        <input id="text" class="field" autocomplete="off" aria-label="Typai answer yenyu">
         <button class="btn primary sm" data-t="send"></button>
       </form>
       <button id="retry" class="btn primary sm" type="button" data-t="retry" hidden></button>
@@ -247,31 +247,31 @@
 const $ = id => document.getElementById(id);
 const T = {
   sn: {
-    sub: 'Mubatsiri wemukoti. Taurai, mukurumidze kubatsirwa', welcome: 'Mauya kuClinic',
-    intro: 'Ndichakubvunzai mibvunzo mishoma. Mhinduro dzenyu dzinopiwa mukoti kuti akubatsirei nekukurumidza.',
-    consent: 'Izwi renyu rinorekodhwa kuti mukoti azorinzwa, rozodzimwa mushure mezuva rimwe chete.',
-    start: 'Ndinobvuma, tanga kutaura', sample: 'Ona murwere wemuenzaniso',
-    notdoctor: 'Mubatsiri uyu ikombiyuta, haasi chiremba. Kana zvakaoma, udzai mukoti iye zvino.',
-    sampleTag: 'Muenzaniso, izwi rekombiyuta', more: 'Zvimwe', helper: 'Mubatsiri',
-    yourNumber: 'Nhamba yenyu', next: 'Murwere anotevera', send: 'Tumira',
-    auto: 'Maikorofoni inozvivhura nekuzvivhara yoga', type: 'Nyora panzvimbo pekutaura', captions: 'Ratidza Chirungu pasi pemashoko',
-    finish: 'Ndapedza', light: 'Chiedza', dark: 'Rima', match: 'Sefoni',
-    staff: 'Vashandi', sampleTitle: 'Varwere vemuenzaniso', close: 'Vhara',
-    sampleAbout: 'Vanhu ava havasi chaivo uye mazwi avo nderekombiyuta. Mubatsiri anovanzwa nekuvapindura chaizvo.',
-    idle: 'Dzvanyai maikorofoni mutaure', listen: 'Taurai iye zvino, ndiri kuteerera', hearing: 'Ndiri kunyora zvamataura…',
-    thinking: 'Ndiri kufunga…', speaking: 'Mubatsiri ari kutaura, teererai', writeHere: 'Nyorai mhinduro yenyu',
-    micDenied: 'Maikorofoni haisi kushanda. Nyorai mhinduro yenyu.', failed: 'Pane chakanganisika. Edzai zvakare.',
-    you: 'Imi', samplePatient: 'Murwere wemuenzaniso', patientSpeaking: 'Murwere ari kutaura…',
-    qof: (n, m) => `Mubvunzo ${n} pa ${m}`, placeholder: 'Nyorai pano',
-    done: 'Zvapera', alarmTag: 'Mukoti ari kuuya', retry: 'Edza zvakare',
-    doneText: 'Ndatenda. Garai muchimirira, mukoti achakudaidzai.',
-    alarmText: 'Ndatenda. Mukoti adaidzwa iye zvino. Ndapota garai pano.',
+    sub: 'Helper yaNurse. Taurai, mubatsirwe fast', welcome: 'Welcome kuClinic',
+    intro: 'Ndichakubvunzai maQuestions mashoma chete. MaAnswers enyu anoenda kuna nurse, kuti akubatsirei fast.',
+    consent: 'Voice renyu rinoRecordwa kuti nurse azoriteerera. RinoDeletwa after 24 hours.',
+    start: 'Startai kutaura', sample: 'Onai sample patient',
+    notdoctor: 'Helper iyi iComputer, haisi doctor. Kana iri emergency, udzai nurse izvozvi.',
+    sampleTag: 'Sample, voice reComputer', more: 'More options', helper: 'Helper',
+    yourNumber: 'Ticket yenyu', next: 'Next patient', send: 'Send',
+    auto: 'Mic inozviOn nekuzviOff yoga', type: 'Typai instead yekutaura', captions: 'Ratidza English pasi pemaWords',
+    finish: 'Ndapedza, finish', light: 'Light', dark: 'Dark', match: 'Follow phone',
+    staff: 'Staff', sampleTitle: 'Sample patients', close: 'Close',
+    sampleAbout: 'Vanhu ava havasi real, uye maVoice avo ndeeComputer. Helper inovanzwa nekuvapindura chaizvo.',
+    idle: 'Pressai mic mutaure', listen: 'Okay, taurai, ndiri kuteerera', hearing: 'Ndiri kurecorder zvamataura…',
+    thinking: 'One moment, ndiri kufunga…', speaking: 'Helper iri kutaura, please teererai', writeHere: 'Typai answer yenyu',
+    micDenied: 'Mic haisi kuworker. Typai answer yenyu.', failed: 'Pane error yaitika. Tryai futi.',
+    you: 'Imi', samplePatient: 'Sample patient', patientSpeaking: 'Patient ari kutaura…',
+    qof: (n, m) => `Question ${n} pa ${m}`, placeholder: 'Typai pano',
+    done: 'Done', alarmTag: 'Nurse ari kuuya', retry: 'Tryai futi',
+    doneText: 'Thank you. Garai mumirire, nurse achakudaidzai.',
+    alarmText: 'Thank you. Nurse adaidzwa izvozvi. Please garai pano.',
   },
   en: {
     sub: "The nurse's helper. Speak, and be helped sooner", welcome: 'Welcome to the clinic',
     intro: 'I will ask you a few short questions. Your answers go to the nurse, so she can help you sooner.',
     consent: 'Your voice is recorded so the nurse can listen to it. It is deleted after one day.',
-    start: 'I agree, start talking', sample: 'Watch a sample patient',
+    start: 'Start speaking', sample: 'Watch a sample patient',
     notdoctor: 'This helper is a computer, not a doctor. If it is serious, tell the nurse now.',
     sampleTag: 'Sample, synthetic voice', more: 'More options', helper: 'Helper',
     yourNumber: 'Your number', next: 'Next patient', send: 'Send',

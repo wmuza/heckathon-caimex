@@ -37,7 +37,7 @@ table("How to take a medicine, said at the pharmacy", "app/prompts.py",
 table("A warning for a community, when the national picture shows a risk", "app/prompts.py",
       [(prompts.WARN_SAY["sn"][k], prompts.WARN_SAY["en"][k]) for k in prompts.WARN_SAY["sn"]])
 table("Ticket numbers in words", "app/voice.py",
-      [(voice.shona_number(n), str(n)) for n in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 21, 30, 45, 99, 100, 101, 110, 125)])
+      [(voice.number_words(n), str(n)) for n in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 21, 30, 45, 99, 100, 101, 110, 125)])
 
 html = (ROOT / "web" / "index.html").read_text()
 block = lambda lang: html[html.index(f"  {lang}: {{"):html.index("  },", html.index(f"  {lang}: {{"))]

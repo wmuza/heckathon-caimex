@@ -122,23 +122,24 @@ async def transcribe(audio: bytes, filename: str, mime: str, lang: str) -> tuple
         seconds=round(secs, 2) if secs is not None else None, from_price_list=priced)
 
 
-def tts_path(text: str, lang: str, voice: str):
-    key = hashlib.sha256(f"{config.TTS_MODEL}|{voice}|{lang}|{text}".encode()).hexdigest()[:24]
+def tts_path(text: str, lang: str, voice: str, model: str | None = None):
+    key = hashlib.sha256(f"{model or config.TTS_MODEL}|{voice}|{lang}|{text}".encode()).hexdigest()[:24]
     return config.TTS_DIR / f"{key}.mp3"
 
 
-async def speak(text: str, lang: str, voice: str | None = None) -> tuple[bytes, dict]:
+async def speak(text: str, lang: str, voice: str | None = None, model: str | None = None) -> tuple[bytes, dict]:
     """Speech as MP3. Cached on disk, so a fixed line is only ever made once."""
     voice = voice or config.TTS_VOICE
+    model = model or config.TTS_MODEL
     t0 = time.time()
-    path = tts_path(text, lang, voice)
+    path = tts_path(text, lang, voice, model)
     if path.exists():
-        return path.read_bytes(), _call("speak", "/v1/audio/speech", config.TTS_MODEL, t0, 0.0,
+        return path.read_bytes(), _call("speak", "/v1/audio/speech", model, t0, 0.0,
                                         cached=True, chars=len(text))
     r = await _post(
         "/audio/speech",
-        json={"model": config.TTS_MODEL, "voice": voice, "language": lang, "input": text,
-              "response_format": "mp3", "stream": False},
+        json={"model": model, "voice": voice, "input": text, "response_format": "mp3", "stream": False,
+              **({"language": lang} if model == config.TTS_MODEL else {})},      # only the clinic's own model takes a language
     )
     if "audio" not in r.headers.get("content-type", "") or len(r.content) < 800:
         raise GatewayError("/audio/speech did not return audio")       # never save a bad line for good
@@ -148,8 +149,17 @@ async def speak(text: str, lang: str, voice: str | None = None) -> tuple[bytes, 
     priced = cost is None
     if priced:
         cost = round(len(text) / 1e6 * PRICES["tts_per_1m_chars"], 8)
-    return r.content, _call("speak", "/v1/audio/speech", config.TTS_MODEL, t0, cost,
+    return r.content, _call("speak", "/v1/audio/speech", model, t0, cost,
                             cached=False, chars=len(text), from_price_list=priced)
+
+
+async def speak_staff(text: str) -> tuple[bytes, dict]:
+    """Long English for staff, in an English voice. If that voice does not answer, the clinic's own
+    voice reads it, so the briefing is never silent."""
+    try:
+        return await speak(text, "en", config.STAFF_TTS_VOICE, config.STAFF_TTS_MODEL)
+    except Exception:
+        return await speak(text, "en")
 
 
 def parse_json(text: str) -> dict:

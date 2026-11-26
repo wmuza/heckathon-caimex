@@ -46,7 +46,14 @@ async def _prewarm() -> None:
     jobs = [one(t, lang) for lang in config.LANGS for t in prompts.fixed_lines(lang)]
     jobs += [one(t, lang) for t, lang in voice.staff_lines()]
     try:        # the morning briefing is long: make its audio now, so the first press does not wait
-        jobs.append(one(voice.briefing_text(_prediction(), national.for_clinic()), "en"))
+        text = voice.briefing_text(_prediction(), national.for_clinic())
+
+        async def briefing():
+            try:
+                await gateway.speak_staff(text)
+            except Exception:
+                pass
+        jobs.append(briefing())
     except Exception:
         pass
     for p in samples.all_patients():
@@ -604,7 +611,12 @@ async def predict_draft(q: Ask):
 
 @app.get("/api/predict/briefing.mp3", dependencies=[Depends(nurse)])
 async def briefing_audio():
-    return await _mp3(voice.briefing_text(_prediction(), national.for_clinic()), "en")
+    try:
+        mp3, _ = await asyncio.wait_for(gateway.speak_staff(voice.briefing_text(_prediction(), national.for_clinic())), 40)
+    except Exception as e:
+        raise HTTPException(502, f"The voice did not answer ({type(e).__name__})")
+    # The briefing changes with the day's numbers and with the voice, so the browser must not keep a copy.
+    return Response(mp3, media_type="audio/mpeg", headers={"Cache-Control": "no-store"})
 
 
 @app.get("/api/say/warning.mp3", dependencies=[Depends(nurse)])

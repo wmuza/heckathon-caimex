@@ -444,7 +444,30 @@ async function ask(id, kind) {
   render();
 }
 $('tm').oninput = e => { back = 21 - +e.target.value; render(); };
-$('hear').onclick = () => { const s = $('hear').querySelector('span'); s.textContent = 'Loading the voice…'; const a = new Audio('/api/predict/briefing.mp3'); a.onplaying = () => { s.textContent = 'Playing'; }; a.onended = a.onerror = () => { s.textContent = 'Hear the briefing'; }; a.play().catch(() => { s.textContent = 'Hear the briefing'; }); };
+/* One button: it reads the briefing, and while the voice is loading or speaking it is a red Stop. */
+const HEAR_ICON = $('hear').querySelector('svg').outerHTML;
+const STOP_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>';
+let briefing = null;
+function hearState(on, label) {
+  const b = $('hear');
+  b.classList.toggle('danger', on);
+  b.innerHTML = (on ? STOP_ICON : HEAR_ICON) + `<span>${label}</span>`;
+  b.setAttribute('aria-label', on ? 'Stop the briefing' : 'Hear the briefing');
+}
+function stopBriefing() {
+  if (!briefing) return;
+  const a = briefing; briefing = null;
+  a.onplaying = a.onended = a.onerror = null; a.pause(); a.removeAttribute('src'); a.load();
+  hearState(false, 'Hear the briefing');
+}
+$('hear').onclick = () => {
+  if (briefing) return stopBriefing();
+  const a = briefing = new Audio('/api/predict/briefing.mp3?t=' + Date.now());
+  hearState(true, 'Stop · loading the voice…');
+  a.onplaying = () => { if (briefing === a) hearState(true, 'Stop'); };
+  a.onended = a.onerror = () => { if (briefing === a) { briefing = null; hearState(false, 'Hear the briefing'); } };
+  a.play().catch(() => { if (briefing === a) { briefing = null; hearState(false, 'Hear the briefing'); } });
+};
 
 async function poll() {
   try {

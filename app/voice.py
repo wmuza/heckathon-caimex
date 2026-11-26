@@ -6,8 +6,8 @@ prompts.py, with only the ticket number put in. No model writes a word of it.
 The voice is the same CAIMEx voice model as the intake, and each sentence is
 synthesised once and then replayed from disk.
 
-The Shona number words were written by an AI assistant and must be read by a
-native speaker before real use.
+Ticket numbers are said in English words inside the Shona sentence ("Ticket fourteen"),
+as people say them in everyday mixed Shona.
 """
 
 from __future__ import annotations
@@ -16,27 +16,28 @@ import time
 
 from . import prompts
 
-ALONE = ["", "poshi", "piri", "tatu", "ina", "shanu", "tanhatu", "nomwe", "sere", "pfumbamwe"]
-JOINED = ["", "rimwe", "maviri", "matatu", "mana", "mashanu", "matanhatu", "manomwe", "masere", "mapfumbamwe"]
+SMALL = ("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
+         "fifteen sixteen seventeen eighteen nineteen").split()
+TENS = "twenty thirty forty fifty sixty seventy eighty ninety".split()
 
 
-def shona_number(n: int) -> str:
-    """A ticket number in Shona words, 1 to 199. The voice reads the digits "14" as "one four"
-    (measured 2026-11-26), so the words are written out. Beyond 199 the digits are left."""
+def number_words(n: int) -> str:
+    """A ticket number in English words, 1 to 199, as it is said in everyday mixed Shona. The voice
+    reads the digits "14" as "one four" (measured 2026-11-26), so the words are written out.
+    Beyond 199 the digits are left."""
     if not 1 <= n <= 199:
         return str(n)
     if n >= 100:
         rest = n - 100
-        return "zana" if not rest else "zana ne" + (JOINED[rest] if rest < 10 else shona_number(rest))
+        return "one hundred" if not rest else "one hundred and " + number_words(rest)
+    if n < 20:
+        return SMALL[n]
     tens, ones = divmod(n, 10)
-    if tens == 0:
-        return ALONE[ones]
-    head = "gumi" if tens == 1 else "makumi " + JOINED[tens]
-    return head if not ones else f"{head} ne{JOINED[ones]}"
+    return TENS[tens - 2] if not ones else f"{TENS[tens - 2]} {SMALL[ones]}"
 
 
 def call_text(lang: str, to: str, number: int) -> str:
-    n = shona_number(number) if lang == "sn" else str(number)
+    n = number_words(number) if lang == "sn" else str(number)
     return prompts.CALLS[lang][to].format(n=n)
 
 

@@ -131,7 +131,7 @@ def parse_age(text: str, asked: bool) -> dict | None:
         after = UNIT_OF.get(toks[j]) if j < len(toks) else None
         # Outside the age question a length of time ("it began three days ago") must not pass for an age:
         # the words have to say someone HAS that many years ("ane makore matatu") or is that old ("3 years old").
-        has = before and i > 1 and toks[i - 2] in HAS
+        has = (before and i > 1 and toks[i - 2] in HAS) or (after and i > 0 and toks[i - 1] in HAS)   # "ane eight months"
         old = after and j + 1 < len(toks) and toks[j + 1] == "old"
         if asked or has or old:
             found.append((n, before or after))

@@ -4,7 +4,8 @@ The helper never speaks a model's words. The chat model chooses a TOPIC, and
 the sentence spoken for that topic is the one written here. So what a patient
 hears was written by a person in advance, and can be read and corrected once.
 
-Every Shona line here was written by an AI assistant and must be read by a
+The Shona is everyday mixed Shona: a Shona sentence with the English words people use in it
+("Zviri kuita worse here?"). Every Shona line here was written by an AI assistant and must be read by a
 native speaker before real use. They are short on purpose: each is read aloud.
 """
 
@@ -16,12 +17,12 @@ LANG_NAME = {"sn": "Shona", "en": "English"}
 
 LINES = {
     "sn": {
-        "greeting": ("Mhoroi, mauya kukiriniki. Ndiri mubatsiri wemukoti, handisi chiremba. "
-                     "Ndichakubvunzai mibvunzo mishoma kuti mukoti akurumidze kukubatsirai. "
+        "greeting": ("Mhoroi, welcome kuClinic. Ndiri helper yaNurse, handisi doctor. "
+                     "Ndichakubvunzai maQuestions mashoma kuti nurse akurumidze kukubatsirai. "
                      "Chii chakuunzai nhasi?"),
-        "repeat": "Ndapota dzokororai, handina kunzwa zvakanaka.",
-        "closing": "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai.",
-        "alarm": "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya.",
+        "repeat": "Sorry, handina kunzwa zvakanaka. Please dzokororai.",
+        "closing": "Thank you. Ndaudza nurse zvamataura. Please garai mumirire, nurse achakudaidzai.",
+        "alarm": "Thank you. Ndiri kudaidza nurse izvozvi. Please garai pano, nurse ari kuuya.",
     },
     "en": {
         "greeting": ("Hello, welcome to the clinic. I am the nurse's helper, not a doctor. "
@@ -45,25 +46,25 @@ BANK = {
         "age": "Mune makore mangani?",
         "age_child": "Mwana ane makore mangani?",
         "onset": "Zvakatanga rini?",
-        "worse": "Zviri kuwedzera here?",
-        "where": "Kurwadza kuri papi?",
-        "severity": "Kurwadza kwacho kwakanyanya here?",
+        "worse": "Zviri kuita worse here?",
+        "where": "Pain iri papi?",
+        "severity": "Pain yacho yakanyanya here?",
         "fever": "Muri kupisa muviri here?",
         "fever_child": "Mwana ari kupisa muviri here?",
-        "breathing": "Muri kunetseka kufema here?",
-        "breathing_child": "Mwana ari kunetseka kufema here?",
+        "breathing": "Mune problem yekufema here?",
+        "breathing_child": "Mwana ane problem yekufema here?",
         "drinking": "Mwana ari kugona kunwa kana kuyamwa here?",
         "vomiting": "Muri kurutsa here?",
         "vomiting_child": "Mwana ari kurutsa here?",
-        "fits": "Pane pfari here?",
+        "fits": "Pane maFits here?",
         "bleeding": "Pane ropa ramuri kuona here?",
         "neck": "Mutsipa wenyu wakaoma here?",
-        "pregnancy": "Mune pamuviri here?",
-        "chronic": "Mune chirwere chenguva refu here, seshuga kana BP?",
-        "chronic_child": "Mwana ane chirwere chenguva refu here?",
+        "pregnancy": "Muri pregnant here?",
+        "chronic": "Mune chronic condition here, seSugar kana BP?",
+        "chronic_child": "Mwana ane chronic condition here?",
         "medicines": "Pane mishonga yamuri kunwa mazuva ano here?",
         "medicines_child": "Pane mishonga iri kunwiwa nemwana mazuva ano here?",
-        "allergy": "Pane mushonga usingawirirani nemi here?",
+        "allergy": "Mune allergy kune mumwe mushonga here?",
         "other": "Pane chimwe chiri kukunetsai here?",
     },
     "en": {
@@ -99,9 +100,9 @@ BANK = {
 
 # Calling a ticket in the waiting room.
 CALLS = {
-    "sn": {"nurse": "Nhamba {n}, ndapota endai kuna mukoti.",
-           "doctor": "Nhamba {n}, ndapota endai kuna chiremba.",
-           "pharmacy": "Nhamba {n}, ndapota endai kunotora mishonga."},
+    "sn": {"nurse": "Ticket {n}, please endai kuna nurse.",
+           "doctor": "Ticket {n}, please endai kuna doctor.",
+           "pharmacy": "Ticket {n}, please endai kuPharmacy."},
     "en": {"nurse": "Ticket {n}, please go to the nurse.",
            "doctor": "Ticket {n}, please go to the doctor.",
            "pharmacy": "Ticket {n}, please go to the pharmacy."},
@@ -109,11 +110,11 @@ CALLS = {
 
 # How to take a medicine, said at the pharmacy. The keys are the doctor's choices.
 HOW_SAY = {
-    "sn": {"Once a day": "Shandisai mushonga uyu kamwe chete pazuva.",
-           "Twice a day": "Shandisai mushonga uyu kaviri pazuva.",
-           "Three times a day": "Shandisai mushonga uyu katatu pazuva.",
-           "When needed": "Shandisai mushonga uyu kana zvichidikanwa chete.",
-           "As directed": "Shandisai mushonga uyu sezvamaudzwa nemupi wemishonga."},
+    "sn": {"Once a day": "Shandisai mushonga uyu once a day.",
+           "Twice a day": "Shandisai mushonga uyu twice a day.",
+           "Three times a day": "Shandisai mushonga uyu three times a day.",
+           "When needed": "Shandisai mushonga uyu only when needed.",
+           "As directed": "Shandisai mushonga uyu sezvamaudzwa naPharmacist."},
     "en": {"Once a day": "Use this medicine once a day.",
            "Twice a day": "Use this medicine twice a day.",
            "Three times a day": "Use this medicine three times a day.",
@@ -124,9 +125,9 @@ HOW_SAY = {
 # A warning for a community, said in the waiting room or sent as a voice message when the national
 # picture shows a risk for the province. One fixed sentence for each illness.
 WARN_SAY = {
-    "sn": {"diarrhoeal": "Yambiro: chirwere chemanyoka chiri kuwanda munharaunda. Birisai mvura yokunwa, mugeze maoko nesipo.",
-           "malaria": "Yambiro: marariya iri kuwanda munharaunda. Rarai pasi pemambure, uyai kukiriniki kana muchipisa muviri.",
-           "respiratory": "Yambiro: zvirwere zvechipfuva zviri kuwanda. Uyai kukiriniki kana mwana achinetseka kufema."},
+    "sn": {"diarrhoeal": "Warning: maCases emanyoka ari kuwanda muArea yenyu. Boilai mvura yekunwa, mugeze maoko neSoap.",
+           "malaria": "Warning: malaria iri kuwanda muArea yenyu. Rarai muNet, muuye kuClinic kana muine temperature.",
+           "respiratory": "Warning: maChest infections ari kuwanda. Uyai kuClinic kana mwana aine problem yekufema."},
     "en": {"diarrhoeal": "Warning: diarrhoea is spreading in this area. Boil your drinking water and wash your hands with soap.",
            "malaria": "Warning: malaria is rising in this area. Sleep under a net, and come to the clinic if you have a fever.",
            "respiratory": "Warning: chest infections are rising. Come to the clinic if a child is struggling to breathe."},
@@ -220,7 +221,7 @@ will see them ahead of the queue.
 Speech recognition wrote the patient's words, so they may contain errors.
 
 Reply with one JSON object and nothing else:
-{{"heard_en": "<the patient's last message in plain English, faithfully, adding nothing>",
+{{"heard_en": "<the patient's last message in plain English, faithfully, adding nothing; Shona does not say whether a person is a he or a she, so write "they" or "the child" unless the patient's words make it plain>",
  "answered": [<every topic the patient has answered so far, in any message: {', '.join(ASKABLE)}>],
  "topic": "<the topic to ask next, which must NOT be in "answered": one of {', '.join(ASKABLE)}>",
  "done": <true or false>,
@@ -244,6 +245,13 @@ Rules:
 - English, short, factual. Use only what the patient said. If something was not asked or not \
 answered, write "not stated". Do not guess.
 - Do not diagnose and do not suggest treatment. You may list what the nurse should check.
+- Never guess whether the patient is a woman or a man. You cannot hear the voice, and Shona has \
+one word for "he" and "she". State the sex only when the patient's own words give it: a pregnancy, \
+her periods, "my son", "my daughter", "my husband", "my wife", "murume wangu", "mukadzi wangu". \
+Otherwise write "the patient" or "the child" and use "they" and "their" everywhere in the note and \
+in "transcript_en"; do not write "he", "she", "his", "her", "woman", "man", "male" or "female", and \
+do not write that the sex is unknown or not stated. The speaker being a mother says nothing about \
+the sex of her child.
 - Urgency is one of "emergency", "urgent" or "routine". Use these definitions, which follow the \
 WHO, ICRC and MSF Interagency Integrated Triage Tool and the WHO IMCI danger signs:
   "emergency" (a clinician now): unresponsive or cannot be woken; struggling to breathe; \
@@ -268,7 +276,7 @@ have is not a red flag: put it in "history" (for example "No difficulty breathin
 answer the question asked. A clear, plausible line is not unclear. Most visits have none: use [].
 
 Reply with one JSON object and nothing else:
-{"patient": "<who is sick, sex if known, age>",
+{"patient": "<who is sick and the age, for example \"Adult, 32 years\" or \"Child, 8 months, brought by the mother\"; the sex only if the patient's words give it>",
  "chief_complaint": "<one line>",
  "history": ["<short fact>", "..."],
  "red_flags": ["<danger sign the patient reported>", "..."],

@@ -92,7 +92,7 @@ document.querySelectorAll('[data-l]').forEach(b => {
   b.onclick = () => {
     lang = b.dataset.l;
     document.querySelectorAll('[data-l]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-    $('ref').placeholder = lang === 'sn' ? 'Ndine musoro uri kurwadza kubva nezuro' : 'I have had a headache since yesterday';
+    $('ref').placeholder = lang === 'sn' ? 'Ndine headache kubva yesterday' : 'I have had a headache since yesterday';
   };
 });
 

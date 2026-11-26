@@ -61,7 +61,7 @@ def _alts(*alts) -> tuple:
     return tuple((a,) if isinstance(a, str) else tuple(a) for a in alts)
 
 
-NOT_MEDICINE = r"(?! (mushonga|mishonga|mapiritsi|piritsi|doro|hwahwa|fodya))"
+NOT_MEDICINE = r"(?! (mushonga|mishonga|mapiritsi|piritsi|ma ?pills?|pills?|ma ?tablets?|tablets?|medication|medicine|doro|hwahwa|fodya))"
 
 RULES: list[Rule] = [
     Rule("emergency", "breathing", "Difficulty breathing", "iitt",
@@ -69,6 +69,7 @@ RULES: list[Rule] = [
                   r"!\bha\w* (ku)?fem[aei]\b", r"!\bha\w*fem[ei]\b",
                   r"!\bha\w*(gon[ei]|kwanis[ei]) kufema", r"!\bha\w* (ku)?(gona|kwanisa) kufema",
                   r"\w*(pererw|per)\w* (ne)?mweya", r"kushaya mweya", r"\w*kwev\w* mweya",
+                  r"\bproblems? (\w+ ){0,1}(ye|ne|pa)?(ku)?(fema|breath\w*)",          # "ane problem yekufema"
                   r"\bmbabvu (\w+ ){0,2}\w*pind\w* mukati"),
          en=_alts(r"(difficult\w*|trouble|problems?|struggl\w*|hard|battling|labou?red) "
                   r"(of |to |with |in )?breath\w*",
@@ -92,11 +93,12 @@ RULES: list[Rule] = [
                   r"\w*taura zvisinganzwisisik\w*", r"\w*vhiringidzik\w*"),
          en=_alts(r"fainted", r"passed out", r"collapsed", r"confused", r"not making sense")),
     Rule("emergency", "bleeding", "Heavy bleeding", "iitt",
-         sn=_alts(r"\bropa (\w+ ){0,3}(rakawand\w*|zhinji|zvakanyany\w*|rakanyany\w*|zvakawand\w*)",
-                  r"\bropa (\w+ ){0,2}\w*erer\w*",
+         sn=_alts(r"\b(ropa|blood) (\w+ ){0,3}(rakawand\w*|zhinji|zvakanyany\w*|rakanyany\w*|zvakawand\w*)",
+                  r"\b(ropa|blood) (\w+ ){0,2}\w*erer\w*",
                   # "the blood will not stop": a negative form, so not put through the negation check
-                  r"!\bropa (\w+ ){0,3}(risingamir\w*|hariper\w*|harisi (kuda )?kumira|haridi kumira|harimir[ei])",
-                  r"\w*rutsa ropa", r"\w*(vh?omit)\w* ropa",
+                  r"!\b(ropa|blood) (\w+ ){0,3}(risingamir\w*|hariper\w*|harisi (kuda )?ku(mira|stop\w*)|haridi ku(mira|stop\w*)|harimir[ei])",
+                  r"!\bbleeding (\w+ ){0,3}(haisi (kuda )?ku(mira|stop\w*)|haidi ku(mira|stop\w*)|haimir[ei])",
+                  r"\w*rutsa (ropa|blood)", r"\w*(vh?omit)\w* (ropa|blood)",
                   r"\w*bleed\w* (\w+ ){0,2}(zvakanyany\w*|zvakawand\w*|heavy)"),
          en=_alts(r"(heavy|severe|a lot of|lots of|profuse|uncontrolled) bleeding",
                   r"bleeding (heavily|a lot|profusely)", r"vomit\w* blood", r"haemorrhag\w*|hemorrhag\w*",
@@ -147,21 +149,23 @@ RULES: list[Rule] = [
                   r"stabbed", r"deep (cut|wound)", r"head injury")),
     # The tool's rule is "any two of": altered mental state, stiff neck, fever, headache.
     Rule("emergency", "stiff_neck_fever", "Stiff neck with fever or headache", "iitt",
-         sn=_alts((r"\b(mutsipa|neck|neki)\b (\w+ ){0,3}\w*(oma|omarar)\w*",
-                   r"\w*pisa muviri|\bfivha\b|\bfever\b|\bmusoro\b|\bhead ?a(che|ck)\w*|\bhedhek\w*")),
+         sn=_alts((r"\b(mutsipa|neck|neki)\b (\w+ ){0,3}(\w*(oma|omarar)\w*|stiff\w*)",
+                   r"\w*pisa muviri|\bfivha\b|\bfever\b|\btemperature\b|\bmusoro\b|\bhead ?a(che|ck)\w*|\bhedhek\w*")),
          en=_alts((r"stiff neck|neck (is )?stiff\w*", r"fever|headache|\bhot\b"))),
     Rule("urgent", "stiff_neck", "Stiff neck", "iitt",
-         sn=_alts(r"\b(mutsipa|neck|neki)\b (\w+ ){0,3}\w*(oma|omarar)\w*",
+         sn=_alts(r"\b(mutsipa|neck|neki)\b (\w+ ){0,3}(\w*(oma|omarar)\w*|stiff\w*)",
                   r"\w*(oma|omarar)\w* (\w+ ){0,2}(mutsipa|neck|neki)\b"),
          en=_alts(r"stiff neck", r"neck (is )?stiff\w*")),
     Rule("urgent", "young_baby", "Baby only days or weeks old", "etat",
          sn=_alts(r"\b(mwana|mucheche|kacheche)\b (\w+ ){0,3}(ane|ave ne|wema|ava nema|ave nema) ?(ma)?(vhiki|zuva)\w*",
-                  r"\b(mwana|mucheche|kacheche)\b (\w+ ){0,3}(ane|ave ne)mwedzi mumwe\b"),
+                  r"\b(mwana|mucheche|kacheche)\b (\w+ ){0,3}(ane|ave ne)mwedzi mumwe\b",
+                  r"\b(mwana|mucheche|kacheche|baby)\b (\w+ ){0,3}(ane|ave ne|rine) ?(\w+ )?(ma ?)?(weeks?|days?)\b"),   # "ane three weeks"
          en=_alts(r"\b(\w+)[- ](days?|weeks?)[- ]old\b", r"\bnewborn\b",
                   r"\b(baby|infant|child|son|daughter)\b (\w+ ){0,3}(is|aged) (\w+ ){0,1}(days?|weeks?)\b")),
     Rule("urgent", "blood", "Blood in stool, urine, vomit or cough", "own",
-         sn=_alts(r"\b(manyoka|tsvina|weti)\b (\w+ ){0,3}ropa\b",
-                  r"\bropa\b (\w+ ){0,3}(mu|pa|mune|ne)?(manyoka|tsvina|weti)\b", r"\w*kosora ropa"),
+         sn=_alts(r"\b(manyoka|tsvina|weti|diarrh\w*|stool|urine)\b (\w+ ){0,3}(ropa|blood)\b",
+                  r"\b(ropa|blood)\b (\w+ ){0,3}(mu|pa|mune|ne)?(manyoka|tsvina|weti|diarrh\w*|stool|urine)\b",
+                  r"\w*(kosora|cough\w*) (ropa|blood)"),
          en=_alts(r"blood\w* (in |with )?(the |my |his |her )?(stool|urine|diarrh\w*|vomit|sputum)",
                   r"bloody (stool|urine|diarrh\w*)", r"cough\w* (up )?blood")),
     Rule("urgent", "assault", "Reports sexual assault", "iitt",
@@ -180,6 +184,12 @@ SN_AFF = re.compile(r"^(ndiri|uri|ari|tiri|muri|vari|ndava|wava|ava|tava|mava|va
 EN_AFF = re.compile(r"^(is|are|was|were|am|keeps|kept|still)$")
 # "has not stopped convulsing", "can't stop vomiting blood": a denial of stopping is not a denial.
 STOPPING = {"stop", "stopped", "stopping", "cease", "ceased"}
+# A Shona speaker who mixes in English denies an English sign with a Shona word ("hapana bleeding",
+# "handina chest pain"). So in Shona speech the English patterns take these denials too. Whole words
+# only, so that no English word is mistaken for one.
+MIX_NEG = re.compile(EN_NEG.pattern[:-2] + r"|handi\w*|haa\w*|hapana|hapasina|pasina|asina|asiri|hatina|hatisi|havana|havasi"
+                     r"|haina|haisi|hauna|harina|harisi|hazvina|hazvisi|hachina)$")
+MIX_AFF = re.compile(EN_AFF.pattern[:-2] + "|" + SN_AFF.pattern[2:])
 CLAUSE = re.compile(r"[.,;:!?\n]| uye | asi | but | and | however ")
 
 
@@ -253,7 +263,8 @@ def scan(text: str, lang: str = "sn") -> list[Rule]:
         if lang == "sn":
             found = any(all(_present(t, clauses, SN_NEG, SN_AFF, 3) for t in alt) for alt in rule.sn)
         if not found:
-            found = any(all(_present(t, clauses, EN_NEG, EN_AFF, 4) for t in alt) for alt in rule.en)
+            neg, aff = (MIX_NEG, MIX_AFF) if lang == "sn" else (EN_NEG, EN_AFF)
+            found = any(all(_present(t, clauses, neg, aff, 4) for t in alt) for alt in rule.en)
         if found:
             hits.append(rule)
     return hits

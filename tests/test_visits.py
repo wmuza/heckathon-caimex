@@ -412,3 +412,10 @@ def test_a_plain_yes_or_no_twice_is_not_a_repeat(monkeypatch):
     fake_second(monkeypatch, {"0": 1, "1": 0, "2": 0})
     s = talk(visits.new("en"), ["My stomach hurts", "No", "No", "No"])
     assert sum(1 for t in s["turns"] if t["role"] == "user") == 4 and not s.get("stopped_early")
+
+
+def test_the_note_is_told_never_to_guess_the_patients_sex():
+    # Shona has one word for "he" and "she" and no model hears the voice: notes had called patients women by guess.
+    assert "Never guess whether the patient is a woman or a man" in prompts.NOTE_SYSTEM
+    assert "sex if known" not in prompts.NOTE_SYSTEM
+    assert "they" in prompts.interview_system("sn")

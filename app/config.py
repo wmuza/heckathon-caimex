@@ -34,6 +34,10 @@ API_KEY = os.environ.get("CAIMEX_API_KEY", "")
 STT_MODEL = os.environ.get("MUKOTI_STT_MODEL", "languages-lab-stt-large-1.3")
 TTS_MODEL = os.environ.get("MUKOTI_TTS_MODEL", "languages-lab-tts-large-1.3")
 TTS_VOICE = os.environ.get("MUKOTI_TTS_VOICE", "getrude")
+# Long English for staff (the forecast briefing) is read by an English voice model. The clinic's own
+# voice is a Shona voice: it read "between 0 and 11" as "zero endereveni" (measured 2026-11-26).
+STAFF_TTS_MODEL = os.environ.get("MUKOTI_STAFF_TTS_MODEL", "tts-1")
+STAFF_TTS_VOICE = os.environ.get("MUKOTI_STAFF_TTS_VOICE", "nova")
 CHAT_MODEL = os.environ.get("MUKOTI_CHAT_MODEL", "deepseek-v4-flash")
 NOTE_MODEL = os.environ.get("MUKOTI_NOTE_MODEL", CHAT_MODEL)
 DECISION_MODEL = os.environ.get("MUKOTI_DECISION_MODEL", "d3-nano")

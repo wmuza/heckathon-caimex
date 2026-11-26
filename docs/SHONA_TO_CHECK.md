@@ -10,10 +10,10 @@ In `app/prompts.py`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Mhoroi, mauya kukiriniki. Ndiri mubatsiri wemukoti, handisi chiremba. Ndichakubvunzai mibvunzo mishoma kuti mukoti akurumidze kukubatsirai. Chii chakuunzai nhasi? | Hello, welcome to the clinic. I am the nurse's helper, not a doctor. I will ask you a few short questions so the nurse can help you sooner. What brings you here today? |  |
-| Ndapota dzokororai, handina kunzwa zvakanaka. | Please say that again, I did not hear you well. |  |
-| Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai. | Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you. |  |
-| Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya. | Thank you. I am calling the nurse now. Please stay here, the nurse is coming. |  |
+| Mhoroi, welcome kuClinic. Ndiri helper yaNurse, handisi doctor. Ndichakubvunzai maQuestions mashoma kuti nurse akurumidze kukubatsirai. Chii chakuunzai nhasi? | Hello, welcome to the clinic. I am the nurse's helper, not a doctor. I will ask you a few short questions so the nurse can help you sooner. What brings you here today? |  |
+| Sorry, handina kunzwa zvakanaka. Please dzokororai. | Please say that again, I did not hear you well. |  |
+| Thank you. Ndaudza nurse zvamataura. Please garai mumirire, nurse achakudaidzai. | Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you. |  |
+| Thank you. Ndiri kudaidza nurse izvozvi. Please garai pano, nurse ari kuuya. | Thank you. I am calling the nurse now. Please stay here, the nurse is coming. |  |
 
 ## What the helper says: the questions
 
@@ -25,25 +25,25 @@ In `app/prompts.py`.
 | Mune makore mangani? | How old are you? |  |
 | Mwana ane makore mangani? | How old is the child? |  |
 | Zvakatanga rini? | When did it start? |  |
-| Zviri kuwedzera here? | Is it getting worse? |  |
-| Kurwadza kuri papi? | Where is the pain? |  |
-| Kurwadza kwacho kwakanyanya here? | Is the pain very bad? |  |
+| Zviri kuita worse here? | Is it getting worse? |  |
+| Pain iri papi? | Where is the pain? |  |
+| Pain yacho yakanyanya here? | Is the pain very bad? |  |
 | Muri kupisa muviri here? | Do you have a fever? |  |
 | Mwana ari kupisa muviri here? | Does the child have a fever? |  |
-| Muri kunetseka kufema here? | Are you struggling to breathe? |  |
-| Mwana ari kunetseka kufema here? | Is the child struggling to breathe? |  |
+| Mune problem yekufema here? | Are you struggling to breathe? |  |
+| Mwana ane problem yekufema here? | Is the child struggling to breathe? |  |
 | Mwana ari kugona kunwa kana kuyamwa here? | Is the child able to drink or breastfeed? |  |
 | Muri kurutsa here? | Are you vomiting? |  |
 | Mwana ari kurutsa here? | Is the child vomiting? |  |
-| Pane pfari here? | Have there been any fits? |  |
+| Pane maFits here? | Have there been any fits? |  |
 | Pane ropa ramuri kuona here? | Have you seen any blood? |  |
 | Mutsipa wenyu wakaoma here? | Is your neck stiff? |  |
-| Mune pamuviri here? | Are you pregnant? |  |
-| Mune chirwere chenguva refu here, seshuga kana BP? | Do you have a long-term illness, such as diabetes or high blood pressure? |  |
-| Mwana ane chirwere chenguva refu here? | Does the child have a long-term illness? |  |
+| Muri pregnant here? | Are you pregnant? |  |
+| Mune chronic condition here, seSugar kana BP? | Do you have a long-term illness, such as diabetes or high blood pressure? |  |
+| Mwana ane chronic condition here? | Does the child have a long-term illness? |  |
 | Pane mishonga yamuri kunwa mazuva ano here? | Are you taking any medicines these days? |  |
 | Pane mishonga iri kunwiwa nemwana mazuva ano here? | Is the child taking any medicines these days? |  |
-| Pane mushonga usingawirirani nemi here? | Is there any medicine that does not agree with you? |  |
+| Mune allergy kune mumwe mushonga here? | Is there any medicine that does not agree with you? |  |
 | Pane chimwe chiri kukunetsai here? | Is anything else troubling you? |  |
 
 ## Calling a ticket in the waiting room (the number is put in)
@@ -52,9 +52,9 @@ In `app/prompts.py`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Nhamba gumi nemana, ndapota endai kuna mukoti. | Ticket 14, please go to the nurse. |  |
-| Nhamba gumi nemana, ndapota endai kuna chiremba. | Ticket 14, please go to the doctor. |  |
-| Nhamba gumi nemana, ndapota endai kunotora mishonga. | Ticket 14, please go to the pharmacy. |  |
+| Ticket fourteen, please endai kuna nurse. | Ticket 14, please go to the nurse. |  |
+| Ticket fourteen, please endai kuna doctor. | Ticket 14, please go to the doctor. |  |
+| Ticket fourteen, please endai kuPharmacy. | Ticket 14, please go to the pharmacy. |  |
 
 ## How to take a medicine, said at the pharmacy
 
@@ -62,11 +62,11 @@ In `app/prompts.py`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Shandisai mushonga uyu kamwe chete pazuva. | Use this medicine once a day. |  |
-| Shandisai mushonga uyu kaviri pazuva. | Use this medicine twice a day. |  |
-| Shandisai mushonga uyu katatu pazuva. | Use this medicine three times a day. |  |
-| Shandisai mushonga uyu kana zvichidikanwa chete. | Use this medicine only when you need it. |  |
-| Shandisai mushonga uyu sezvamaudzwa nemupi wemishonga. | Use this medicine as the pharmacist has told you. |  |
+| Shandisai mushonga uyu once a day. | Use this medicine once a day. |  |
+| Shandisai mushonga uyu twice a day. | Use this medicine twice a day. |  |
+| Shandisai mushonga uyu three times a day. | Use this medicine three times a day. |  |
+| Shandisai mushonga uyu only when needed. | Use this medicine only when you need it. |  |
+| Shandisai mushonga uyu sezvamaudzwa naPharmacist. | Use this medicine as the pharmacist has told you. |  |
 
 ## A warning for a community, when the national picture shows a risk
 
@@ -74,9 +74,9 @@ In `app/prompts.py`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Yambiro: chirwere chemanyoka chiri kuwanda munharaunda. Birisai mvura yokunwa, mugeze maoko nesipo. | Warning: diarrhoea is spreading in this area. Boil your drinking water and wash your hands with soap. |  |
-| Yambiro: marariya iri kuwanda munharaunda. Rarai pasi pemambure, uyai kukiriniki kana muchipisa muviri. | Warning: malaria is rising in this area. Sleep under a net, and come to the clinic if you have a fever. |  |
-| Yambiro: zvirwere zvechipfuva zviri kuwanda. Uyai kukiriniki kana mwana achinetseka kufema. | Warning: chest infections are rising. Come to the clinic if a child is struggling to breathe. |  |
+| Warning: maCases emanyoka ari kuwanda muArea yenyu. Boilai mvura yekunwa, mugeze maoko neSoap. | Warning: diarrhoea is spreading in this area. Boil your drinking water and wash your hands with soap. |  |
+| Warning: malaria iri kuwanda muArea yenyu. Rarai muNet, muuye kuClinic kana muine temperature. | Warning: malaria is rising in this area. Sleep under a net, and come to the clinic if you have a fever. |  |
+| Warning: maChest infections ari kuwanda. Uyai kuClinic kana mwana aine problem yekufema. | Warning: chest infections are rising. Come to the clinic if a child is struggling to breathe. |  |
 
 ## Ticket numbers in words
 
@@ -84,28 +84,28 @@ In `app/voice.py`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| poshi | 1 |  |
-| piri | 2 |  |
-| tatu | 3 |  |
-| ina | 4 |  |
-| shanu | 5 |  |
-| tanhatu | 6 |  |
-| nomwe | 7 |  |
-| sere | 8 |  |
-| pfumbamwe | 9 |  |
-| gumi | 10 |  |
-| gumi nerimwe | 11 |  |
-| gumi nemaviri | 12 |  |
-| gumi nemashanu | 15 |  |
-| makumi maviri | 20 |  |
-| makumi maviri nerimwe | 21 |  |
-| makumi matatu | 30 |  |
-| makumi mana nemashanu | 45 |  |
-| makumi mapfumbamwe nemapfumbamwe | 99 |  |
-| zana | 100 |  |
-| zana nerimwe | 101 |  |
-| zana negumi | 110 |  |
-| zana nemakumi maviri nemashanu | 125 |  |
+| one | 1 |  |
+| two | 2 |  |
+| three | 3 |  |
+| four | 4 |  |
+| five | 5 |  |
+| six | 6 |  |
+| seven | 7 |  |
+| eight | 8 |  |
+| nine | 9 |  |
+| ten | 10 |  |
+| eleven | 11 |  |
+| twelve | 12 |  |
+| fifteen | 15 |  |
+| twenty | 20 |  |
+| twenty one | 21 |  |
+| thirty | 30 |  |
+| forty five | 45 |  |
+| ninety nine | 99 |  |
+| one hundred | 100 |  |
+| one hundred and one | 101 |  |
+| one hundred and ten | 110 |  |
+| one hundred and twenty five | 125 |  |
 
 ## The patient's screen
 
@@ -113,47 +113,47 @@ In `web/index.html`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Mubatsiri wemukoti. Taurai, mukurumidze kubatsirwa | The nurse's helper. Speak, and be helped sooner |  |
-| Mauya kuClinic | Welcome to the clinic |  |
-| Ndichakubvunzai mibvunzo mishoma. Mhinduro dzenyu dzinopiwa mukoti kuti akubatsirei nekukurumidza. | I will ask you a few short questions. Your answers go to the nurse, so she can help you sooner. |  |
-| Izwi renyu rinorekodhwa kuti mukoti azorinzwa, rozodzimwa mushure mezuva rimwe chete. | Your voice is recorded so the nurse can listen to it. It is deleted after one day. |  |
-| Ndinobvuma, tanga kutaura | I agree, start talking |  |
-| Ona murwere wemuenzaniso | Watch a sample patient |  |
-| Mubatsiri uyu ikombiyuta, haasi chiremba. Kana zvakaoma, udzai mukoti iye zvino. | This helper is a computer, not a doctor. If it is serious, tell the nurse now. |  |
-| Muenzaniso, izwi rekombiyuta | Sample, synthetic voice |  |
-| Zvimwe | More options |  |
-| Mubatsiri | Helper |  |
-| Nhamba yenyu | Your number |  |
-| Murwere anotevera | Next patient |  |
-| Tumira | Send |  |
-| Maikorofoni inozvivhura nekuzvivhara yoga | The microphone opens and closes by itself |  |
-| Nyora panzvimbo pekutaura | Type instead of speaking |  |
-| Ratidza Chirungu pasi pemashoko | Show English under the words |  |
-| Ndapedza | I have finished |  |
-| Chiedza | Light |  |
-| Rima | Dark |  |
-| Sefoni | Match phone |  |
-| Vashandi | Staff |  |
-| Varwere vemuenzaniso | Sample patients |  |
-| Vhara | Close |  |
-| Vanhu ava havasi chaivo uye mazwi avo nderekombiyuta. Mubatsiri anovanzwa nekuvapindura chaizvo. | These people are made up and their voices are synthetic. The helper really hears them and really answers. |  |
-| Dzvanyai maikorofoni mutaure | Tap the microphone to speak |  |
-| Taurai iye zvino, ndiri kuteerera | Speak now, I am listening |  |
-| Ndiri kunyora zvamataura… | Writing down what you said… |  |
-| Ndiri kufunga… | Thinking… |  |
-| Mubatsiri ari kutaura, teererai | The helper is speaking, listen |  |
-| Nyorai mhinduro yenyu | Type your answer |  |
-| Maikorofoni haisi kushanda. Nyorai mhinduro yenyu. | The microphone is not working. Type your answer. |  |
-| Pane chakanganisika. Edzai zvakare. | Something went wrong. Please try again. |  |
+| Helper yaNurse. Taurai, mubatsirwe fast | The nurse's helper. Speak, and be helped sooner |  |
+| Welcome kuClinic | Welcome to the clinic |  |
+| Ndichakubvunzai maQuestions mashoma chete. MaAnswers enyu anoenda kuna nurse, kuti akubatsirei fast. | I will ask you a few short questions. Your answers go to the nurse, so she can help you sooner. |  |
+| Voice renyu rinoRecordwa kuti nurse azoriteerera. RinoDeletwa after 24 hours. | Your voice is recorded so the nurse can listen to it. It is deleted after one day. |  |
+| Startai kutaura | Start speaking |  |
+| Onai sample patient | Watch a sample patient |  |
+| Helper iyi iComputer, haisi doctor. Kana iri emergency, udzai nurse izvozvi. | This helper is a computer, not a doctor. If it is serious, tell the nurse now. |  |
+| Sample, voice reComputer | Sample, synthetic voice |  |
+| More options | More options |  |
+| Helper | Helper |  |
+| Ticket yenyu | Your number |  |
+| Next patient | Next patient |  |
+| Send | Send |  |
+| Mic inozviOn nekuzviOff yoga | The microphone opens and closes by itself |  |
+| Typai instead yekutaura | Type instead of speaking |  |
+| Ratidza English pasi pemaWords | Show English under the words |  |
+| Ndapedza, finish | I have finished |  |
+| Light | Light |  |
+| Dark | Dark |  |
+| Follow phone | Match phone |  |
+| Staff | Staff |  |
+| Sample patients | Sample patients |  |
+| Close | Close |  |
+| Vanhu ava havasi real, uye maVoice avo ndeeComputer. Helper inovanzwa nekuvapindura chaizvo. | These people are made up and their voices are synthetic. The helper really hears them and really answers. |  |
+| Pressai mic mutaure | Tap the microphone to speak |  |
+| Okay, taurai, ndiri kuteerera | Speak now, I am listening |  |
+| Ndiri kurecorder zvamataura… | Writing down what you said… |  |
+| One moment, ndiri kufunga… | Thinking… |  |
+| Helper iri kutaura, please teererai | The helper is speaking, listen |  |
+| Typai answer yenyu | Type your answer |  |
+| Mic haisi kuworker. Typai answer yenyu. | The microphone is not working. Type your answer. |  |
+| Pane error yaitika. Tryai futi. | Something went wrong. Please try again. |  |
 | Imi | You |  |
-| Murwere wemuenzaniso | Sample patient |  |
-| Murwere ari kutaura… | The patient is speaking… |  |
-| Nyorai pano | Type here |  |
-| Zvapera | Finished |  |
-| Mukoti ari kuuya | The nurse is coming |  |
-| Edza zvakare | Try again |  |
-| Ndatenda. Garai muchimirira, mukoti achakudaidzai. | Thank you. Please take a seat, the nurse will call you. |  |
-| Ndatenda. Mukoti adaidzwa iye zvino. Ndapota garai pano. | Thank you. The nurse has been called. Please stay here. |  |
+| Sample patient | Sample patient |  |
+| Patient ari kutaura… | The patient is speaking… |  |
+| Typai pano | Type here |  |
+| Done | Finished |  |
+| Nurse ari kuuya | The nurse is coming |  |
+| Tryai futi | Try again |  |
+| Thank you. Garai mumirire, nurse achakudaidzai. | Thank you. Please take a seat, the nurse will call you. |  |
+| Thank you. Nurse adaidzwa izvozvi. Please garai pano. | Thank you. The nurse has been called. Please stay here. |  |
 
 ## Sample patients: answers every Shona patient shares
 
@@ -161,25 +161,25 @@ In `samples/patients.json`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Ndini ndiri kurwara. | It is me. |  |
-| Ndine makore makumi matatu. | I am thirty years old. |  |
-| Zvakatanga nezuro. | It started yesterday. |  |
-| Kwete, zvakangofanana. | No, it is about the same. |  |
-| Zviri pakati nepakati. | It is not too bad. |  |
-| Kwete, ndiri kufema zvakanaka. | No, I am breathing well. |  |
-| Hongu, ari kunwa zvakanaka. | Yes, drinking well. |  |
-| Kwete, hapana ropa. | No, there is no blood. |  |
-| Kwete, handina pamuviri. | No, I am not pregnant. |  |
-| Kwete, handina chirwere chenguva refu. | No, I have no long-term illness. |  |
-| Kwete, handisi kunwa mishonga. | No, I am not taking any medicines. |  |
-| Kwete, hapana. | No, none. |  |
-| Kwete. | No. |  |
-| Ndiri kurwara. | I am not feeling well. |  |
-| Ipapo pandakuudzai. | Where I told you. |  |
-| Kwete, handisi kupisa muviri. | No, I do not have a fever. |  |
-| Kwete, handisi kurutsa. | No, I am not vomiting. |  |
-| Kwete, hapana pfari. | No, no fits. |  |
-| Kwete, mutsipa hauna kuoma. | No, my neck is not stiff. |  |
+| Ndini patient. | It is me. |  |
+| Ndine thirty years. | I am thirty years old. |  |
+| Zvakastarta yesterday. | It started yesterday. |  |
+| Kwete, zviri just the same. | No, it is about the same. |  |
+| Zviri moderate, hazvina kunyanya. | It is not too bad. |  |
+| Kwete, ndiri kufema normal. | No, I am breathing well. |  |
+| Hongu, ari kunwa normal. | Yes, drinking well. |  |
+| Kwete, hapana blood. | No, there is no blood. |  |
+| Kwete, handisi pregnant. | No, I am not pregnant. |  |
+| Kwete, handina chronic condition. | No, I have no long-term illness. |  |
+| Kwete, handisi kunwa maPills. | No, I am not taking any medicines. |  |
+| Kwete, handina allergy. | No, none. |  |
+| Kwete, that's all. | No. |  |
+| Handisi kufeeler mushe. | I am not feeling well. |  |
+| Pa area yandakuudzai iyoyo. | Where I told you. |  |
+| Kwete, handina temperature. | No, I do not have a fever. |  |
+| Kwete, handisi kuvomita. | No, I am not vomiting. |  |
+| Kwete, hapana maFits. | No, no fits. |  |
+| Kwete, neck haisi stiff. | No, my neck is not stiff. |  |
 
 ## Sample patients: their own lines
 
@@ -187,161 +187,161 @@ In `samples/patients.json`.
 
 | Shona | Meant to say | OK? |
 |---|---|---|
-| Mwana wangu ane mwedzi misere ari kutadza kufema, uye ari kupisa muviri. | (A mother whose baby cannot breathe) opening line |  |
+| Mwana wangu ane eight months ari kutadza kubreather, uye ane temperature. | (A mother whose baby cannot breathe) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane mwedzi misere. | answer about: age |  |
-| Kubva husiku hwapfuura. | answer about: onset |  |
-| Hongu, zviri kuwedzera. | answer about: worse |  |
-| Hongu, ari kutadza kufema. | answer about: breathing |  |
-| Hongu, ari kupisa muviri. | answer about: fever |  |
-| Kwete, hapana pfari. | answer about: fits |  |
-| Kwete, haasi kurutsa. | answer about: vomiting |  |
-| Mwana wangu ane manyoka kubva nezuro. | (A child with diarrhoea who has stopped drinking) opening line |  |
+| Ane eight months. | answer about: age |  |
+| Kubva last night. | answer about: onset |  |
+| Hongu, zviri kuita worse. | answer about: worse |  |
+| Hongu, ari kutadza kubreather. | answer about: breathing |  |
+| Hongu, ane temperature. | answer about: fever |  |
+| Kwete, hapana maFits. | answer about: fits |  |
+| Kwete, haasi kuvomita. | answer about: vomiting |  |
+| Mwana wangu ane diarrhoea kubva yesterday. | (A child with diarrhoea who has stopped drinking) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane gore rimwe chete. | answer about: age |  |
-| Kubva nezuro manheru. | answer about: onset |  |
-| Hongu, zviri kuwedzera, ava kuneta. | answer about: worse |  |
+| Ane one year. | answer about: age |  |
+| Kubva yesterday evening. | answer about: onset |  |
+| Hongu, zviri kuita worse, ava weak. | answer about: worse |  |
 | Hongu, zvakanyanya. | answer about: severity |  |
-| Kwete, ari kufema zvakanaka. | answer about: breathing |  |
-| Kwete, haachagoni kunwa kana kuyamwa, uye anorutsa zvese zvaanodya. | answer about: drinking |  |
-| Kwete, hapana ropa mumanyoka. | answer about: bleeding |  |
+| Kwete, ari kufema normal. | answer about: breathing |  |
+| Kwete, haachagoni kunwa kana kuyamwa, uye ari kuvomita everything yaanodya. | answer about: drinking |  |
+| Kwete, hapana blood mustool. | answer about: bleeding |  |
 | Haachagoni kunwa kana kuyamwa. | answer about: other |  |
-| Kwete, haasi kupisa muviri. | answer about: fever |  |
-| Hongu, anorutsa zvese zvaanodya. | answer about: vomiting |  |
-| Kwete, hapana pfari. | answer about: fits |  |
-| Ndine pamuviri pemwedzi minomwe, ndatanga kubuda ropa mangwanani ano. | (A pregnant woman who is bleeding) opening line |  |
-| Ndine makore makumi maviri nematanhatu. | answer about: age |  |
-| Mangwanani ano. | answer about: onset |  |
-| Hongu, riri kuwedzera. | answer about: worse |  |
-| Hongu, ropa riri kubuda. | answer about: bleeding |  |
-| Hongu, ndine pamuviri pemwedzi minomwe. | answer about: pregnancy |  |
-| Mwana wangu ane makore matatu abatwa nepfari kaviri husiku hwapfuura. | (A child who had fits in the night) opening line |  |
+| Kwete, haana temperature. | answer about: fever |  |
+| Hongu, ari kuvomita everything yaanodya. | answer about: vomiting |  |
+| Kwete, hapana maFits. | answer about: fits |  |
+| Ndiri pregnant, seven months, ndatanga kubleeder this morning. | (A pregnant woman who is bleeding) opening line |  |
+| Ndine twenty six years. | answer about: age |  |
+| This morning. | answer about: onset |  |
+| Hongu, bleeding iri kuwedzera. | answer about: worse |  |
+| Hongu, ndiri kubleeder. | answer about: bleeding |  |
+| Hongu, ndiri pregnant, seven months. | answer about: pregnancy |  |
+| Mwana wangu ane three years aita maFits twice last night. | (A child who had fits in the night) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane makore matatu. | answer about: age |  |
-| Husiku hwapfuura. | answer about: onset |  |
+| Ane three years. | answer about: age |  |
+| Last night. | answer about: onset |  |
 | Hongu. | answer about: worse |  |
-| Hongu, kaviri husiku hwapfuura. | answer about: fits |  |
-| Hongu, ari kupisa muviri. | answer about: fever |  |
-| Murume wangu arumwa nenyoka pagumbo tiri kumunda. | (A man bitten by a snake) opening line |  |
-| Murume wangu. | answer about: who |  |
-| Ane makore makumi mana. | answer about: age |  |
-| Awa imwe chete yapfuura. | answer about: onset |  |
-| Mbuya vangu vafenda kumba, vazomuka asi vava kutaura zvisinganzwisisike. | (A grandmother who fainted) opening line |  |
-| Mbuya vangu. | answer about: who |  |
-| Vane makore makumi manomwe. | answer about: age |  |
-| Mangwanani ano. | answer about: onset |  |
-| Hongu, vane shuga. | answer about: chronic |  |
-| Ndave nemavhiki ndisingarari, uye ndava kufunga kuzviuraya. | (A man with thoughts of ending his life) opening line |  |
-| Ndine makore makumi matatu nemashanu. | answer about: age |  |
-| Mavhiki matatu apfuura. | answer about: onset |  |
+| Hongu, twice last night. | answer about: fits |  |
+| Hongu, ane temperature. | answer about: fever |  |
+| Husband wangu arumwa nenyoka paleg, tanga tiri kumunda. | (A man bitten by a snake) opening line |  |
+| Husband wangu. | answer about: who |  |
+| Ane forty years. | answer about: age |  |
+| One hour ago. | answer about: onset |  |
+| Gogo vangu vaita faint kumba, vazomuka asi vava confused. | (A grandmother who fainted) opening line |  |
+| Gogo vangu. | answer about: who |  |
+| Vane seventy years. | answer about: age |  |
+| This morning. | answer about: onset |  |
+| Hongu, vane sugar. | answer about: chronic |  |
+| Ndave nemaWeeks ndisingarare, uye ndava nemaThoughts ekuzviuraya. | (A man with thoughts of ending his life) opening line |  |
+| Ndine thirty five years. | answer about: age |  |
+| Three weeks ago. | answer about: onset |  |
 | Hongu. | answer about: worse |  |
-| Ndazvicheka nebanga paruoko, ropa riri kubuda rakawanda uye harisi kumira. | (A deep cut that will not stop bleeding) opening line |  |
-| Ndine makore makumi maviri nemapfumbamwe. | answer about: age |  |
-| Maminitsi makumi maviri apfuura. | answer about: onset |  |
-| Hongu, ropa rakawanda. | answer about: bleeding |  |
-| Mwana wangu ane mavhiki matatu ari kupisa muviri uye haasi kuyamwa. | (A three-week-old baby with fever) opening line |  |
+| Ndazvicheka neknife paruoko, blood riri kubuda rakawanda uye harisi kumira. | (A deep cut that will not stop bleeding) opening line |  |
+| Ndine twenty nine years. | answer about: age |  |
+| Twenty minutes ago. | answer about: onset |  |
+| Hongu, blood rakawanda. | answer about: bleeding |  |
+| Mwana wangu ane three weeks ane temperature, uye haasi kuyamwa. | (A three-week-old baby with fever) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane mavhiki matatu. | answer about: age |  |
-| Kubva nezuro. | answer about: onset |  |
+| Ane three weeks. | answer about: age |  |
+| Kubva yesterday. | answer about: onset |  |
 | Kwete, haasi kuyamwa. | answer about: drinking |  |
 | Hongu. | answer about: worse |  |
-| Hongu, ari kupisa muviri. | answer about: fever |  |
-| Ndine musoro unorwadza zvakanyanya, ndiri kupisa muviri, uye mutsipa wangu wakaoma. | (A man with a bad headache, fever and a stiff neck) opening line |  |
-| Ndine makore makumi maviri nemana. | answer about: age |  |
-| Kubva nezuro husiku. | answer about: onset |  |
-| Hongu, zviri kuwedzera. | answer about: worse |  |
+| Hongu, ane temperature. | answer about: fever |  |
+| Ndine headache yakanyanya, ndine temperature, uye neck yangu iri stiff. | (A man with a bad headache, fever and a stiff neck) opening line |  |
+| Ndine twenty four years. | answer about: age |  |
+| Kubva last night. | answer about: onset |  |
+| Hongu, zviri kuita worse. | answer about: worse |  |
 | Hongu, zvakanyanya. | answer about: severity |  |
-| Hongu, ndiri kupisa muviri. | answer about: fever |  |
-| Hongu, mutsipa wakaoma. | answer about: neck |  |
-| Musoro nemutsipa. | answer about: where |  |
+| Hongu, ndine temperature. | answer about: fever |  |
+| Hongu, neck iri stiff. | answer about: neck |  |
+| Head neneck. | answer about: where |  |
 | Kwete. | answer about: vomiting |  |
-| Mwana ane makore mana ane manyoka ane ropa kubva nezuro. | (A child with blood in the stool) opening line |  |
+| Mwana ane four years ane diarrhoea ine blood kubva yesterday. | (A child with blood in the stool) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane makore mana. | answer about: age |  |
-| Kubva nezuro. | answer about: onset |  |
-| Zvakangofanana. | answer about: worse |  |
-| Hongu, pane ropa mumanyoka. | answer about: bleeding |  |
+| Ane four years. | answer about: age |  |
+| Kubva yesterday. | answer about: onset |  |
+| Zviri just the same. | answer about: worse |  |
+| Hongu, pane blood mustool. | answer about: bleeding |  |
 | Hongu, ari kunwa. | answer about: drinking |  |
 | Kwete. | answer about: fever |  |
-| Kwete, haasi kurutsa. | answer about: vomiting |  |
-| Ndine pamuviri pemwedzi mishanu, ndiri kupisa muviri zvakanyanya uye ndiri kutonhorwa. | (A pregnant woman with a high fever) opening line |  |
-| Ndine makore makumi maviri nemaviri. | answer about: age |  |
-| Mazuva maviri apfuura. | answer about: onset |  |
+| Kwete, haasi kuvomita. | answer about: vomiting |  |
+| Ndiri pregnant, five months, ndine temperature yakanyanya uye ndiri kuita maChills. | (A pregnant woman with a high fever) opening line |  |
+| Ndine twenty two years. | answer about: age |  |
+| Two days ago. | answer about: onset |  |
 | Hongu. | answer about: worse |  |
-| Hongu, pemwedzi mishanu. | answer about: pregnancy |  |
-| Kwete, hapana ropa. | answer about: bleeding |  |
-| Hongu, zvakanyanya. | answer about: fever |  |
-| Mwana wangu atsva nemvura inopisa paruoko nepadumbu. | (A child scalded with hot water) opening line |  |
+| Hongu, five months. | answer about: pregnancy |  |
+| Kwete, hapana bleeding. | answer about: bleeding |  |
+| Hongu, yakanyanya. | answer about: fever |  |
+| Mwana wangu atsva nemvura inopisa paruoko nepachest. | (A child scalded with hot water) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane makore maviri. | answer about: age |  |
-| Awa imwe chete yapfuura. | answer about: onset |  |
-| Hongu, ari kuchema zvakanyanya. | answer about: severity |  |
-| Paruoko nepadumbu. | answer about: where |  |
-| Ndine dumbu riri kurwadza zvakanyanya kubva husiku, handisi kugona kumira ndakatwasuka. | (Severe abdominal pain since the night) opening line |  |
-| Ndine makore makumi matatu nerimwe. | answer about: age |  |
-| Kubva husiku hwapfuura. | answer about: onset |  |
-| Hongu, zviri kuwedzera. | answer about: worse |  |
+| Ane two years. | answer about: age |  |
+| One hour ago. | answer about: onset |  |
+| Hongu, ari kuchema nepain. | answer about: severity |  |
+| Paruoko nepachest. | answer about: where |  |
+| Ndine stomach pain yakanyanya kubva last night, handisi kugona kumira straight. | (Severe abdominal pain since the night) opening line |  |
+| Ndine thirty one years. | answer about: age |  |
+| Kubva last night. | answer about: onset |  |
+| Hongu, zviri kuita worse. | answer about: worse |  |
 | Hongu, zvakanyanya. | answer about: severity |  |
-| Mudumbu, kurudyi. | answer about: where |  |
+| Mustomach, kuright side. | answer about: where |  |
 | Kwete. | answer about: vomiting |  |
 | Kwete. | answer about: fever |  |
-| Ndave nemavhiki matatu ndichikosora, uye nezuro ndakosora ropa. | (Three weeks of cough, now with blood) opening line |  |
-| Ndine makore makumi mana nemashanu. | answer about: age |  |
-| Mavhiki matatu apfuura. | answer about: onset |  |
+| Ndave nethree weeks ndichikosora, uye yesterday ndakosora blood. | (Three weeks of cough, now with blood) opening line |  |
+| Ndine forty five years. | answer about: age |  |
+| Three weeks ago. | answer about: onset |  |
 | Hongu. | answer about: worse |  |
-| Hongu, ndakosora ropa nezuro. | answer about: bleeding |  |
-| Ndine musoro uri kurwadza uye ndiri kukosora. | (A woman with a headache and a cough) opening line |  |
-| Ndine makore makumi matatu nemaviri. | answer about: age |  |
-| Mazuva maviri apfuura. | answer about: onset |  |
-| Kwete, zvakangofanana. | answer about: worse |  |
-| Musoro. | answer about: where |  |
-| Zvishoma chete. | answer about: fever |  |
-| Ndauya kuzotora mapiritsi angu eBP, apera. | (A woman collecting her blood pressure tablets) opening line |  |
-| Ndine makore makumi matanhatu nemana. | answer about: age |  |
-| Mapiritsi apera nezuro. | answer about: onset |  |
+| Hongu, ndakosora blood yesterday. | answer about: bleeding |  |
+| Ndine headache uye ndiri kukosora. | (A woman with a headache and a cough) opening line |  |
+| Ndine thirty two years. | answer about: age |  |
+| Two days ago. | answer about: onset |  |
+| Kwete, zviri just the same. | answer about: worse |  |
+| Front yemusoro. | answer about: where |  |
+| Slight temperature chete. | answer about: fever |  |
+| Ndauya kuzotora maPills angu eBP, apera. | (A woman collecting her blood pressure tablets) opening line |  |
+| Ndine sixty four years. | answer about: age |  |
+| MaPills apera yesterday. | answer about: onset |  |
 | Hongu, ndine BP. | answer about: chronic |  |
-| Hongu, mapiritsi eBP. | answer about: medicines |  |
-| Kwete, hapana chiri kurwadza. | answer about: severity |  |
-| Mwana wangu ane makore matanhatu ane mapundu anovava pamaoko kwevhiki. | (A child with an itchy rash) opening line |  |
+| Hongu, maPills eBP. | answer about: medicines |  |
+| Kwete, hapana pain. | answer about: severity |  |
+| Mwana wangu ane six years ane rash inoita itch pamaoko kubva last week. | (A child with an itchy rash) opening line |  |
 | Mwana wangu. | answer about: who |  |
-| Ane makore matanhatu. | answer about: age |  |
-| Vhiki rapfuura. | answer about: onset |  |
-| Kwete, ari kufema zvakanaka. | answer about: breathing |  |
-| Hongu, ari kudya nekunwa zvakanaka. | answer about: drinking |  |
-| Kwete, haasi kupisa muviri. | answer about: fever |  |
-| Pamaoko. | answer about: where |  |
-| Ndine musana uri kurwadza kubva pandakasimudza saga svondo rapfuura. | (Backache after lifting a sack) opening line |  |
-| Ndine makore makumi mana nemaviri. | answer about: age |  |
-| Svondo rapfuura. | answer about: onset |  |
-| Musana, nechezasi. | answer about: where |  |
-| Ndauya kuzobaiwa jekiseni rekuronga mhuri. | (A family planning injection) opening line |  |
-| Ndine makore makumi maviri nemasere. | answer about: age |  |
-| Hapana chiri kurwadza. | answer about: onset |  |
-| Kwete, hapana chiri kurwadza. | answer about: severity |  |
-| Ndine zino riri kurwadza kwemazuva maviri. | (A toothache) opening line |  |
-| Ndine makore makumi matatu nemana. | answer about: age |  |
-| Mazuva maviri apfuura. | answer about: onset |  |
-| Zino rekuseri. | answer about: where |  |
-| Ndauya nemwana kuzobaiwa majekiseni ake emwedzi mipfumbamwe. | (A baby due for immunisation) opening line |  |
-| Mwana wangu, asi haasi kurwara. | answer about: who |  |
-| Ane mwedzi mipfumbamwe. | answer about: age |  |
-| Haasi kurwara, majekiseni chete. | answer about: onset |  |
-| Kwete, ari kufema zvakanaka. | answer about: breathing |  |
-| Hongu, ari kuyamwa zvakanaka. | answer about: drinking |  |
-| Kwete, haasi kupisa muviri. | answer about: fever |  |
-| Kwete, haasi kurutsa. | answer about: vomiting |  |
-| Ndine dzihwa nechipfuva kwemazuva matatu. | (A cold, with every danger sign denied) opening line |  |
-| Ndine makore makumi maviri nerimwe. | answer about: age |  |
-| Mazuva matatu apfuura. | answer about: onset |  |
-| Kwete, handisi kunetseka kufema. | answer about: breathing |  |
-| Kwete, hapana ropa randiri kuona. | answer about: bleeding |  |
-| Kwete, handina pamuviri. | answer about: pregnancy |  |
-| Kwete, handisi kupisa muviri. | answer about: fever |  |
-| Kwete, mutsipa hauna kuoma. | answer about: neck |  |
-| Ndine dumbu rinorwadza pandinenge ndiri kumwedzi. | (Period pain) opening line |  |
-| Ndine makore gumi nemanomwe. | answer about: age |  |
-| Mwedzi woga woga. | answer about: onset |  |
-| Ropa rekumwedzi chete, harina kuwanda. | answer about: bleeding |  |
-| Zviri pakati nepakati. | answer about: severity |  |
-| Dumbu rezasi. | answer about: where |  |
+| Ane six years. | answer about: age |  |
+| Last week. | answer about: onset |  |
+| Kwete, ari kufema normal. | answer about: breathing |  |
+| Hongu, ari kudya nekunwa normal. | answer about: drinking |  |
+| Kwete, haana temperature. | answer about: fever |  |
+| Pamaoko ese. | answer about: where |  |
+| Ndine back pain kubva pandakasimudza saga last week. | (Backache after lifting a sack) opening line |  |
+| Ndine forty two years. | answer about: age |  |
+| Last week. | answer about: onset |  |
+| Lower back. | answer about: where |  |
+| Ndauya kuzobaiwa injection yeFamily planning. | (A family planning injection) opening line |  |
+| Ndine twenty eight years. | answer about: age |  |
+| Hapana problem, ndauya kuinjection chete. | answer about: onset |  |
+| Kwete, hapana pain. | answer about: severity |  |
+| Ndine toothache, yava netwo days. | (A toothache) opening line |  |
+| Ndine thirty four years. | answer about: age |  |
+| Two days ago. | answer about: onset |  |
+| Zino rekuback. | answer about: where |  |
+| Ndauya nemwana kuzobaiwa maInjection ake enine months. | (A baby due for immunisation) opening line |  |
+| Mwana wangu, asi haasi sick. | answer about: who |  |
+| Ane nine months. | answer about: age |  |
+| Haasi sick, ndauya kumaInjection chete. | answer about: onset |  |
+| Kwete, ari kufema normal. | answer about: breathing |  |
+| Hongu, ari kuyamwa normal. | answer about: drinking |  |
+| Kwete, haana temperature. | answer about: fever |  |
+| Kwete, haasi kuvomita. | answer about: vomiting |  |
+| Ndine flu nechest, zvava nethree days. | (A cold, with every danger sign denied) opening line |  |
+| Ndine twenty one years. | answer about: age |  |
+| Three days ago. | answer about: onset |  |
+| Kwete, handina problem yekufema. | answer about: breathing |  |
+| Kwete, hapana blood randiri kuona. | answer about: bleeding |  |
+| Kwete, handisi pregnant. | answer about: pregnancy |  |
+| Kwete, handina temperature. | answer about: fever |  |
+| Kwete, neck haisi stiff. | answer about: neck |  |
+| Ndine maPeriod pains, dumbu rinorwadza every month. | (Period pain) opening line |  |
+| Ndine seventeen years. | answer about: age |  |
+| Every month. | answer about: onset |  |
+| Blood remaPeriods chete, harina kuwanda. | answer about: bleeding |  |
+| Zviri moderate. | answer about: severity |  |
+| Lower stomach. | answer about: where |  |
 

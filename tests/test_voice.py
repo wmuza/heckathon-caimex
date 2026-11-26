@@ -27,20 +27,20 @@ def fresh(tmp_path, monkeypatch):
     visits.SESSIONS.clear(); voice.CALLS.clear(); pharmacy.STATE.clear()
 
 
-@pytest.mark.parametrize("n,words", [(1, "poshi"), (10, "gumi"), (14, "gumi nemana"), (20, "makumi maviri"),
-                                     (35, "makumi matatu nemashanu"), (100, "zana"), (104, "zana nemana"), (250, "250")])
-def test_ticket_numbers_in_shona_words(n, words):
-    assert voice.shona_number(n) == words
+@pytest.mark.parametrize("n,words", [(1, "one"), (10, "ten"), (14, "fourteen"), (20, "twenty"),
+                                     (35, "thirty five"), (100, "one hundred"), (104, "one hundred and four"), (250, "250")])
+def test_ticket_numbers_in_words(n, words):
+    assert voice.number_words(n) == words
 
 
 def test_every_announcement_is_a_sentence_written_in_advance():
-    assert voice.call_text("sn", "doctor", 14) == "Nhamba gumi nemana, ndapota endai kuna chiremba."
+    assert voice.call_text("sn", "doctor", 14) == "Ticket fourteen, please endai kuna doctor."
     assert voice.call_text("en", "pharmacy", 7) == "Ticket 7, please go to the pharmacy."
     assert set(prompts.CALLS["sn"]) == set(prompts.CALLS["en"]) == set(voice.PLACES)
     assert set(prompts.HOW_SAY["sn"]) == set(prompts.HOW_SAY["en"]) == set(pharmacy.HOW)
     assert voice.how_text("sn", "something a model wrote") == prompts.HOW_SAY["sn"]["As directed"]
     # none of this is in the interview, so the model never sees it and the evaluated prompt is unchanged
-    assert "ndapota endai" not in prompts.interview_system("sn") and "Shandisai" not in prompts.interview_system("sn")
+    assert "please endai" not in prompts.interview_system("sn") and "Shandisai" not in prompts.interview_system("sn")
 
 
 def test_the_patient_is_called_on_as_they_move_and_the_board_holds_only_numbers(fresh):
@@ -56,7 +56,7 @@ def test_the_patient_is_called_on_as_they_move_and_the_board_holds_only_numbers(
     assert all(set(x) == {"id", "at", "number", "to", "langs"} for x in board["calls"])
     assert board["calls"][0]["langs"] == ["sn", "en"]                                 # the patient's language first
     assert c.get(f"/api/board?after={board['last']}").json()["calls"] == []
-    assert c.get(f"/api/board/{board['calls'][1]['id']}/sn.mp3").content == f"mp3:Nhamba {voice.shona_number(s['number'])}, ndapota endai kuna chiremba.".encode()
+    assert c.get(f"/api/board/{board['calls'][1]['id']}/sn.mp3").content == f"mp3:Ticket {voice.number_words(s['number'])}, please endai kuna doctor.".encode()
 
 
 def test_the_board_counts_who_waits_and_shows_only_fixed_public_notices(fresh, monkeypatch):
@@ -129,3 +129,22 @@ def test_dictation_writes_what_the_doctor_said_and_nothing_is_saved_until_the_do
     assert c.post("/api/dictate", files={"file": ("d.wav", b"tiny", "audio/wav")}).status_code == 400
     r = c.post("/api/dictate", files={"file": ("d.wav", b"RIFF" + b"0" * 9000, "audio/wav")}, data={"lang": "en"})
     assert r.json() == {"text": "Acute gastroenteritis"} and "consult" not in s
+
+
+def test_the_briefing_is_read_by_the_english_voice_and_falls_back(monkeypatch):
+    import asyncio
+    from app import config
+    asked = []
+
+    async def speak(text, lang, voice=None, model=None):
+        asked.append((lang, voice, model))
+        if model == config.STAFF_TTS_MODEL and fail:
+            raise gateway.GatewayError("down")
+        return b"mp3", {}
+    monkeypatch.setattr(gateway, "speak", speak)
+    fail = False
+    asyncio.run(gateway.speak_staff("Good morning."))
+    assert asked == [("en", config.STAFF_TTS_VOICE, config.STAFF_TTS_MODEL)]
+    fail = True
+    asyncio.run(gateway.speak_staff("Good morning."))
+    assert asked[-1] == ("en", None, None)          # the clinic's own voice reads it instead

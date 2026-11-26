@@ -254,3 +254,42 @@ def test_urgent_signs_in_mixed_speech(text, key):
 ])
 def test_mixed_speech_that_is_not_a_danger_sign(text):
     assert level(text) == "routine"
+
+
+# The wording the helper and the sample patients now use: everyday mixed Shona.
+@pytest.mark.parametrize("text,key,expect", [
+    ("Mwana ane problem yekufema", "breathing", "emergency"),
+    ("Ndazvicheka, blood riri kubuda rakawanda uye harisi kumira", "bleeding", "emergency"),
+    ("Blood harisi kustopper", "bleeding", "emergency"),
+    ("Ndine headache, ndine temperature, uye neck yangu iri stiff", "stiff_neck_fever", "emergency"),
+    ("Mwana ari kuvomita everything yaanodya", "cannot_drink", "emergency"),
+    ("Ndiri pregnant, ndatanga kubleeder this morning", "pregnancy_bleeding", "emergency"),
+    ("Neck yangu iri stiff", "stiff_neck", "urgent"),
+    ("Mwana wangu ane three weeks ane temperature", "young_baby", "urgent"),
+    ("Mwana ane diarrhoea ine blood kubva yesterday", "blood", "urgent"),
+    ("Pane blood mustool", "blood", "urgent"),
+    ("Yesterday ndakosora blood", "blood", "urgent"),
+])
+def test_signs_in_the_helpers_own_mixed_wording(text, key, expect):
+    assert key in keys(text)
+    assert level(text) == expect
+
+
+# A Shona denial in front of an English sign is still a denial.
+@pytest.mark.parametrize("text", [
+    "Kwete, handina problem yekufema",
+    "Kwete, neck haisi stiff",
+    "Ndiri pregnant, five months. Kwete, hapana bleeding.",
+    "Ndiri pregnant. Hapana blood randiri kuona.",
+    "Handina chest pain",
+    "Hapana blood mustool",
+    "Mwana haasi kunwa maPills",
+    "Mwana wangu ane six years ane rash kubva last week",
+    "Blood remaPeriods chete, harina kuwanda",
+])
+def test_mixed_denials_are_not_danger_signs(text):
+    assert level(text) == "routine"
+
+
+def test_an_english_sign_after_a_shona_denial_of_something_else_still_counts():
+    assert "chest_pain" in keys("Handina simba, ndine chest pain")
