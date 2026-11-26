@@ -450,11 +450,30 @@ async def call_ticket(sid: str, body: Call):
     return voice.call(_visit(sid), body.to)
 
 
+_NOTICES: dict = {"at": 0.0, "list": []}
+
+
+def _board_notices() -> list[dict]:
+    """Health notices for the room: the fixed public sentence for each illness at high risk, or with an
+    outbreak reported, in this clinic's province. Worked out at most once a minute."""
+    if time.time() - _NOTICES["at"] > 60:
+        try:
+            ws = [w for w in national.for_clinic() if w["level"] in ("confirmed", "likely")]
+        except Exception:
+            ws = []
+        _NOTICES.update(at=time.time(), list=[{"disease": w["disease"], "level": w["level"], "picture": w["picture"],
+                                               **{lang: voice.warn_text(lang, w["disease"]) for lang in config.LANGS}} for w in ws])
+    return _NOTICES["list"]
+
+
 @app.get("/api/board")
 async def board(after: int = 0):
-    """The waiting-room board. Open to the room: it holds ticket numbers and where to go, nothing else."""
+    """The waiting-room board. Open to the room: ticket numbers and where to go, how many are waiting,
+    and the province's public health notices. Nothing about any one patient."""
     return {"calls": [{k: c[k] for k in ("id", "at", "number", "to", "langs")} for c in voice.CALLS if c["id"] > after][-12:],
-            "last": voice.CALLS[-1]["id"] if voice.CALLS else 0, "now": time.time()}
+            "last": voice.CALLS[-1]["id"] if voice.CALLS else 0, "now": time.time(),
+            "waiting": sum(1 for s in visits.SESSIONS.values() if s["status"] in ("summarising", "ready")),
+            "notices": _board_notices()}
 
 
 @app.get("/api/board/{call_id}/{lang}.mp3")

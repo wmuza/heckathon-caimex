@@ -9,23 +9,85 @@
 <script src="theme.js"></script>
 <script src="art.js"></script>
 <style>
-  :root { --col: 1100px; }
+  /* The waiting-room screen. Open to the room: ticket numbers and where to go, how many are waiting,
+     and the province's public health notices. Nothing about any one patient. */
+  :root { --col: 1320px; }
+  body { display: flex; flex-direction: column; min-height: 100dvh; }
+  .wrap { flex: 1; width: 100%; padding-top: 20px; }
   .band-in { flex-wrap: wrap; }
-  .now { display: grid; grid-template-columns: minmax(140px, 260px) 1fr; gap: 28px; align-items: center; min-height: 320px; }
-  .now .art { width: 100%; aspect-ratio: 1; border-radius: 28px; background: var(--panel-sunk); padding: 16px; }
-  .now .lab { font-size: 1.25rem; font-weight: 600; color: var(--ink-2); }
-  .now .no { font-size: clamp(5rem, 16vw, 11rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-  .now .to { font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin-top: 8px; color: var(--blue-ink); }
-  .now .to small { display: block; font-size: 0.6em; font-weight: 600; color: var(--ink-2); }
-  .now.flash { animation: flash 1.2s ease-out; }
-  @keyframes flash { from { box-shadow: 0 0 0 6px var(--blue-fill); } to { box-shadow: var(--shadow-panel); } }
-  .past { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
-  .past div { background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 12px 16px; }
-  .past b { font-size: 1.75rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .past span { display: block; color: var(--ink-2); font-weight: 600; font-size: 0.9375rem; }
-  .quietbox { text-align: center; padding: 48px 20px; }
   .sound { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  @media (max-width: 560px) { .now { grid-template-columns: 1fr; } .now .art { max-width: 160px; } }
+
+  /* The screen fills the window: the call and the clock, the three counters, then notices and steps */
+  .board { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-rows: minmax(250px, 1fr) auto auto; gap: 16px;
+    min-height: calc(100dvh - 240px); }
+  .board > .wide { grid-column: 1 / -1; }
+
+  /* Now calling */
+  .now { display: grid; grid-template-columns: minmax(120px, 200px) 1fr; gap: 28px; align-items: center; padding: 24px 28px; }
+  .now .art { width: 100%; aspect-ratio: 1; border-radius: 28px; background: var(--panel-sunk); padding: 16px; }
+  .now .lab { font-size: 1.25rem; font-weight: 700; color: var(--ink-2); }
+  .now .no { font-size: clamp(5rem, 13vw, 10rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--navy); }
+  .now .to { font-size: clamp(1.5rem, 3.4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin-top: 8px; color: var(--blue-ink); }
+  .now .to small, .now .idle-en { display: block; font-size: 0.6em; font-weight: 600; color: var(--ink-2); }
+  .now.calling { box-shadow: inset 0 0 0 3px var(--blue-fill), var(--shadow-panel); }
+  .now.flash { animation: flash 1.2s ease-out; }
+  @keyframes flash { from { box-shadow: 0 0 0 8px var(--brand-red); } to { box-shadow: inset 0 0 0 3px var(--blue-fill), var(--shadow-panel); } }
+  /* Navy numbers on light; on the dark theme, the ink colour, so they never sink into the panel */
+  [data-theme="dark"] .now .no, [data-theme="dark"] .place .last b:not(.none) { color: var(--ink); }
+  .now .idle-t { font-size: clamp(1.75rem, 3.6vw, 2.75rem); font-weight: 700; line-height: 1.15; }
+  .now .idle-en { font-size: 1.125rem; margin-top: 10px; }
+
+  /* The clock, the welcome and how many are waiting */
+  .clock { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding: 24px 28px;
+    background: var(--navy); color: var(--on-navy); border: 0; border-bottom: 6px solid var(--brand-red); }
+  .clock .tm { font-size: clamp(3rem, 6vw, 4.75rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .clock .dt { font-size: 1.125rem; font-weight: 600; color: var(--on-navy-2); margin-top: 8px; }
+  .clock .hi { font-size: 1.625rem; font-weight: 700; line-height: 1.2; }
+  .clock .hi small { display: block; font-size: 0.6em; font-weight: 600; color: var(--on-navy-2); }
+  .clock .wt { display: flex; align-items: baseline; gap: 10px; padding-top: 16px; border-top: 1px solid var(--navy-line); }
+  .clock .wt b { font-size: 2.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .clock .wt span { font-weight: 600; color: var(--on-navy-2); }
+
+  /* One counter for each place a ticket is sent */
+  .places { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .place { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 4px 16px; align-items: center; padding: 16px 20px; }
+  .place .art { width: 64px; height: 64px; border-radius: 18px; background: var(--panel-sunk); padding: 6px; grid-row: span 2; }
+  .place .nm { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .place .nm small { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .place .last { display: flex; align-items: baseline; gap: 10px; }
+  .place .last b { font-size: 2.5rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; color: var(--navy); }
+  .place .last span { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .place .last b.none { color: var(--ink-2); font-weight: 600; }
+  .place .before { grid-column: 1 / -1; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-height: 26px; padding-top: 8px; margin-top: 4px; border-top: 1px solid var(--divider); font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .place .before i { font-style: normal; font-weight: 700; color: var(--ink); padding: 2px 10px; border-radius: 999px; background: var(--panel-sunk); font-variant-numeric: tabular-nums; }
+
+  /* Health notice and the steps */
+  .lower { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; }
+  .notice-card { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 16px; align-items: center; padding: 20px 22px;
+    background: var(--red-tint); border-color: transparent; box-shadow: inset 6px 0 0 var(--red-fill), var(--shadow-panel); }
+  .notice-card.likely { background: var(--warn-tint); box-shadow: inset 6px 0 0 var(--warn-dot), var(--shadow-panel); }
+  .notice-card .art { width: 76px; height: 76px; border-radius: 18px; background: var(--panel); padding: 6px; }
+  .notice-card .k { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--red-ink); }
+  .notice-card.likely .k { color: var(--warn-ink); }
+  .notice-card .sn { font-size: 1.25rem; font-weight: 700; line-height: 1.35; margin-top: 4px; }
+  .notice-card .en { color: var(--ink-2); margin-top: 6px; }
+  .steps { padding: 18px 22px; }
+  .steps h2 { font-size: 0.8125rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-ink); }
+  .steps ol { list-style: none; padding: 0; margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; counter-reset: s; }
+  .steps li { counter-increment: s; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 10px 8px; border-radius: 16px; background: var(--panel-sunk); }
+  .steps li .art { width: 52px; height: 52px; }
+  .steps li b { font-size: 1rem; line-height: 1.25; }
+  .steps li b::before { content: counter(s) ". "; color: var(--brand-red); }
+  .steps li span { font-size: 0.8125rem; color: var(--ink-2); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .board { grid-template-columns: 1fr; grid-template-rows: auto; min-height: 0; }
+    .places { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .now { grid-template-columns: 1fr; padding: 20px; } .now .art { max-width: 150px; }
+    .steps ol { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -44,39 +106,80 @@
 </header>
 
 <div class="wrap">
-  <section class="panel now" id="now" hidden aria-live="polite">
-    <div class="art" id="nowArt"></div>
-    <div><p class="lab" id="nowLab"></p><p class="no" id="nowNo"></p><p class="to" id="nowTo"></p></div>
-  </section>
-  <section class="panel quietbox" id="idle">
-    <p class="title">No number is being called</p>
-    <p class="quiet">Please stay seated. Your number will be shown and said here.</p>
-  </section>
-  <div class="past" id="past" aria-label="Called earlier"></div>
+  <div class="board">
+    <section class="panel now" id="now" aria-live="polite">
+      <div class="art" id="nowArt"></div>
+      <div id="nowText"></div>
+    </section>
+
+    <section class="panel clock" aria-label="Time and welcome">
+      <div><div class="tm" id="tm"></div><div class="dt" id="dt"></div></div>
+      <div class="hi" lang="sn">Mauya kuClinic<small lang="en">Welcome to the clinic</small></div>
+      <div class="wt"><b id="waiting">0</b><span id="waitingT">waiting to see the nurse</span></div>
+    </section>
+
+    <div class="places wide" id="places" aria-label="Last called to each place"></div>
+
+    <div class="lower wide">
+      <div id="notices" style="display:contents"></div>
+      <section class="panel steps" aria-labelledby="stepsT">
+        <h2 id="stepsT">How it works · Zvinoita sei</h2>
+        <ol>
+          <li><span class="art" id="st1"></span><b lang="sn">Taurai, mukurumidze kubatsirwa</b><span>Speak to the helper, and be helped sooner</span></li>
+          <li><span class="art" id="st2"></span><b lang="sn">Garai muchimirira</b><span>Take a seat and wait</span></li>
+          <li><span class="art" id="st3"></span><b lang="sn">Teererai nhamba yenyu</b><span>Listen for your number, then go where it says</span></li>
+        </ol>
+      </section>
+    </div>
+  </div>
 </div>
 <audio id="player" hidden></audio>
 
 <script>
 const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // Where to go, in both languages, with the picture for it. Shona written by an AI assistant: to be read by a native speaker.
 const PLACE = {
-  nurse: { en: 'Go to the nurse', sn: 'Endai kuna mukoti', pic: 'nurse_coming' },
-  doctor: { en: 'Go to the doctor', sn: 'Endai kuna chiremba', pic: 'not_doctor' },
-  pharmacy: { en: 'Go to the pharmacy', sn: 'Endai kunotora mishonga', pic: 'medicines' },
+  nurse: { en: 'Go to the nurse', sn: 'Endai kuna mukoti', pic: 'nurse_coming', name: 'Nurse', snName: 'Mukoti' },
+  doctor: { en: 'Go to the doctor', sn: 'Endai kuna chiremba', pic: 'not_doctor', name: 'Doctor', snName: 'Chiremba' },
+  pharmacy: { en: 'Go to the pharmacy', sn: 'Endai kunotora mishonga', pic: 'medicines', name: 'Pharmacy', snName: 'Mishonga' },
 };
-let last = null, shown = [], queue = [], playing = false, sound = false;
+const pic = name => name === 'not_doctor' ? 'welcome' : name;      // the doctor's own picture says "not a doctor"
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+let last = null, shown = [], queue = [], playing = false, sound = false, waiting = 0, notices = [];
 
 function render() {
   const c = shown[shown.length - 1];
-  $('now').hidden = !c; $('idle').hidden = !!c;
+  $('now').classList.toggle('calling', !!c);
   if (c) {
     const p = PLACE[c.to];
-    $('nowLab').textContent = 'Nhamba · Ticket';
-    $('nowNo').textContent = c.number;
-    $('nowTo').innerHTML = `${p.sn}<small>${p.en}</small>`;
-    Art.show($('nowArt'), p.pic === 'not_doctor' ? 'welcome' : p.pic, p.en);
+    $('nowText').innerHTML = `<p class="lab">Nhamba · Ticket</p><p class="no">${c.number}</p><p class="to"><span lang="sn">${p.sn}</span><small>${p.en}</small></p>`;
+    Art.show($('nowArt'), pic(p.pic), p.en);
+  } else {
+    $('nowText').innerHTML = `<p class="lab">Nhamba · Ticket</p><p class="idle-t" lang="sn">Garai muchimirira, mukoti achakudaidzai.</p>
+      <p class="idle-en">Please stay seated. Your number will be shown and said here.</p>`;
+    Art.show($('nowArt'), 'wait', 'Please stay seated');
   }
-  $('past').innerHTML = shown.slice(0, -1).reverse().slice(0, 8).map(x => `<div><b>${x.number}</b><span>${PLACE[x.to].en}</span></div>`).join('');
+  $('places').innerHTML = Object.entries(PLACE).map(([k, p]) => {
+    const calls = shown.filter(x => x.to === k), lastOne = calls[calls.length - 1];
+    const before = calls.slice(0, -1).reverse().slice(0, 4);
+    return `<section class="panel place"><span class="art" id="pl-${k}" aria-hidden="true"></span>
+      <span class="nm">${p.name}<small lang="sn">${p.snName}</small></span>
+      <span class="last">${lastOne ? `<b>${lastOne.number}</b><span>last called</span>` : '<b class="none">–</b><span>no one called yet</span>'}</span>
+      <span class="before">${before.length ? 'Before: ' + before.map(x => `<i>${x.number}</i>`).join('') : 'No earlier calls'}</span></section>`;
+  }).join('');
+  Object.entries(PLACE).forEach(([k, p]) => Art.show($('pl-' + k), pic(p.pic), ''));
+  $('waiting').textContent = waiting;
+  $('waitingT').textContent = waiting === 1 ? 'person waiting to see the nurse' : 'people waiting to see the nurse';
+  $('notices').innerHTML = notices.map((n, i) => `<section class="panel notice-card ${n.level}" role="note">
+      <span class="art" id="nt-${i}" aria-hidden="true"></span>
+      <div><p class="k">Health notice · Yambiro</p><p class="sn" lang="sn">${esc(cap(n.sn.replace(/^Yambiro:\s*/, '')))}</p><p class="en" lang="en">${esc(cap(n.en.replace(/^Warning:\s*/, '')))}</p></div></section>`).join('');
+  notices.forEach((n, i) => Art.show($('nt-' + i), n.picture, ''));
+}
+function tick() {
+  const d = new Date();
+  $('tm').textContent = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  $('dt').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 /* Say each call in the patient's language, then the other, one call after another. */
 async function speak() {
@@ -100,8 +203,10 @@ async function poll() {
     const first = last === null;
     const r = await fetch('/api/board?after=' + (first ? 0 : last));
     const j = await r.json();
+    const sig = JSON.stringify([j.waiting, j.notices]), changed = sig !== poll.sig;
+    poll.sig = sig; waiting = j.waiting || 0; notices = j.notices || [];
     if (first) { last = j.last; shown = j.calls; render(); return; }      // what was called before the board opened is shown, not said again
-    if (!j.calls.length) return;
+    if (!j.calls.length) { if (changed) render(); return; }
     last = j.last;
     shown = shown.concat(j.calls).slice(-12);
     queue.push(...j.calls);
@@ -115,7 +220,9 @@ $('soundOn').onclick = () => {
   const a = $('player'); a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA='; a.play().catch(() => {});
   sound = true; $('soundOn').hidden = true; $('soundOk').hidden = false; speak();
 };
-Art.warm(['nurse_coming', 'welcome', 'medicines']);
+Art.warm(['nurse_coming', 'welcome', 'medicines', 'wait', 'listening', 'vomiting', 'fever', 'breathing']);
+Art.show($('st1'), 'welcome', ''); Art.show($('st2'), 'wait', ''); Art.show($('st3'), 'listening', '');
+tick(); setInterval(tick, 15000);
 poll(); setInterval(poll, 2000);
 </script>
 </body>

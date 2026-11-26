@@ -59,6 +59,20 @@ def test_the_patient_is_called_on_as_they_move_and_the_board_holds_only_numbers(
     assert c.get(f"/api/board/{board['calls'][1]['id']}/sn.mp3").content == f"mp3:Nhamba {voice.shona_number(s['number'])}, ndapota endai kuna chiremba.".encode()
 
 
+def test_the_board_counts_who_waits_and_shows_only_fixed_public_notices(fresh, monkeypatch):
+    for status in ("ready", "summarising", "talking", "seen"):
+        visits.new("sn")["status"] = status
+    monkeypatch.setattr(server.national, "for_clinic", lambda now=None: [
+        {"disease": "diarrhoeal", "level": "confirmed", "picture": "vomiting", "advice": "for staff", "drivers": []},
+        {"disease": "malaria", "level": "watch", "picture": "fever", "advice": "for staff", "drivers": []}])
+    server._NOTICES["at"] = 0
+    board = TestClient(server.app).get("/api/board").json()
+    assert board["waiting"] == 2                                                        # waiting for the nurse only
+    assert board["notices"] == [{"disease": "diarrhoeal", "level": "confirmed", "picture": "vomiting",
+                                 "sn": prompts.WARN_SAY["sn"]["diarrhoeal"], "en": prompts.WARN_SAY["en"]["diarrhoeal"]}]
+    server._NOTICES["at"] = 0
+
+
 def test_no_pharmacy_call_when_nothing_was_prescribed():
     s = visits.new("en"); s["status"] = "seen"
     TestClient(server.app).post(f"/api/visits/{s['id']}/consult", json={"diagnosis": "Headache", "outcome": "treated"})
