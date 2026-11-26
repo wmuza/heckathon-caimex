@@ -14,13 +14,14 @@
   .wrap { padding-top: 20px; }
   .layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 20px; align-items: start; }
   /* The queue: one panel that stays in view while the nurse reads a note */
-  #listCol { position: sticky; top: 84px; max-height: calc(100dvh - 104px); display: flex; flex-direction: column; padding: 0; overflow: hidden; }
-  .q-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 16px 20px 14px; border-bottom: 1px solid var(--divider); }
+  /* The queue: a card for each patient, as on the doctor's page. The column stays in view while a note is read. */
+  #listCol { position: sticky; top: 84px; max-height: calc(100dvh - 104px); display: flex; flex-direction: column; }
+  .q-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 2px 6px 6px; }
   .q-head h2 { font-size: 1.0625rem; font-weight: 700; }
-  .list { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px 10px; overflow-y: auto; min-height: 0; }
-  .list > * { flex-shrink: 0; }            /* rows keep their height; the list scrolls instead */
-  .group { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); margin: 16px 12px 6px; }
-  .group:first-child { margin-top: 8px; }
+  .list { display: flex; flex-direction: column; gap: 10px; padding: 4px 6px 12px; overflow-y: auto; min-height: 0; }
+  .list > * { flex-shrink: 0; }            /* cards keep their height; the list scrolls instead */
+  .group { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 10px 2px 0; }
+  .group:first-child { margin-top: 0; }
 
   /* The level as a shape, so it never depends on colour alone:
      emergency a solid disc with a mark, urgent a ring with a dot, routine an open ring with a tick. */
@@ -38,23 +39,23 @@
 
   /* One patient in the queue: level, picture, a line of words, the wait */
   .row {
-    display: grid; grid-template-columns: 28px 48px minmax(0, 1fr) auto; gap: 4px 12px; width: 100%; text-align: left; cursor: pointer;
-    background: transparent; border: 0; border-radius: 14px; padding: 10px 12px; color: inherit;
-    min-height: 48px; align-items: center; transition: background 120ms ease;
+    display: grid; grid-template-columns: 28px 52px minmax(0, 1fr) auto; gap: 4px 12px; width: 100%; text-align: left; cursor: pointer;
+    background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 12px 14px; color: inherit;
+    box-shadow: var(--shadow-panel); min-height: 48px; align-items: center; transition: border-color 160ms ease, box-shadow 160ms ease;
   }
-  .row:hover { background: var(--panel-sunk); }
-  .row .pict { width: 48px; height: 48px; border-radius: 12px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--hairline); padding: 4px; }
+  .row:hover { border-color: var(--blue-fill); }
+  .row .pict { width: 52px; height: 52px; border-radius: 14px; background: var(--panel-sunk); padding: 6px; }
   .row .cc { font-weight: 600; overflow-wrap: anywhere; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .row .sub { color: var(--ink-2); font-size: 0.8125rem; font-weight: 600; margin-top: 2px; display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: center; }
   .row .tk { font-variant-numeric: tabular-nums; color: var(--ink); }
   .row .smp { font-size: 0.6875rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: var(--neutral-tint); color: var(--neutral-ink); }
-  .row[aria-current="true"] { background: var(--selected); box-shadow: inset 4px 0 0 var(--blue-fill); }
+  .row[aria-current="true"] { border-color: var(--blue-fill); box-shadow: 0 0 0 2px var(--blue-fill), var(--shadow-panel); }
   .row .here { width: 20px; height: 20px; color: var(--blue-ink); visibility: hidden; }
   .row[aria-current="true"] .here { visibility: visible; }
-  .row.line { grid-template-columns: 28px minmax(0, 1fr) auto; padding-top: 8px; padding-bottom: 8px; }
+  .row.line { grid-template-columns: 28px minmax(0, 1fr) auto; padding-top: 10px; padding-bottom: 10px; background: var(--panel-sunk); box-shadow: none; }
   .row.line .cc { font-weight: 400; color: var(--ink-2); -webkit-line-clamp: 1; }
   .row.fresh { animation: arrive 1.8s ease-out 1; }
-  @keyframes arrive { 0% { transform: translateY(-10px); opacity: 0; } 25% { transform: none; opacity: 1; background: var(--selected); } 100% { background: transparent; } }
+  @keyframes arrive { 0% { transform: translateY(-10px); opacity: 0; } 25% { transform: none; opacity: 1; background: var(--selected); } 100% { background: var(--panel); } }
   .still svg * { animation: none !important; }      /* pictures in the list stay still; only the open one moves */
 
   /* How long they have waited: a ring that fills over an hour, minutes in the middle */
@@ -257,10 +258,10 @@
 
 <div class="wrap">
   <div class="layout">
-    <section id="listCol" class="panel" aria-labelledby="qTitle">
+    <section id="listCol" aria-labelledby="qTitle">
       <div class="q-head"><h2 id="qTitle">Queue</h2><span class="quiet small strong" id="qSum"></span></div>
       <div id="list" class="list" aria-label="Patients"></div>
-      <div id="empty" class="empty" hidden>
+      <div id="empty" class="panel empty" hidden>
         <div class="art" id="emptyArt" hidden></div>
         <p class="strong">No one is waiting</p>
         <button id="fill" class="btn sm">Load the sample patients</button>
