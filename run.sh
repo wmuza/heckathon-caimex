@@ -7,6 +7,7 @@ if [ ! -f .env ]; then
   exit 1
 fi
 echo "Mukoti is starting. Give it a minute before a demo."
+echo "  Welcome        http://127.0.0.1:$PORT/welcome"
 echo "  Patient        http://127.0.0.1:$PORT"
 echo "  Nurse's queue  http://127.0.0.1:$PORT/nurse"
 echo "  Vitals         http://127.0.0.1:$PORT/vitals"

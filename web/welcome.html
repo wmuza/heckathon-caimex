@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: welcome</title>
+<meta name="description" content="Mukoti is Shona for nurse. A Shona and English voice helper that prepares a triage note for the clinic nurse.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<style>
+  /* The welcome page has its own look: navy blue and red, the team's colours.
+     As in app.css, colour literals live only in these two token blocks. */
+  :root, [data-theme="light"] {
+    --navy: #0B1F4D; --navy-2: #15306B; --navy-line: #2A4785;
+    --on-navy: #FFFFFF; --on-navy-2: #C9D4EC;
+    --red: #D22630; --red-press: #B01E27; --red-text: #B4232A; --red-soft: #FBE9EA;
+    --w-page: #F5F7FB; --w-panel: #FFFFFF; --w-ink: #0E1B3D; --w-ink-2: #4A5672;
+    --w-line: #DCE3F0; --w-tint: #E8EEF9;
+    --w-shadow: 0 1px 2px rgba(11, 31, 77, 0.06), 0 14px 32px -18px rgba(11, 31, 77, 0.35);
+    --art-ink: #0B1F4D; --art-paper: #FFFFFF; --art-tint: #E8EEF9; --art-accent: #D22630; --art-quiet: #4A5672;
+    --art-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.55);
+    --focus: #0B1F4D; --strong: #0B1F4D;
+  }
+  [data-theme="dark"] {
+    --navy: #0A1838; --navy-2: #122552; --navy-line: #2A4785;
+    --on-navy: #FFFFFF; --on-navy-2: #BFCBE6;
+    --red: #D22630; --red-press: #E0434C; --red-text: #FF9AA0; --red-soft: #3A1620;
+    --w-page: #060D20; --w-panel: #0E1A36; --w-ink: #F1F4FA; --w-ink-2: #B5C0D8;
+    --w-line: #22335C; --w-tint: #15254A;
+    --w-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    --art-ink: #F1F4FA; --art-paper: #0E1A36; --art-tint: #15254A; --art-accent: #FF8A90; --art-quiet: #B5C0D8;
+    --art-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+    --focus: #FFFFFF; --strong: #233F80;
+  }
+
+  body { background: var(--w-page); color: var(--w-ink); }
+  .w-col { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  a { color: var(--red-text); }
+
+  /* Navy top: header and the first view */
+  .top { background: linear-gradient(170deg, var(--navy) 0%, var(--navy) 55%, var(--navy-2) 100%); color: var(--on-navy); border-top: 6px solid var(--red); }
+  .top :focus-visible { outline-color: var(--on-navy); }
+  .w-head { display: flex; align-items: center; gap: 14px; padding-top: 18px; padding-bottom: 18px; }
+  .w-logo { display: flex; align-items: center; gap: 12px; color: var(--on-navy); text-decoration: none; font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; }
+  .w-logo svg { width: 40px; height: 40px; flex: none; }
+  .w-head nav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+  .w-head nav a { color: var(--on-navy-2); text-decoration: none; font-weight: 600; font-size: 0.9375rem; padding: 10px 14px; border-radius: 999px; }
+  .w-head nav a:hover { color: var(--on-navy); background: var(--navy-2); }
+
+  .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; padding-top: 40px; padding-bottom: 72px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--navy-line); color: var(--on-navy-2); font-size: 0.8125rem; font-weight: 600; }
+  .chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+  .hero h1 { font-size: clamp(3.25rem, 9vw, 6rem); font-weight: 700; line-height: 1; letter-spacing: -0.03em; margin-top: 22px; }
+  .meaning { margin-top: 18px; font-size: clamp(1.375rem, 3vw, 1.875rem); font-weight: 600; line-height: 1.25; }
+  .meaning b { font-weight: 700; }
+  .meaning .nurse { box-shadow: inset 0 -0.18em 0 var(--red); }
+  .lead { margin-top: 18px; max-width: 34em; color: var(--on-navy-2); font-size: 1.125rem; line-height: 1.6; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .w-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 24px; border-radius: 999px; font-weight: 700; text-decoration: none; transition: transform 160ms ease, background 160ms ease; }
+  .w-btn svg { width: 18px; height: 18px; }
+  .w-btn:active { transform: scale(0.98); }
+  .w-btn.red { background: var(--red); color: var(--on-navy); }
+  .w-btn.red:hover { background: var(--red-press); }
+  .w-btn.line { color: var(--on-navy); box-shadow: inset 0 0 0 1.5px var(--on-navy-2); }
+  .w-btn.line:hover { background: var(--navy-2); }
+
+  .art-card {
+    --ink: var(--art-ink); --paper: var(--art-paper); --tint: var(--art-tint); --accent: var(--art-accent); --quiet: var(--art-quiet);
+    background: var(--art-paper); color: var(--w-ink); border-radius: 28px; padding: 28px 28px 22px; box-shadow: var(--art-shadow);
+    border-bottom: 6px solid var(--red);
+  }
+  .art-card .art { aspect-ratio: 1; max-width: 340px; margin: 0 auto; }
+  .art-card .art svg { width: 100%; height: 100%; display: block; }
+  .art-card figcaption { text-align: center; margin-top: 8px; }
+  .art-card .sn { font-size: 1.5rem; font-weight: 700; color: var(--w-ink); }
+  .art-card .en { color: var(--w-ink-2); font-size: 0.9375rem; }
+
+  /* Sections below the navy */
+  section.w-sec { padding: 72px 0; }
+  section.w-sec + section.w-sec { padding-top: 0; }
+  .kicker { color: var(--red-text); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .w-sec h2 { font-size: clamp(1.75rem, 3.6vw, 2.375rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-top: 8px; }
+  .w-sec .intro { color: var(--w-ink-2); font-size: 1.0625rem; max-width: 40em; margin-top: 12px; }
+
+  .name { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .name p + p { margin-top: 14px; }
+  .name .body { color: var(--w-ink-2); font-size: 1.0625rem; line-height: 1.65; margin-top: 16px; }
+  .name .body b { color: var(--w-ink); }
+  .quote { background: var(--w-panel); border: 1px solid var(--w-line); border-left: 6px solid var(--red); border-radius: 20px; padding: 26px 28px; box-shadow: var(--w-shadow); }
+  .quote .said { font-size: 0.8125rem; font-weight: 700; color: var(--w-ink-2); }
+  .quote blockquote { margin: 10px 0 0; font-size: 1.25rem; font-weight: 600; line-height: 1.45; color: var(--w-ink); }
+  .quote .tr { margin-top: 12px; color: var(--w-ink-2); }
+
+  .steps { list-style: none; padding: 0; margin-top: 32px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: step; }
+  .steps li { background: var(--w-panel); border: 1px solid var(--w-line); border-radius: 20px; padding: 22px; box-shadow: var(--w-shadow); counter-increment: step; }
+  .steps li::before { content: counter(step); display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--strong); color: var(--on-navy); font-weight: 700; }
+  .steps li.alarm::before { background: var(--red); }
+  .steps h3 { font-size: 1.0625rem; font-weight: 700; margin-top: 16px; line-height: 1.3; }
+  .steps p { color: var(--w-ink-2); margin-top: 6px; font-size: 0.9375rem; }
+
+  .facts { margin-top: 32px; background: var(--navy); color: var(--on-navy); border-radius: 28px; padding: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .facts .big { font-size: clamp(2.25rem, 4.6vw, 3rem); font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .facts .big::after { content: ""; display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--red); margin-top: 14px; }
+  .facts .what { margin-top: 14px; font-weight: 600; line-height: 1.45; }
+  .facts .caveat { margin-top: 8px; color: var(--on-navy-2); font-size: 0.875rem; }
+
+  .screens { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 32px; }
+  .screen { display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; border-radius: 18px; background: var(--w-panel); border: 1px solid var(--w-line); color: var(--w-ink); text-decoration: none; box-shadow: var(--w-shadow); transition: transform 160ms ease, border-color 160ms ease; }
+  .screen:hover { border-color: var(--red); transform: translateY(-2px); }
+  .screen .nm { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 700; font-size: 1.0625rem; }
+  .screen .nm svg { width: 18px; height: 18px; color: var(--red-text); flex: none; }
+  .screen .for { color: var(--w-ink-2); font-size: 0.9375rem; }
+  .screen code { margin-top: 6px; font: 600 0.8125rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--w-ink-2); }
+  .screen.lead-card { background: var(--strong); border-color: var(--strong); color: var(--on-navy); }
+  .screen.lead-card .for, .screen.lead-card code { color: var(--on-navy-2); }
+  .screen.lead-card .nm svg { color: var(--on-navy); }
+
+  .w-foot { border-top: 1px solid var(--w-line); padding: 28px 0 40px; }
+  .w-foot .w-col { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
+  .w-foot p { color: var(--w-ink-2); font-size: 0.9375rem; max-width: 46em; }
+  .w-foot .seg { background: var(--w-tint); }
+  .w-foot .seg button { color: var(--w-ink-2); }
+  .w-foot .seg button[aria-pressed="true"] { background: var(--w-panel); color: var(--w-ink); box-shadow: 0 0 0 1px var(--w-line); }
+  .w-foot .seg button .ck { color: var(--red-text); }
+
+  @media (max-width: 960px) {
+    .hero, .name { grid-template-columns: 1fr; }
+    .hero { gap: 36px; padding-top: 16px; }
+    .art-card { max-width: 420px; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .facts { grid-template-columns: 1fr; padding: 32px; }
+  }
+  @media (max-width: 560px) {
+    .w-col { padding: 0 18px; }
+    .steps { grid-template-columns: 1fr; }
+    .w-head nav a:not(.keep) { display: none; }
+    section.w-sec { padding: 56px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <header class="w-col w-head">
+    <a class="w-logo" href="/welcome" aria-label="Mukoti, welcome page">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="var(--on-navy)"/><g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path stroke="var(--navy)" d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path stroke="var(--red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>
+      Mukoti
+    </a>
+    <nav aria-label="On this page">
+      <a href="#name">The name</a>
+      <a href="#how">How it works</a>
+      <a href="#screens">Screens</a>
+      <a class="keep" href="/engine">Engine</a>
+    </nav>
+  </header>
+
+  <div class="w-col hero">
+    <div>
+      <span class="chip"><i aria-hidden="true"></i>Econet AI hackathon, 25 November 2026</span>
+      <h1>Mukoti</h1>
+      <p class="meaning"><b lang="sn">Mukoti</b> is Shona for <b class="nurse">nurse</b>.</p>
+      <p class="lead">The first person every patient talks to at the clinic, in Shona or English.
+        It listens, asks up to six short questions aloud, and gives the nurse a note in English
+        and a queue with the most urgent patient at the top.</p>
+      <div class="ctas">
+        <a class="w-btn red" href="/demo">Start the demo
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        <a class="w-btn line" href="/">Open the patient screen</a>
+      </div>
+    </div>
+    <figure class="art-card">
+      <div class="art" id="artWelcome"></div>
+      <figcaption>
+        <div class="sn" lang="sn">Mauya kukiriniki</div>
+        <div class="en">Welcome to the clinic</div>
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
+<main>
+  <section class="w-sec" id="name" aria-labelledby="nameH">
+    <div class="w-col name">
+      <div>
+        <p class="kicker">The name</p>
+        <h2 id="nameH">Named for the person it helps</h2>
+        <div class="body">
+          <p><b lang="sn">Mukoti</b> is Shona for <b>nurse</b>. The product is the nurse's helper, and
+            when it speaks to a patient it calls itself <b lang="sn">mubatsiri</b>, the helper.</p>
+          <p>It does not diagnose and does not advise treatment. It is a quick check at reception,
+            and the nurse decides. If a patient says a danger sign, it stops asking and calls the nurse.</p>
+        </div>
+      </div>
+      <div class="quote">
+        <p class="said">The first thing a patient hears</p>
+        <blockquote lang="sn">Mhoroi, mauya kukiriniki. Ndiri mubatsiri wemukoti, handisi chiremba.</blockquote>
+        <p class="tr">"Hello, welcome to the clinic. I am the nurse's helper, not a doctor."</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-sec" id="how" aria-labelledby="howH">
+    <div class="w-col">
+      <p class="kicker">How it works</p>
+      <h2 id="howH">From the bench to the nurse</h2>
+      <p class="intro">Every question comes with a picture, so a patient who cannot read is not left out.
+        The nurse's queue uses the same pictures.</p>
+      <ol class="steps">
+        <li><h3>The patient speaks</h3><p>At the door, on a phone or tablet, in Shona or English.</p></li>
+        <li><h3>Up to six short questions</h3><p>Asked aloud with a picture, and nothing asked twice that was already answered.</p></li>
+        <li class="alarm"><h3>A danger sign stops the talk</h3><p>Fixed rules, with no AI, check every sentence. An emergency calls the nurse at once.</p></li>
+        <li><h3>The nurse gets the note</h3><p>A short note in English and a queue ordered by urgency. Only the nurse can lower a level.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="w-sec" aria-labelledby="factsH">
+    <div class="w-col">
+      <p class="kicker">Measured</p>
+      <h2 id="factsH">What we can say, and how far it goes</h2>
+      <div class="facts">
+        <div>
+          <div class="big">24 of 24</div>
+          <p class="what">emergencies given the emergency level, on 60 patient statements it had never seen.</p>
+          <p class="caveat">Written by an AI that could not see our rules, not collected from patients.</p>
+        </div>
+        <div>
+          <div class="big">4 US cents</div>
+          <p class="what">about what a visit costs on CAIMEx, 98% of it speech recognition.</p>
+          <p class="caveat">On our 30 short sample visits. A real patient says more, so expect more.</p>
+        </div>
+        <div>
+          <div class="big">4 models</div>
+          <p class="what">from CAIMEx to hear, choose, speak and give a second opinion, all listed as hosted in Zimbabwe.</p>
+          <p class="caveat">That is what the gateway's catalogue lists. We have not checked it ourselves.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-sec" id="screens" aria-labelledby="screensH">
+    <div class="w-col">
+      <p class="kicker">Screens</p>
+      <h2 id="screensH">From the door to the pharmacy</h2>
+      <p class="intro">Each step has its own screen, and the ticket number carries the patient between them.</p>
+      <div class="screens">
+        <a class="screen lead-card" href="/demo"><span class="nm">Demo<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">The patient and the nurse side by side, for a room</span><code>/demo</code></a>
+        <a class="screen" href="/"><span class="nm">Patient<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">On a phone or tablet at the door</span><code>/</code></a>
+        <a class="screen" href="/nurse"><span class="nm">Nurse's queue<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">Most urgent first, with the note and the recording</span><code>/nurse</code></a>
+        <a class="screen" href="/vitals"><span class="nm">Vitals<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">An aide keys in weight, height, blood pressure and sex</span><code>/vitals</code></a>
+        <a class="screen" href="/doctor"><span class="nm">Doctor<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">Reads the note and the vitals, writes the diagnosis and prescription</span><code>/doctor</code></a>
+        <a class="screen" href="/pharmacy"><span class="nm">Pharmacy<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">Dispenses only what was prescribed</span><code>/pharmacy</code></a>
+        <a class="screen" href="/board"><span class="nm">Waiting room<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">Calls ticket numbers aloud, in Shona and English</span><code>/board</code></a>
+        <a class="screen" href="/outbreaks"><span class="nm">Forecast<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">Expected arrivals today, and where an illness is rising</span><code>/outbreaks</code></a>
+        <a class="screen" href="/national"><span class="nm">Zimbabwe<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">A risk score for each province, on the map</span><code>/national</code></a>
+        <a class="screen" href="/engine"><span class="nm">Engine<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">For judges: how CAIMEx is used, with live numbers</span><code>/engine</code></a>
+        <a class="screen" href="/check"><span class="nm">Voice check<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span><span class="for">For the team: test the recogniser on real voices</span><code>/check</code></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="w-foot">
+  <div class="w-col">
+    <p>Every model Mukoti calls is listed by the CAIMEx gateway as hosted in Zimbabwe.
+      Built for the Econet AI hackathon, 25 November 2026.</p>
+    <div class="seg" role="group" aria-label="Appearance">
+      <button data-theme-choice="light">Light</button>
+      <button data-theme-choice="dark">Dark</button>
+      <button data-theme-choice="match">Match phone</button>
+    </div>
+  </div>
+</footer>
+
+<script src="art.js"></script>
+<script>
+  // The same welcome picture the patient screen opens with, drawn in navy and red here.
+  Art.show(document.getElementById('artWelcome'), 'welcome', 'A helper at the clinic door, waving a patient in');
+</script>
+</body>
+</html>

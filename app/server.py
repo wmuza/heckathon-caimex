@@ -890,4 +890,9 @@ async def demo_page():
     return FileResponse(config.WEB / "demo.html")
 
 
+@app.get("/welcome")
+async def welcome_page():
+    return FileResponse(config.WEB / "welcome.html")
+
+
 app.mount("/", StaticFiles(directory=config.WEB, html=True), name="web")

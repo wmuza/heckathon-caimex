@@ -21,6 +21,7 @@ echo 'CAIMEX_API_KEY=sk-or-...' > .env     # never commit this file
 
 | Screen | Address | Who it is for |
 |---|---|---|
+| Welcome | http://127.0.0.1:8000/welcome | Anyone new: what Mukoti is, and a link to every screen |
 | Demo | http://127.0.0.1:8000/demo | A room: the patient and the nurse side by side |
 | Patient | http://127.0.0.1:8000 | The patient, on a phone or tablet at the door |
 | Nurse's queue | http://127.0.0.1:8000/nurse | The nurse |
