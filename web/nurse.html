@@ -18,6 +18,7 @@
   .q-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 16px 20px 14px; border-bottom: 1px solid var(--divider); }
   .q-head h2 { font-size: 1.0625rem; font-weight: 700; }
   .list { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px 10px; overflow-y: auto; min-height: 0; }
+  .list > * { flex-shrink: 0; }            /* rows keep their height; the list scrolls instead */
   .group { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); margin: 16px 12px 6px; }
   .group:first-child { margin-top: 8px; }
 
@@ -190,8 +191,40 @@
     .count { min-width: 0; padding-right: 12px; }
     .d-acts { width: 100%; } .d-acts #seen { flex: 1; }
   }
+  /* Printing. "Print queue" prints a sheet built from the live queue; "Print note" prints the open note
+     under a heading. Either way it prints in the light colours (app.css keeps the dark ones for screens). */
+  .print-sheet, .print-head { display: none; }
+  .ps-head { justify-content: space-between; align-items: flex-end; gap: 16px; padding-bottom: 10px; border-bottom: 3px solid var(--navy); margin-bottom: 12px; }
+  .ps-brand { display: flex; align-items: center; gap: 10px; }
+  .ps-brand svg { width: 34px; height: 34px; flex: none; }
+  .ps-title { font-size: 1.375rem; font-weight: 700; line-height: 1.1; }
+  .ps-sub { font-size: 0.8125rem; color: var(--ink-2); }
+  .ps-meta { text-align: right; font-size: 0.8125rem; color: var(--ink-2); line-height: 1.4; }
+  .ps-meta b { color: var(--ink); }
+  .ps-counts { display: flex; gap: 20px; flex-wrap: wrap; font-weight: 600; font-size: 0.875rem; margin: 4px 0 2px; }
+  .ps-counts span { display: inline-flex; align-items: center; gap: 6px; }
+  .ps-counts .lvl, table.pq .lvl { width: 16px; height: 16px; }
+  .print-sheet h2 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); margin: 18px 0 6px; }
+  table.pq { width: 100%; border-collapse: collapse; font-size: 0.8125rem; line-height: 1.4; }
+  table.pq th { text-align: left; font-weight: 700; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); padding: 6px 8px; border-bottom: 1.5px solid var(--ink); }
+  table.pq td { padding: 8px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  table.pq tr { break-inside: avoid; }
+  table.pq .lv { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; white-space: nowrap; }
+  table.pq .tk, table.pq .n { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.pq .cc { font-weight: 600; }
+  table.pq .sm { color: var(--ink-2); }
+  table.pq .box { display: inline-block; width: 14px; height: 14px; border: 1.5px solid var(--ink); border-radius: 3px; }
+  table.pq .smp { font-size: 0.6875rem; font-weight: 700; color: var(--ink-2); }
+  .ps-foot { margin-top: 6px; font-size: 0.75rem; color: var(--ink-2); }
   @media print {
-    .layout { display: block; } #listCol, #hint, .play { display: none; } details.trace { display: none; }
+    @page { margin: 14mm 12mm; }
+    .wrap { max-width: none; padding: 0; }
+    .layout { display: block; } #listCol, #hint, #back, .play { display: none !important; } details.trace { display: none; }
+    body.print-queue > :not(#printSheet) { display: none !important; }
+    body.print-queue #printSheet { display: block; }
+    body.print-note #detailCol { display: block !important; }
+    body.print-note .print-head { display: flex; }
+    .d-head { padding: 0 0 14px; } .d-body { padding: 0; }
   }
 </style>
 </head>
@@ -207,7 +240,7 @@
       <p class="sub">Most urgent first</p>
     </div>
     <div class="counts" id="counts" aria-live="polite"></div>
-    <div class="page-tools"></div>
+    <div class="page-tools"><button class="btn sm" id="printQueue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></svg>Print queue</button></div>
   </div>
 </header>
 
@@ -230,6 +263,7 @@
         <p class="strong" id="hintTitle">No patient open</p>
         <p id="hintText">Choose a patient from the queue to read their note.</p>
       </div>
+      <div class="print-head ps-head" id="printHead"></div>
       <div id="detail" class="panel detail" hidden></div>
     </div>
   </div>
@@ -245,6 +279,7 @@
 </footer>
 
 <div id="toast" class="toast noprint" role="alert" hidden></div>
+<div id="printSheet" class="print-sheet"></div>
 <audio id="player" hidden></audio>
 
 <div id="pinSheet" class="sheet-back" hidden>
@@ -397,7 +432,7 @@ function traceHtml(v) {
 /* Age as the patient said it, and what staff measured at the scale. None of it moves the level. */
 function detailsHtml(v) {
   const d = v.details || {};
-  const val = x => `${x.value}${x.unit ? ' ' + x.unit : ''}`;
+  const val = x => `${x.value}${x.unit ? ' ' + (x.value === 1 ? x.unit.replace(/s$/, '') : x.unit) : ''}`;
   const one = (pic, label, x, todo) => {
     if (!x || (x.value == null && !x.flag)) return `<span class="det todo">${art(pic, 'still')}${todo}</span>`;
     const how = x.flag ? `<span class="wdot"></span>${esc(x.flag)}`
@@ -458,7 +493,7 @@ function renderDetail(now) {
           `<button data-level="${l}" aria-pressed="${l === lvl}">${CK}${LABEL[l]}</button>`).join('')}</div></div>
       <div class="d-acts">
         <button class="btn sm" id="callIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg>Call ticket ${v.number}</button>
-        <button class="btn sm icon" id="print" aria-label="Print this note" title="Print this note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></svg></button>
+        <button class="btn sm" id="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></svg>Print note</button>
         <button class="btn primary sm" id="seen">${v.status === 'seen' ? 'Put back in the queue' : 'Mark as seen'}</button>
       </div>
     </div>` : ''}
@@ -486,7 +521,7 @@ function renderDetail(now) {
     </div>`;
   const act = (id, fn) => { const b = $(id); if (b) b.onclick = fn; };
   act('seen', async () => { await fetch(`/api/visits/${v.id}/seen?seen=${v.status !== 'seen'}`, { method: 'POST' }); poll(); });
-  act('print', () => window.print());
+  act('print', () => printNote(v));
   act('callIn', async () => {
     const b = $('callIn');
     const r = await fetch(`/api/visits/${v.id}/call`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to: 'nurse' }) });
@@ -499,6 +534,66 @@ function renderDetail(now) {
   });
   el.querySelectorAll('.play').forEach(b => b.onclick = () => playClip(b));
   const d = el.querySelector('details.trace'); if (d) d.ontoggle = () => { traceOpen = d.open; };
+}
+
+/* ── Printing ─────────────────────────────────────────────────────────────
+   The queue is printed from the same visits the screen shows, in the same order
+   (the server sends waiting patients first, most urgent first). */
+const LOGO = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="var(--navy)"/><g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path stroke="#FFFFFF" d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path stroke="var(--brand-red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>';
+const stamp = sec => new Date(sec * 1000).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+let nowSec = Date.now() / 1000;
+function printHead(title, sub, right) {
+  return `<div class="ps-brand">${LOGO}<div><div class="ps-title">${title}</div><div class="ps-sub">${sub}</div></div></div>
+    <div class="ps-meta">${right}<br>Printed ${esc(stamp(nowSec))}</div>`;
+}
+function measured(v) {
+  const d = v.details || {}, out = [];
+  const val = x => esc(`${x.value}${x.unit ? ' ' + (x.value === 1 ? x.unit.replace(/s$/, '') : x.unit) : ''}`);
+  if (d.age && d.age.value != null) out.push(`Age ${val(d.age)}${d.age.source === 'said' ? ' (said)' : ''}`);
+  if (d.sex && d.sex.value) out.push(d.sex.value === 'female' ? 'Female' : 'Male');
+  if (d.weight && d.weight.value != null) out.push(val(d.weight));
+  if (d.height && d.height.value != null) out.push(val(d.height));
+  if (d.bp && d.bp.value != null) out.push('BP ' + val(d.bp));
+  return out.join(' · ');
+}
+function signsOf(v) {
+  const t = v.triage || {};
+  const signs = (t.checks && t.checks[0] && t.checks[0].signs) || v.live_signs || [];
+  return [...new Set(signs.map(s => s.label))];
+}
+function queueSheet() {
+  const wait = visits.filter(waiting), talking = visits.filter(v => v.status === 'talking'), seen = visits.filter(v => v.status === 'seen');
+  const n = l => wait.filter(v => levelOf(v) === l).length;
+  const lv = v => { const l = levelOf(v) || 'urgent'; return `<span class="lv">${glyph(l)}${LABEL[l]}</span>`; };
+  const rows = wait.map((v, i) => {
+    const note = v.note || {}, signs = signsOf(v), m = measured(v);
+    return `<tr><td><span class="box" aria-label="Seen"></span></td><td class="n">${i + 1}</td><td>${lv(v)}</td><td class="tk">${v.number}</td>
+      <td><div class="cc">${esc(headline(v))}</div>${note.patient ? `<div class="sm">${esc(note.patient)}</div>` : ''}${v.sample ? '<div class="smp">Sample visit</div>' : ''}</td>
+      <td>${m || '<span class="sm">Not measured</span>'}</td>
+      <td>${signs.length ? esc(signs.join(', ')) : '<span class="sm">None</span>'}</td>
+      <td class="n">${Math.max(0, Math.round((nowSec - v.created) / 60))} min</td><td>${v.lang === 'sn' ? 'Shona' : 'English'}</td></tr>`;
+  }).join('');
+  const short = (list, what) => list.length ? `<h2>${what} (${list.length})</h2><table class="pq"><thead><tr><th>Ticket</th><th>Level</th><th>Complaint</th></tr></thead><tbody>${
+    list.map(v => `<tr><td class="tk">${v.number}</td><td>${v.status === 'talking' ? '<span class="sm">Still speaking</span>' : lv(v)}</td><td class="cc">${esc(headline(v))}</td></tr>`).join('')}</tbody></table>` : '';
+  return `<div class="ps-head" style="display:flex">${printHead("Nurse's queue", 'Most urgent first', `<b>${wait.length} waiting</b>`)}</div>
+    <div class="ps-counts">${['emergency', 'urgent', 'routine'].map(l => `<span>${glyph(l)}${n(l)} ${LABEL[l].toLowerCase()}</span>`).join('')}</div>
+    <p class="ps-foot">A computer's draft from the patients' own words. It does not diagnose. Only the nurse can lower a level. Ticket numbers link to the clinic register; no names are kept.</p>
+    <h2>Waiting for the nurse (${wait.length})</h2>
+    ${wait.length ? `<table class="pq"><thead><tr><th>Seen</th><th>#</th><th>Level</th><th>Ticket</th><th>Complaint</th><th>Age and measurements</th><th>Danger signs</th><th>Waited</th><th>Language</th></tr></thead><tbody>${rows}</tbody></table>`
+      : '<p class="sm">No one is waiting.</p>'}
+    ${short(talking, 'Speaking to the helper now')}${short(seen, 'Seen')}`;
+}
+// What to print is chosen by a class on the body; app.css prints in the light colours.
+function printAs(kind) {
+  document.body.classList.add(kind);
+  const done = () => { document.body.classList.remove(kind); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  window.print();
+}
+function printQueue() { $('printSheet').innerHTML = queueSheet(); printAs('print-queue'); }
+function printNote(v) {
+  $('printHead').innerHTML = printHead("Nurse's note", `Ticket ${v.number}`, `<b>${esc(LABEL[levelOf(v)] || 'Speaking now')}</b>`);
+  printAs('print-note');
 }
 
 /* One recording at a time; the button that is playing turns into Stop. */
@@ -564,12 +659,13 @@ async function poll() {
       if (!current) { current = fresh[0].id; lastSig = ''; listSig = ''; }
       else if (current !== fresh[0].id) announce(fresh[0], d.now);
     }
-    render(d.now); loadFull();
+    nowSec = d.now; render(d.now); loadFull();
     first = false;
   } catch (e) {} finally { polling = false; }
 }
 async function fill() { await fetch('/api/demo/fill', { method: 'POST' }); poll(); }
 $('fill').onclick = fill;
+$('printQueue').onclick = printQueue;
 $('back').onclick = () => { document.body.classList.remove('open'); };
 $('clear').onclick = async () => {
   if (!confirm('Remove every patient from the queue and delete the recordings?')) return;
