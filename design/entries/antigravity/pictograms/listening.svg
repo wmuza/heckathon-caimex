@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .listening-halo { transform-origin: 120px 104px; animation: listening-breathe 2.4s ease-in-out infinite; }
+    .listening-w1 { animation: listening-wave 2.4s ease-in-out infinite 0s; }
+    .listening-w2 { animation: listening-wave 2.4s ease-in-out infinite 0.4s; }
+    @keyframes listening-breathe {
+      0%, 100% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    @keyframes listening-wave {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .listening-halo, .listening-w1, .listening-w2 { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle class="listening-halo" cx="120" cy="104" r="64" fill="var(--tint, #E8F0FE)"/>
+  <g fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round">
+    <path class="listening-w1" d="M74 82a34 34 0 0 0 0 44"/>
+    <path class="listening-w1" d="M166 82a34 34 0 0 1 0 44"/>
+    <path class="listening-w2" d="M54 68a54 54 0 0 0 0 72"/>
+    <path class="listening-w2" d="M186 68a54 54 0 0 1 0 72"/>
+  </g>
+  <rect x="100" y="54" width="40" height="72" rx="20" fill="var(--accent, #2563EB)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <path d="M84 114a36 36 0 0 0 72 0M120 150v34M94 184h52" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

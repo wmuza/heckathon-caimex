@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.repeat-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.repeat-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.repeat-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.repeat-fill{fill:var(--accent,#2563EB)}.repeat-tint{fill:var(--tint,#E8F0FE)}.repeat-hot{fill:var(--danger,#CF2A30)}.repeat-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.repeat-again{transform-box:fill-box;transform-origin:50% 50%;animation:repeat-turn 3.2s ease-in-out infinite}
+@keyframes repeat-turn{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-36deg)}}
+
+@media (prefers-reduced-motion:reduce){.repeat-move{animation:none}}
+</style>
+<path class="repeat-body" d="M68 214V162C68 141 124 141 124 162V214Z"/><circle class="repeat-body" cx="96" cy="128" r="24"/><path class="repeat-line" d="M74 164L112 140"/><circle class="repeat-body" cx="124" cy="128" r="13"/><g class="repeat-again repeat-move"><path class="repeat-ray" d="M150 40a46 46 0 1 1-28 20"/><path class="repeat-ray" d="M122 52l2-22 20 10"/></g>
+</svg>

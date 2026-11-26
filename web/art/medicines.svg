@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .medicines-motion {
+      animation: medicines-loop 3.6s ease-in-out infinite;
+
+    }
+    @keyframes medicines-loop {
+      0%, 13%, 100% { transform: translate(0, 0); }
+      56%, 75% { transform: translate(10px, -11px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .medicines-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="45" y="49" width="62" height="24" rx="5" fill="var(--tint, #E8F0FE)"/>
+    <path d="M53 73v11l-9 11q-6 7-6 16v63q0 14 14 14h48q14 0 14-14v-63q0-9-6-16l-9-11V73" fill="var(--paper, #FFFFFF)"/>
+    <path d="M39 119h74v43H39" fill="var(--tint, #E8F0FE)"/>
+    <path d="M76 130v21m-10-10h20" stroke="var(--accent, #2563EB)"/>
+    <path d="m114 184 31-20 31 1 26-18q9-5 14 1 5 8-2 14l-36 27-33 5-16 10" fill="var(--paper, #FFFFFF)"/>
+    <g class="medicines-motion">
+      <path d="M143 143a12 12 0 0 1 0-17l18-18a12 12 0 0 1 17 17l-18 18a12 12 0 0 1-17 0z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+      <path d="m152 117 17 17" stroke="var(--accent, #2563EB)"/>
+    </g>
+  </g>
+</svg>

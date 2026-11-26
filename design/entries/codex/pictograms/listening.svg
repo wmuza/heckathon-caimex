@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .listening-motion {
+      animation: listening-loop 3.2s ease-in-out infinite;
+      transform-origin: 120px 0;
+    }
+    @keyframes listening-loop {
+      0%, 100% { transform: scaleX(1); }
+      49%, 66% { transform: scaleX(1.16); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .listening-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="92" y="37" width="56" height="107" rx="28" fill="var(--tint, #E8F0FE)"/>
+    <path d="M75 115v3a45 45 0 0 0 90 0v-3m-45 48v33m-27 0h54"/>
+    <path d="M109 69h22m-22 20h22" stroke="var(--accent, #2563EB)"/>
+    <g class="listening-motion" stroke="var(--accent, #2563EB)">
+      <path d="M62 77q-15 19 0 38m-17-48q-23 29 0 58m133-48q15 19 0 38m17-48q23 29 0 58"/>
+    </g>
+  </g>
+</svg>

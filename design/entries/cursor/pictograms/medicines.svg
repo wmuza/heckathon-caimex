@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.medicines-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.medicines-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.medicines-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.medicines-fill{fill:var(--accent,#2563EB)}.medicines-tint{fill:var(--tint,#E8F0FE)}.medicines-hot{fill:var(--danger,#CF2A30)}.medicines-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.medicines-hi{opacity:0;animation:medicines-up 3.2s ease-in-out infinite}
+.medicines-lo{opacity:1;animation:medicines-down 3.2s ease-in-out infinite}
+@keyframes medicines-up{0%,28%{opacity:1}48%,100%{opacity:0}}
+@keyframes medicines-down{0%,28%{opacity:0}48%,100%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){.medicines-move{animation:none}}
+</style>
+
+<path class="medicines-line" d="M36 168c0 40 168 40 168 0"/>
+<path class="medicines-line" d="M58 168v-30M90 164v-36M120 160v-38M150 164v-36M182 168v-30"/>
+<g class="medicines-hi medicines-move"><path class="medicines-fill" d="M100 71V52A20 20 0 0 1 140 52V71Z"/><rect class="medicines-line" x="96" y="28" width="48" height="86" rx="24.0"/></g><g class="medicines-lo medicines-move"><path class="medicines-fill" d="M100 154V142A20 20 0 0 1 140 142V154Z"/><rect class="medicines-line" x="96" y="118" width="48" height="72" rx="24.0"/></g>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.chronic-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.chronic-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.chronic-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.chronic-fill{fill:var(--accent,#2563EB)}.chronic-tint{fill:var(--tint,#E8F0FE)}.chronic-hot{fill:var(--danger,#CF2A30)}.chronic-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.chronic-heart{transform-box:fill-box;transform-origin:50% 50%;animation:chronic-beat 3.2s ease-in-out infinite}
+.chronic-dot{fill:var(--quiet,#5B6474)}
+.chronic-d1{animation:chronic-day 4s ease-in-out infinite}
+.chronic-d2{animation:chronic-day 4s ease-in-out infinite;animation-delay:-3.2s}
+.chronic-d3{animation:chronic-day 4s ease-in-out infinite;animation-delay:-2.4s}
+.chronic-d4{animation:chronic-day 4s ease-in-out infinite;animation-delay:-1.6s}
+.chronic-d5{animation:chronic-day 4s ease-in-out infinite;animation-delay:-.8s}
+@keyframes chronic-beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes chronic-day{0%,12%{fill:var(--accent,#2563EB)}28%,100%{fill:var(--quiet,#5B6474)}}
+
+@media (prefers-reduced-motion:reduce){.chronic-move{animation:none}}
+</style>
+<path class="chronic-body" d="M84 186V89C84 70 156 70 156 89V186Z"/><circle class="chronic-body" cx="120" cy="58" r="22"/><path class="chronic-fill chronic-heart chronic-move" d="M120 118c-8-14-30-10-30 6 0 16 16 24 30 36 14-12 30-20 30-36 0-16-22-20-30-6z"/><circle class="chronic-dot chronic-move chronic-d1" cx="52" cy="208" r="7"/><circle class="chronic-dot chronic-move chronic-d2" cx="88" cy="208" r="7"/><circle class="chronic-dot chronic-move chronic-d3" cx="124" cy="208" r="7"/><circle class="chronic-dot chronic-move chronic-d4" cx="160" cy="208" r="7"/><circle class="chronic-dot chronic-move chronic-d5" cx="196" cy="208" r="7"/>
+</svg>

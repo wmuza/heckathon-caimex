@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .not_doctor-bars {
+      animation: not_doctor-speak 3.4s ease-in-out infinite;
+      transform-origin: 73px 106px;
+    }
+    @keyframes not_doctor-speak {
+      0%, 100% { transform: scaleY(.72); }
+      53%, 72% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .not_doctor-bars { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="23" y="67" width="101" height="78" rx="11" fill="var(--paper, #FFFFFF)"/>
+    <path d="M74 145v26m-25 0h50"/>
+    <path class="not_doctor-bars" d="M42 102v8m16-15v22m16-32v42m16-32v22m16-15v8" stroke="var(--accent, #2563EB)"/>
+    <path d="M152 71h-7v27a20 20 0 0 0 40 0V71h-7m-13 47v29a20 20 0 0 0 40 0v-12"/>
+    <circle cx="205" cy="125" r="10" fill="var(--paper, #FFFFFF)"/>
+    <path d="m140 165 75-96" stroke="var(--paper, #FFFFFF)" stroke-width="14"/>
+    <path d="m140 165 75-96" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

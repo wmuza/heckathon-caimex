@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .other-motion {
+      animation: other-loop 3.4s ease-in-out infinite;
+
+    }
+    @keyframes other-loop {
+      0%, 100% { transform: translateY(0); }
+      48%, 67% { transform: translateY(-6px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .other-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="67" cy="110" r="25" fill="var(--paper, #FFFFFF)"/>
+    <path d="M31 201v-35q0-22 22-24h28q15 0 24 14l13 19 21-8 12-15q4-5 10-2 7 4 3 11l-8 16-37 18q-8 4-14-2l-11-12v20z" fill="var(--paper, #FFFFFF)"/>
+    <g class="other-motion" stroke="var(--accent, #2563EB)">
+      <path d="M138 46h54a17 17 0 0 1 17 17v24a17 17 0 0 1-17 17h-37l-21 14v-15a17 17 0 0 1-13-17V63a17 17 0 0 1 17-17z" fill="var(--paper, #FFFFFF)"/>
+      <path d="M147 75h1m17 0h1m17 0h1"/>
+    </g>
+  </g>
+</svg>

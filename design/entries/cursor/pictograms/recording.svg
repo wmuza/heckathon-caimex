@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.recording-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.recording-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.recording-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.recording-fill{fill:var(--accent,#2563EB)}.recording-tint{fill:var(--tint,#E8F0FE)}.recording-hot{fill:var(--danger,#CF2A30)}.recording-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.recording-dot{opacity:1;animation:recording-glow 3s ease-in-out infinite}
+@keyframes recording-glow{0%,100%{opacity:1}50%{opacity:.35}}
+
+@media (prefers-reduced-motion:reduce){.recording-move{animation:none}}
+</style>
+
+<rect class="recording-body" x="88" y="36" width="64" height="100" rx="32"/>
+<path class="recording-line" d="M72 108a48 48 0 0 0 96 0"/>
+<path class="recording-line" d="M120 156V184M96 184H144"/>
+<path class="recording-ray" d="M40 70q-18 28 0 56M28 56q-26 42 0 84"/>
+<circle class="recording-hot recording-dot recording-move" cx="168" cy="52" r="12"/>
+
+</svg>

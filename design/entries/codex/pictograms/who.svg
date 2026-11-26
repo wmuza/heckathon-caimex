@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .who-motion {
+      animation: who-loop 3.6s ease-in-out infinite;
+
+    }
+    @keyframes who-loop {
+      0%, 12%, 100% { transform: translateX(0); }
+      48%, 63% { transform: translateX(88px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .who-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="79" cy="79" r="26" fill="var(--paper, #FFFFFF)"/>
+    <path d="M31 186v-33a30 30 0 0 1 30-30h30a30 30 0 0 1 30 30v33z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M55 163v23m42-23v23"/>
+    <circle cx="167" cy="109" r="19" fill="var(--paper, #FFFFFF)"/>
+    <path d="M137 186v-18a23 23 0 0 1 23-23h14a23 23 0 0 1 23 23v18z" fill="var(--paper, #FFFFFF)"/>
+    <path class="who-motion" d="M66 212h25" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

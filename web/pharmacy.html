@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: pharmacy</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 1180px; }
+  .band-in { flex-wrap: wrap; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  h2.title { margin-bottom: 4px; }
+
+  /* One medicine: what is on the shelf, how fast it goes, how long it lasts */
+  .med { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 14px 0; border-bottom: 1px solid var(--divider); align-items: center; }
+  .med:last-child { border-bottom: 0; padding-bottom: 0; }
+  .med .nm { font-weight: 700; }
+  .med .fig { color: var(--ink-2); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+  .med .fig b { color: var(--ink); font-weight: 700; }
+  .med .days { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; text-align: right; }
+  .med .days small { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .gauge { grid-column: 1 / -1; position: relative; height: 10px; border-radius: 999px; background: var(--neutral-tint); }
+  .gauge i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--green-dot); }
+  .gauge.soon i { background: var(--warn-dot); }
+  .gauge.now i, .gauge.none i { background: var(--red-fill); }
+  .gauge u { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink-2); left: 50%; }
+  .med .mfoot { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .tag.none { background: var(--red-fill); color: var(--ink-on); }
+  .tag.none .dot { background: var(--ink-on); }
+  .tag.now, .tag.soon { background: var(--warn-tint); color: var(--warn-ink); }
+  .tag.now .dot, .tag.soon .dot { background: var(--warn-dot); }
+  .tag.enough { background: var(--green-tint); color: var(--green-ink); }
+  .tag.enough .dot { background: var(--green-dot); }
+  .tag .ck { width: 12px; height: 12px; }
+  .adv { background: var(--panel-sunk); border-radius: 18px; padding: 14px 16px; margin: 12px 0 4px; }
+  .adv h3 { font-size: 0.9375rem; font-weight: 700; }
+  .adv ol { padding: 0; margin: 10px 0 0; display: grid; gap: 10px; }
+  .adv li { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+  .adv .by { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+  .adv .live { width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  .tag.watch { background: var(--selected); color: var(--blue-ink); } .tag.watch .dot { background: var(--blue-fill); }
+  .key { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .key u { width: 2px; height: 14px; background: var(--ink-2); flex: none; }
+
+  /* Choosing the ticket: its number and the face that came with it */
+  .tks { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tkb {
+    display: grid; justify-items: center; gap: 4px; width: 88px; padding: 8px 6px; border-radius: 18px; cursor: pointer;
+    background: var(--panel); border: 1px solid var(--ghost-edge); font-weight: 700; font-variant-numeric: tabular-nums; position: relative;
+  }
+  .tkb[aria-pressed="true"] { border-color: var(--blue-fill); box-shadow: 0 0 0 2px var(--blue-fill); background: var(--selected); }
+  .tkb .ck { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; color: var(--blue-ink); display: none; }
+  .tkb[aria-pressed="true"] .ck { display: block; }
+  .face { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: var(--panel-sunk); display: block; }
+  span.face { padding: 6px; }
+  .face.lg { width: 96px; height: 96px; }
+  .tkb small { font-size: 0.75rem; font-weight: 600; color: var(--ink-2); }
+  .who { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; }
+  .same { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; }
+  .same figure { display: grid; justify-items: center; gap: 2px; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .rxl { display: grid; gap: 8px; padding: 0; margin: 8px 0 0; }
+  .rxl li { list-style: none; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 14px; background: var(--panel-sunk); }
+  .rxl .q { color: var(--ink-2); font-weight: 600; font-size: 0.9375rem; }
+  .tkb .due { position: absolute; top: 6px; left: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); }
+  .two { display: grid; grid-template-columns: 1fr 120px; gap: 10px; }
+  .msg { display: flex; gap: 8px; align-items: center; font-weight: 600; min-height: 24px; }
+  .msg .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--red-fill); }
+  .msg.bad { color: var(--red-ink); }
+  .msg.ok { color: var(--green-ink); } .msg.ok .dot { background: var(--green-dot); }
+  .log { display: grid; gap: 10px; }
+  .log li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; list-style: none; }
+  .log time { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; font-size: 0.875rem; padding-top: 2px; }
+  ul.log { padding: 0; }
+  hr { border: 0; border-top: 1px solid var(--divider); margin: 4px 0; }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Pharmacy</h1>
+      <p class="sub">Stock, dispensing by ticket, and what the supervisor signed</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy" aria-current="page">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+    <section class="panel" aria-labelledby="stockT">
+      <h2 class="title" id="stockT">When each medicine runs out</h2>
+      <p class="quiet small" id="stockSub"></p>
+      <div id="advice"></div>
+      <div id="meds"></div>
+      <p class="key quiet small"><u></u><span id="keyTxt"></span></p>
+      <p class="notice quiet small" id="demoNote" hidden style="margin-top:12px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>
+        <span>The use before today is made up for the demonstration. Anything dispensed here is real and counts from now.</span></p>
+    </section>
+
+    <div class="stack">
+      <section class="panel stack" aria-labelledby="giveT">
+        <h2 class="title" id="giveT">Dispense to a ticket</h2>
+        <div class="tks" id="tks" role="group" aria-label="Ticket"></div>
+        <p class="quiet" id="noTk" hidden>No ticket is waiting. A ticket appears when a patient finishes speaking.</p>
+        <div id="giveBody" class="stack" hidden>
+          <div class="who"><div id="whoFace"></div><div><p class="strong" id="whoT"></p><p class="quiet small" id="whoGot"></p></div></div>
+          <div id="rxBox"></div>
+          <p class="eyebrow" id="otherT">Something not on the prescription</p>
+          <div class="two">
+            <div><label class="lab" for="med">Medicine</label><select class="field" id="med"></select></div>
+            <div><label class="lab" for="qty">How many</label><input class="field num" id="qty" inputmode="numeric" autocomplete="off"></div>
+          </div>
+          <div id="sameBox" hidden><p class="eyebrow" id="sameT"></p><div class="same" id="same" style="margin-top:8px"></div></div>
+          <p class="msg" id="msg" role="alert"></p>
+          <button class="btn primary block" id="give"></button>
+          <hr>
+          <div>
+            <span class="eyebrow" id="feeLab">Clinic fee for this ticket</span>
+            <div class="seg big" role="group" aria-labelledby="feeLab" style="margin-top:6px">
+              <button data-fee="due"></button><button data-fee="paid"></button><button data-fee="waived"></button>
+            </div>
+            <p class="quiet small" id="feeWhy" style="margin-top:6px"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="logT">
+        <h2 class="title" id="logT">Signed by the supervisor today</h2>
+        <ul class="log" id="log" style="margin-top:10px"></ul>
+        <p class="quiet" id="noLog">Nothing yet. A fee waiver, a second supply on one ticket and a change to a stock count each need the supervisor's PIN.</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<footer class="foot noprint">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+</footer>
+
+<div id="supBack" class="sheet-back" hidden>
+  <form class="sheet stack" id="supForm" role="dialog" aria-modal="true" aria-labelledby="supT">
+    <h2 class="title" id="supT">Supervisor's approval</h2>
+    <p id="supWhat"></p>
+    <div id="supCountBox" hidden><label class="lab" for="supCount">Counted on the shelf</label><input class="field num" id="supCount" inputmode="numeric" autocomplete="off"></div>
+    <div><label class="lab" for="supReason">Reason</label>
+      <select class="field" id="supPick" hidden></select>
+      <input class="field" id="supReason" autocomplete="off" maxlength="120"></div>
+    <div><label class="lab" for="supPin">Supervisor's PIN</label>
+      <input class="field" id="supPin" type="password" inputmode="numeric" autocomplete="off"></div>
+    <p class="quiet small" id="supDemo" hidden>Demonstration PIN: 2468. Set MUKOTI_SUPERVISOR_PIN before real use.</p>
+    <p class="msg bad" id="supMsg" role="alert"></p>
+    <button class="btn primary block">Approve</button>
+    <button type="button" class="btn block" id="supCancel">Cancel</button>
+  </form>
+</div>
+
+<div id="pinSheet" class="sheet-back" hidden>
+  <form class="sheet stack" id="pinForm">
+    <h2 class="title">Nurse's PIN</h2>
+    <input class="field" id="pin" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN">
+    <p class="small" id="pinMsg" style="color:var(--red-ink)" role="alert"></p>
+    <button class="btn primary block">Open</button>
+  </form>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+const STATUS = { none: 'None left', now: 'Order now', soon: 'Order soon', enough: 'Enough' };
+const FEE = { due: 'Not paid yet', paid: 'Paid', waived: 'Waived' };
+const pictures = {};
+let d = null, ticket = null, pending = null;
+
+const face = (t, cls) => t.photo ? `<img class="face ${cls || ''}" src="${t.photo}" alt="Photo on ticket ${t.number}">`
+  : `<span class="face art ${cls || ''}" aria-hidden="true">${pictures[t.picture] || pictures.other || ''}</span>`;
+const clock = at => new Date(at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+const med = id => d.medicines.find(m => m.id === id);
+function say(text, ok) { $('msg').className = 'msg ' + (ok ? 'ok' : 'bad'); $('msg').innerHTML = text ? `<span class="dot"></span><span>${esc(text)}</span>` : ''; }
+
+function renderStock() {
+  const span = d.soon_days * 2;
+  $('stockSub').textContent = `From what was dispensed in the last ${d.rate_days} days. Flagged ${d.soon_days / 7} weeks before the shelf is empty.`;
+  $('keyTxt').textContent = `${d.soon_days / 7} weeks of stock`;
+  $('demoNote').hidden = !d.demo_history;
+  const a = d.advice || {}, U = { now: 'Order today', soon: 'Order this week', watch: 'Watch' };
+  $('advice').innerHTML = a.orders ? `<div class="adv"><h3>What to order first</h3><p style="margin-top:4px">${esc(a.summary)}</p>
+      <ol>${a.orders.map(o => `<li><span class="tag ${o.urgency}"><span class="dot"></span>${U[o.urgency]}</span><span><span class="strong">${esc(o.name)}</span><br><span class="quiet">${esc(o.why)}</span></span></li>`).join('')}</ol>
+      <p class="by">${a.status === 'working' ? '<span class="live"></span>CAIMEx is reading the shelf again.' : `Advice from CAIMEx · ${esc(a.model)}. It read the shelf below and the outbreak watch together. The days left under it are plain arithmetic.`}</p></div>`
+    : `<div class="adv"><p class="by" style="margin:0">${a.status === 'working' ? '<span class="live"></span>CAIMEx is reading the shelf and the outbreak watch.' : 'CAIMEx did not answer. The arithmetic below still holds.'}</p></div>`;
+  $('meds').innerHTML = d.medicines.map(m => {
+    const pct = m.days_left == null ? 100 : Math.max(2, Math.min(100, m.days_left / span * 100));
+    return `<div class="med">
+      <div><div class="nm">${esc(m.name)}</div>
+        <div class="fig"><b>${m.stock.toLocaleString()}</b> ${esc(m.unit)} on the shelf · <b>${m.per_day}</b> a day${m.for && m.for.length ? ` · mostly for ${esc(m.for.join(' and ').toLowerCase())}` : ''}</div></div>
+      <div class="days">${m.days_left == null ? '–' : m.days_left}<small>${m.days_left === 1 ? 'day left' : 'days left'}</small></div>
+      <div class="gauge ${m.status}" aria-hidden="true"><i style="width:${m.stock <= 0 ? 0 : pct}%"></i><u></u></div>
+      <div class="mfoot"><span class="tag ${m.status}">${m.status === 'enough' ? CK : '<span class="dot"></span>'}${STATUS[m.status]}</span>
+        <button class="btn sm" data-count="${m.id}">Change the count</button></div>
+    </div>`;
+  }).join('');
+  $('meds').querySelectorAll('[data-count]').forEach(b => b.onclick = () => {
+    const m = med(b.dataset.count);
+    ask({ what: `Set the shelf count of ${m.name}. It is ${m.stock.toLocaleString()} ${m.unit} now.`, count: true,
+          send: (pin, reason, counted) => post('/api/pharmacy/adjust', { med: m.id, counted, pin, reason }) });
+  });
+}
+
+function renderGive() {
+  const sel = $('med').value;
+  $('med').innerHTML = d.medicines.map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join('');
+  if (sel && med(sel)) $('med').value = sel;
+  if (!d.tickets.some(t => t.id === ticket)) ticket = (d.tickets.find(t => t.stage === 'pharmacy') || d.tickets[d.tickets.length - 1] || {}).id || null;
+  $('noTk').hidden = d.tickets.length > 0;
+  $('giveBody').hidden = !ticket;
+  $('tks').innerHTML = d.tickets.map(t => `<button class="tkb" data-id="${t.id}" aria-pressed="${t.id === ticket}">${t.stage === 'pharmacy' ? '<i class="due" title="Has a prescription to dispense"></i>' : ''}${CK}${face(t)}<span><small>Ticket</small> ${t.number}</span></button>`).join('');
+  $('tks').querySelectorAll('.tkb').forEach(b => b.onclick = () => { ticket = b.dataset.id; say(''); renderGive(); });
+  const t = d.tickets.find(x => x.id === ticket);
+  if (!t) return;
+  $('whoFace').innerHTML = face(t, 'lg');
+  $('whoT').textContent = `Ticket ${t.number}` + (t.photo ? '' : ' · no photo taken');
+  $('whoGot').textContent = t.given.length ? 'Already given: ' + t.given.map(g => `${med(g.med) ? med(g.med).name : g.med} × ${g.qty}`).join(', ') : 'Nothing dispensed to this ticket yet.';
+  const c = t.consult;
+  $('rxBox').innerHTML = !c ? '<p class="quiet">The doctor has not written a prescription for this ticket. Anything dispensed needs the supervisor.</p>'
+    : `<p class="eyebrow">The doctor's prescription · ${esc(c.diagnosis)}</p>` + (c.rx.length ? `<ul class="rxl">${c.rx.map(l => {
+        const left = t.owed[l.med] || 0, mm = med(l.med) || { name: l.med, unit: '' };
+        return `<li><span><span class="strong">${esc(mm.name)}</span><br><span class="q">${l.qty} ${esc(mm.unit)} · ${esc(l.how)}</span></span>
+          <span class="row-gap" style="justify-content:flex-end"><button class="btn sm say" data-how="${esc(l.how)}" aria-label="Say how to take ${esc(mm.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg>Say</button>
+          ${left ? `<button class="btn primary sm" data-rx="${l.med}" data-qty="${left}" data-say="${esc(l.how)}">Dispense ${left}</button>` : `<span class="tag enough">${CK}Dispensed</span>`}</span></li>`; }).join('')}</ul>
+          <p class="quiet small" style="margin-top:6px">"Say" tells the patient how to take it, in ${t.lang === 'sn' ? 'Shona' : 'English'}, in words written in advance.</p>`
+      : '<p class="quiet">Nothing was prescribed.</p>');
+  $('rxBox').querySelectorAll('[data-rx]').forEach(b => b.onclick = async () => { const how = b.dataset.say; if (await give(b.dataset.rx, b.dataset.qty)) sayHow(how, t.lang); });
+  $('rxBox').querySelectorAll('.say').forEach(b => b.onclick = () => sayHow(b.dataset.how, t.lang));
+  $('otherT').hidden = !c;
+  const m = med($('med').value);
+  const others = d.tickets.filter(o => o.id !== t.id && o.given.some(g => g.med === m.id));
+  $('sameBox').hidden = !others.length;
+  $('sameT').textContent = `Also given ${m.name}. Is this the same person?`;
+  $('same').innerHTML = others.map(o => `<figure>${face(o)}<figcaption>Ticket ${o.number}</figcaption></figure>`).join('');
+  $('give').textContent = `Dispense to ticket ${t.number}`;
+  $('give').className = c && c.rx.length ? 'btn block' : 'btn primary block';
+  const fee = (t.fee && t.fee.status) || 'due';
+  document.querySelectorAll('[data-fee]').forEach(b => { b.setAttribute('aria-pressed', b.dataset.fee === fee); b.innerHTML = CK + FEE[b.dataset.fee]; });
+  $('feeWhy').textContent = fee === 'waived' ? `Waived: ${t.fee.reason}. Signed by the supervisor at ${clock(t.fee.at)}.` : '';
+}
+
+function renderLog() {
+  $('noLog').hidden = d.approvals.length > 0;
+  $('log').innerHTML = d.approvals.map(r => {
+    const what = r.kind === 'waiver' ? `Fee waived for ticket ${r.ticket}`
+      : r.kind === 'adjust' ? `${esc(r.name)}: count changed from ${r.was.toLocaleString()} to ${r.now.toLocaleString()}`
+      : `Second supply of ${esc(r.name)} to ticket ${r.ticket} (${-r.qty})`;
+    return `<li><time>${clock(r.at)}</time><div><div class="strong">${what}</div><div class="quiet small">${esc(r.reason)}</div></div></li>`;
+  }).join('');
+}
+function render() { renderStock(); renderGive(); renderLog(); }
+
+async function post(url, body) {
+  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { $('pinSheet').hidden = false; }
+  return { ok: r.ok, status: r.status, text: j.detail || '' };
+}
+
+/* The supervisor's sheet. `send` is called with the PIN and the reason, and the sheet stays until it is accepted. */
+function ask(o) {
+  pending = o;
+  $('supWhat').textContent = o.what;
+  $('supCountBox').hidden = !o.count; $('supCount').value = '';
+  $('supPick').hidden = !o.reasons; $('supReason').hidden = !!o.reasons;
+  if (o.reasons) $('supPick').innerHTML = o.reasons.map(x => `<option>${esc(x)}</option>`).join('');
+  $('supReason').value = ''; $('supPin').value = ''; $('supMsg').textContent = '';
+  $('supDemo').hidden = !d.demo_pin;
+  $('supBack').hidden = false;
+  (o.count ? $('supCount') : o.reasons ? $('supPin') : $('supReason')).focus();
+}
+$('supCancel').onclick = () => { $('supBack').hidden = true; pending = null; };
+$('supForm').onsubmit = async e => {
+  e.preventDefault();
+  if (!pending) return;
+  const reason = pending.reasons ? $('supPick').value : $('supReason').value;
+  const r = await pending.send($('supPin').value, reason, $('supCount').value);
+  if (r.ok) { $('supBack').hidden = true; pending = null; say('Approved and recorded.', true); poll(true); }
+  else $('supMsg').textContent = r.text || 'Not approved';
+};
+
+$('give').onclick = () => give($('med').value, $('qty').value.trim());
+/* How to take the medicine, said to the patient in their language: one of five sentences written in advance. */
+function sayHow(how, lang) { new Audio(`/api/say/how.mp3?how=${encodeURIComponent(how)}&lang=${lang || 'sn'}`).play().catch(() => {}); }
+async function give(mid, qty) {
+  const t = d.tickets.find(x => x.id === ticket), m = med(mid);
+  const body = { sid: t.id, med: m.id, qty };
+  const r = await post('/api/pharmacy/dispense', body);
+  if (r.ok) { say(`${qty} ${m.unit} of ${m.name} dispensed to ticket ${t.number}.`, true); $('qty').value = ''; poll(true); return true; }
+  else if (r.status === 403) ask({ what: r.text + '.', send: (pin, reason) => post('/api/pharmacy/dispense', { ...body, pin, reason }) });
+  else say(r.text || 'Not dispensed');
+}
+$('med').onchange = () => { say(''); renderGive(); };
+document.querySelectorAll('[data-fee]').forEach(b => b.onclick = async () => {
+  if (b.getAttribute('aria-pressed') === 'true') return;
+  const t = d.tickets.find(x => x.id === ticket), url = `/api/visits/${t.id}/fee`;
+  if (b.dataset.fee === 'waived') ask({ what: `Waive the clinic fee for ticket ${t.number}.`, reasons: d.reasons, send: (pin, reason) => post(url, { status: 'waived', pin, reason }) });
+  else { await post(url, { status: b.dataset.fee }); poll(true); }
+});
+
+async function poll(force) {
+  try {
+    const r = await fetch('/api/pharmacy');
+    if (r.status === 401) { $('pinSheet').hidden = false; return; }
+    const j = await r.json(), sig = JSON.stringify({ ...j, now: 0 });
+    if (sig === poll.sig && !force) return;
+    poll.sig = sig; d = j; render();
+    if (j.advice && j.advice.status === 'working') setTimeout(poll, 3000);
+  } catch (e) {}
+}
+$('pinForm').onsubmit = async e => {
+  e.preventDefault();
+  const fd = new FormData(); fd.append('pin', $('pin').value);
+  const r = await fetch('/api/nurse/login', { method: 'POST', body: fd });
+  if (r.ok) { $('pinSheet').hidden = true; poll(); } else { $('pinMsg').textContent = 'That PIN is not right.'; }
+};
+const NAMES = ['who', 'age', 'onset', 'worse', 'where', 'severity', 'fever', 'breathing', 'drinking', 'vomiting', 'fits', 'bleeding', 'neck', 'pregnancy', 'chronic', 'medicines', 'allergy', 'other'];
+Promise.all(NAMES.map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(() => { poll(); setInterval(poll, 3000); });
+</script>
+<script src="help.js"></script>
+</body>
+</html>

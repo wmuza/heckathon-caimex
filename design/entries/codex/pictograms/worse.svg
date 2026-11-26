@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .worse-motion {
+      animation: worse-loop 3.4s ease-in-out infinite;
+      transform-origin: 136px 88px;
+    }
+    @keyframes worse-loop {
+      0%, 18%, 100% { transform: scale(1); }
+      58%, 78% { transform: scale(1.16); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .worse-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="65" cy="84" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M30 189v-45a31 31 0 0 1 31-31h12q29 0 33 31l4 45z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m49 144 9 17q4 7 12 4l17-8" stroke="var(--ink, #1F2430)"/>
+    <path d="m122 175 22-12-12-10 22-14m9-19 23-26 13 2 10-22m-19 7 19-7 4 19" stroke="var(--accent, #2563EB)"/>
+    <path class="worse-motion" d="m132 113 14-23-17-3 17-29" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

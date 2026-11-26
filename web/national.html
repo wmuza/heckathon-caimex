@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: Zimbabwe</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 1180px; --s1: #DCE7FB; --s2: #B5CCF7; --s3: #86ABF1; --s4: #4F86F7; --s5: #1D4ED8; }
+  [data-theme="dark"] { --s1: #1B2A4A; --s2: #24407A; --s3: #2F5BB5; --s4: #4F86F7; --s5: #9DBBFB; }
+  .band-in { flex-wrap: wrap; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .pick { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .pick .seg { flex-wrap: wrap; border-radius: 22px; }
+  .map { width: 100%; height: auto; display: block; margin-top: 10px; }
+  .map .pv { stroke: var(--panel); stroke-width: 2; cursor: pointer; }
+  .map .pv:hover, .map .pv:focus-visible, .map .pv[aria-pressed="true"] { stroke: var(--ink); stroke-width: 2.5; outline: none; }
+  .map .usual { fill: var(--neutral-tint); } .map .watch { fill: var(--selected); }
+  .map .likely { fill: url(#zhatch); } .map .confirmed { fill: var(--red-fill); }
+  .map .q1 { fill: var(--s1); } .map .q2 { fill: var(--s2); } .map .q3 { fill: var(--s3); } .map .q4 { fill: var(--s4); } .map .q5 { fill: var(--s5); }
+  .map text { font: 600 13px 'Figtree', sans-serif; fill: var(--ink); text-anchor: middle; pointer-events: none; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; }
+  .map text.v { font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
+  .map .city { fill: var(--panel); stroke: var(--ink); stroke-width: 2; pointer-events: none; }
+  .map .lead { stroke: var(--ink-2); stroke-width: 1.5; pointer-events: none; }
+  .map .here { fill: none; stroke: var(--blue-fill); stroke-width: 3; pointer-events: none; }
+  .legend { display: flex; gap: 8px 16px; flex-wrap: wrap; margin-top: 10px; }
+  .legend span { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; font-size: 0.875rem; }
+  .sw { width: 20px; height: 20px; border-radius: 6px; flex: none; box-shadow: inset 0 0 0 1px var(--hairline); }
+  .sw.usual { background: var(--neutral-tint); } .sw.watch { background: var(--selected); }
+  .sw.likely { background: repeating-linear-gradient(45deg, var(--red-fill) 0 3px, var(--red-tint) 3px 8px); } .sw.confirmed { background: var(--red-fill); }
+  .sw.q1 { background: var(--s1); } .sw.q2 { background: var(--s2); } .sw.q3 { background: var(--s3); } .sw.q4 { background: var(--s4); } .sw.q5 { background: var(--s5); }
+  .sw.here { background: none; box-shadow: none; border: 3px solid var(--blue-fill); border-radius: 50%; }
+  .src { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: var(--neutral-tint); color: var(--neutral-ink); white-space: nowrap; }
+  .src.real { background: var(--green-tint); color: var(--green-ink); } .src.ai { background: var(--selected); color: var(--blue-ink); }
+  .warn { padding: 16px 0; border-bottom: 1px solid var(--divider); }
+  .warn:first-of-type { padding-top: 6px; } .warn:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .warn .hd { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; }
+  .warn .art { width: 56px; height: 56px; border-radius: 14px; background: var(--panel-sunk); padding: 4px; }
+  .warn h3 { font-size: 1.0625rem; font-weight: 700; line-height: 1.3; }
+  .warn .sc { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; text-align: right; }
+  .warn .sc small { display: block; font-size: 0.75rem; font-weight: 600; color: var(--ink-2); }
+  .dr { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; margin-top: 10px; align-items: center; }
+  .dr .lb { font-size: 0.9375rem; } .dr .lb b { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .dr .pt { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.9375rem; text-align: right; }
+  .dr .tr { grid-column: 1 / -1; height: 8px; border-radius: 999px; background: var(--neutral-tint); position: relative; margin-bottom: 6px; }
+  .dr .tr i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--blue-fill); }
+  .tag.confirmed { background: var(--red-fill); color: var(--ink-on); } .tag.confirmed .dot { background: var(--ink-on); }
+  .tag.likely { background: var(--warn-tint); color: var(--warn-ink); } .tag.likely .dot { background: var(--warn-dot); }
+  .tag.watch { background: var(--selected); color: var(--blue-ink); } .tag.watch .dot { background: var(--blue-fill); }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .out { margin-top: 10px; padding: 12px 14px; border-radius: 16px; background: var(--selected); }
+  .out pre { white-space: pre-wrap; font: inherit; margin: 6px 0 0; }
+  .ev { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 10px; margin-top: 12px; }
+  .ev div { background: var(--panel-sunk); border-radius: 16px; padding: 12px 14px; }
+  .ev b { display: block; margin-bottom: 2px; } .ev span.t { color: var(--ink-2); font-size: 0.875rem; display: block; margin-top: 4px; }
+  #tbl .r { padding-right: 16px; }
+  @media (max-width: 480px) { .warn .hd { grid-template-columns: 44px 1fr; } .warn .art { width: 44px; height: 44px; } .warn .sc { grid-column: 1 / -1; text-align: left; } .warn .sc small { display: inline; margin-left: 6px; } .dr .lb { overflow-wrap: anywhere; } .pick .seg button { padding: 0 10px; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Zimbabwe</h1>
+      <p class="sub">Where the weather, the water and past cases favour an outbreak</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national" aria-current="page">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+    <section class="panel" aria-labelledby="mapT">
+      <h2 class="title" id="mapT"></h2>
+      <p class="quiet small" id="mapSub"></p>
+      <div class="pick">
+        <div class="seg" role="group" aria-label="Illness" id="dis"></div>
+        <div class="seg" role="group" aria-label="What the map shows" id="lay"></div>
+      </div>
+      <div id="map"></div>
+      <div class="legend" id="legend"></div>
+      <p class="quiet small" id="credit" style="margin-top:12px"></p>
+    </section>
+
+    <section class="panel" aria-labelledby="wT">
+      <h2 class="title" id="wT">Warnings for clinics</h2>
+      <p class="quiet small" id="wSub"></p>
+      <div id="warns"></div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:16px" aria-labelledby="evT">
+    <h2 class="title" id="evT">The evidence behind the map</h2>
+    <div class="ev" id="ev"></div>
+  </section>
+
+  <section class="panel" style="margin-top:16px" aria-labelledby="tblT">
+    <h2 class="title" id="tblT">Every province, as a table</h2>
+    <div class="scroll-x" style="margin-top:8px"><table class="t" id="tbl"></table></div>
+  </section>
+</div>
+
+<footer class="foot noprint">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+</footer>
+
+<div id="pinSheet" class="sheet-back" hidden>
+  <form class="sheet stack" id="pinForm">
+    <h2 class="title">Staff PIN</h2>
+    <input class="field" id="pin" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN">
+    <p class="small" id="pinMsg" style="color:var(--red-ink)" role="alert"></p>
+    <button class="btn primary block">Open</button>
+  </form>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+const LEVEL = { confirmed: 'Outbreak reported', likely: 'High risk', watch: 'Watch', usual: 'As usual' };
+const SRC = { weather: ['real', 'Real weather'], 'made up': ['', 'Made up for the demo'], 'our estimate': ['', 'Our estimate'] };
+const LAYERS = {
+  risk: { name: 'Risk', title: d => `Risk of ${d.name.toLowerCase()}, by province`, sub: 'A score from 0 to 100, from the weather, reported water problems and recent cases.' },
+  rain: { name: 'Rain', title: () => 'Rain in the last seven days', sub: 'Millimetres, at each province\'s centre point. Real weather.', unit: ' mm', val: r => r.conditions.rain_7 },
+  water: { name: 'Water', title: () => 'Water points reported broken or unsafe', sub: 'Reports from clinics. Made up for the demonstration.', unit: '', val: r => r.water_reports },
+  cases: { name: 'Past cases', title: d => `${d.name}: cases in the last two weeks`, sub: 'Reported by clinics, a week on average. Made up for the demonstration.', unit: '', val: (r, k) => Math.round((r.risk[k].cases_by_week[6] + r.risk[k].cases_by_week[7]) / 2) },
+};
+const SHORT = { 'Mashonaland Central': 'Mash. Central', 'Mashonaland East': 'Mash. East', 'Mashonaland West': 'Mash. West', 'Matabeleland North': 'Mat. North', 'Matabeleland South': 'Mat. South' };
+const CITY = { Harare: [70, -40], Bulawayo: [-80, 40] };       // small provinces get a label beside them
+const pictures = {}, said = {};
+let d = null, geo = null, disease = 'diarrhoeal', layer = 'risk', picked = null;
+
+function mapSvg() {
+  const L = LAYERS[layer], vals = layer === 'risk' ? null : d.provinces.map(r => L.val(r, disease));
+  const top = vals ? Math.max(...vals, 1) : 0;
+  const cls = r => layer === 'risk' ? r.risk[disease].level : 'q' + Math.min(5, 1 + Math.floor(L.val(r, disease) / top * 4.999));
+  const txt = r => layer === 'risk' ? r.risk[disease].score : L.val(r, disease) + (L.unit || '');
+  const shapes = geo.provinces.map(g => { const r = d.provinces.find(x => x.name === g.name);
+    return `<path class="pv ${cls(r)}" d="${g.d}" tabindex="0" role="button" data-p="${esc(g.name)}" aria-pressed="${g.name === picked}" aria-label="${esc(g.name)}: ${txt(r)}${layer === 'risk' ? ' out of 100, ' + LEVEL[r.risk[disease].level] : ''}"/>`; }).join('');
+  const labels = geo.provinces.map(g => { const r = d.provinces.find(x => x.name === g.name), c = CITY[g.name];
+    const x = g.x + (c ? c[0] : 0), y = g.y + (c ? c[1] : 0);
+    return `${c ? `<line class="lead" x1="${g.x}" y1="${g.y}" x2="${x}" y2="${y + 4}"/><circle class="city" cx="${g.x}" cy="${g.y}" r="5"/>` : ''}
+      ${g.name === d.clinic_province ? `<circle class="here" cx="${g.x}" cy="${g.y}" r="${c ? 11 : 44}"/>` : ''}
+      <text x="${x}" y="${y - 6}">${esc(SHORT[g.name] || g.name)}</text><text class="v" x="${x}" y="${y + 13}">${txt(r)}</text>`; }).join('');
+  return `<svg class="map" viewBox="-20 -10 ${geo.width + 40} ${geo.height + 20}" role="group" aria-label="Map of Zimbabwe by province">
+    <defs><pattern id="zhatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="9" height="9" fill="var(--red-tint)"/><rect width="3" height="9" fill="var(--red-fill)" opacity="0.55"/></pattern></defs>${shapes}${labels}</svg>`;
+}
+
+function warnHtml(w) {
+  const id = w.province + '|' + w.disease, o = said[id];
+  return `<article class="warn">
+    <div class="hd"><span class="art" aria-hidden="true">${pictures[w.picture] || ''}</span>
+      <div><span class="tag ${w.level}"><span class="dot"></span>${LEVEL[w.level]}</span><h3 style="margin-top:4px">${esc(w.name)} in ${esc(w.province)}</h3></div>
+      <div class="sc">${w.score}<small>out of 100</small></div></div>
+    <div class="dr">${w.drivers.map(x => `<span class="lb">${esc(x.label)}: <b>${esc(x.value)}</b> <span class="src ${SRC[x.source][0]}">${SRC[x.source][1]}</span></span><span class="pt">${x.points} of ${x.max}</span><span class="tr"><i style="width:${x.points / x.max * 100}%"></i></span>`).join('')}</div>
+    <p class="strong" style="margin-top:6px">${esc(w.advice)}</p>
+    <div class="acts"><button class="btn sm" data-why="${esc(id)}">Why? Ask CAIMEx</button><button class="btn sm" data-draft="${esc(id)}">Draft the alert with CAIMEx</button>
+      <button class="btn sm" data-say="${w.disease}">Hear the Shona warning</button></div>
+    ${o ? `<div class="out"><span class="src ai">${esc(o.by)}</span><pre>${esc(o.text)}</pre></div>` : ''}
+  </article>`;
+}
+
+function render() {
+  const L = LAYERS[layer], D = d.diseases[disease];
+  $('mapT').textContent = L.title(D); $('mapSub').textContent = L.sub;
+  $('dis').innerHTML = Object.entries(d.diseases).map(([k, v]) => `<button data-d="${k}" aria-pressed="${k === disease}">${CK}${esc(k === 'diarrhoeal' ? 'Diarrhoeal' : v.name)}</button>`).join('');
+  $('lay').innerHTML = Object.entries(LAYERS).map(([k, v]) => `<button data-l="${k}" aria-pressed="${k === layer}">${CK}${v.name}</button>`).join('');
+  $('dis').querySelectorAll('button').forEach(b => b.onclick = () => { disease = b.dataset.d; render(); });
+  $('lay').querySelectorAll('button').forEach(b => b.onclick = () => { layer = b.dataset.l; render(); });
+  $('map').innerHTML = mapSvg();
+  $('map').querySelectorAll('.pv').forEach(p => {
+    p.onclick = () => { picked = picked === p.dataset.p ? null : p.dataset.p; render(); };
+    p.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); p.onclick(); } };
+  });
+  $('legend').innerHTML = (layer === 'risk' ? ['confirmed', 'likely', 'watch', 'usual'].map(l => `<span><i class="sw ${l}"></i>${LEVEL[l]}${l === 'likely' ? ` (${d.thresholds.high}+)` : l === 'watch' ? ` (${d.thresholds.watch}+)` : ''}</span>`).join('')
+    : '<span>Less</span>' + [1, 2, 3, 4, 5].map(q => `<span><i class="sw q${q}"></i></span>`).join('') + '<span>More</span>') + `<span><i class="sw here"></i>This clinic's province</span>`;
+  $('credit').innerHTML = `Boundaries: ${esc(geo.source)} Weather: ${esc(d.weather.source)} ${d.weather.live ? 'Fetched' : 'Saved copy from'} ${esc(d.weather.fetched)}.`;
+
+  const shown = d.warnings.filter(w => (!picked || w.province === picked) && (picked || true));
+  $('wT').textContent = picked ? `Warnings for clinics in ${picked}` : 'Warnings for clinics';
+  $('wSub').textContent = picked ? 'Press the province again to see the whole country.' : `${d.warnings.length} across the country, most serious first. A clinic sees its own province's warnings on its Forecast page.`;
+  $('warns').innerHTML = shown.length ? shown.map(warnHtml).join('') : `<p class="quiet" style="padding:16px 0">No warning for ${esc(picked)}. Conditions there are as usual.</p>`;
+  $('warns').querySelectorAll('[data-why],[data-draft]').forEach(b => b.onclick = () => ask(b.dataset.why || b.dataset.draft, b.dataset.why ? 'why' : 'draft'));
+  $('warns').querySelectorAll('[data-say]').forEach(b => b.onclick = () => new Audio(`/api/say/warning.mp3?disease=${b.dataset.say}&lang=sn`).play().catch(() => {}));
+
+  $('ev').innerHTML = [
+    ['Weather', 'real', 'Real', 'Rainfall and temperature for the last eight weeks and the coming week, for each province. Heavy rain favours diarrhoeal disease; rain a few weeks earlier, with warmth, favours malaria; cold favours chest infections.'],
+    ['Water', '', 'Made up for the demo', 'How many water points clinics reported broken or unsafe. A real system would take this from the clinics\' own reports.'],
+    ['Past cases', '', 'Made up for the demo', 'Cases reported by clinics in each province over eight weeks, and whether an outbreak is already reported. A real system would read the national weekly disease returns.'],
+    ['The score', '', 'Our weights', 'Points are added up as shown on each warning. The weights are ours and have not been fitted to data or reviewed by an epidemiologist, so the score ranks provinces; it is not a probability.'],
+    ['CAIMEx', 'ai', 'Explains and speaks', 'No AI computes the score. A CAIMEx chat model explains a warning and drafts the alert from the numbers; the CAIMEx voice reads a fixed warning in Shona.'],
+  ].map(([h, c, tag, t]) => `<div><b>${h}</b><span class="src ${c}">${tag}</span><span class="t">${t}</span></div>`).join('');
+  const lv = r => Object.keys(d.diseases).map(k => r.risk[k]);
+  $('tbl').innerHTML = `<thead><tr><th>Province</th>${Object.values(d.diseases).map(v => `<th class="r">${esc(v.name)}</th>`).join('')}<th class="r">Rain, 7 days</th><th class="r">Forecast rain</th><th class="r">Temperature</th><th class="r">Water reports</th></tr></thead><tbody>` +
+    d.provinces.map(r => `<tr><td class="strong">${esc(r.name)}</td>${lv(r).map(x => `<td class="r num">${x.score}${x.level === 'usual' ? '' : ' · ' + LEVEL[x.level]}</td>`).join('')}
+      <td class="r num">${r.conditions.rain_7} mm</td><td class="r num">${r.conditions.rain_next_7} mm</td><td class="r num">${r.conditions.temp_7} °C</td><td class="r num">${r.water_reports}</td></tr>`).join('') + '</tbody>';
+}
+
+async function ask(id, kind) {
+  const [province, dis] = id.split('|');
+  said[id] = { by: 'CAIMEx', text: kind === 'why' ? 'CAIMEx is reading the numbers…' : 'CAIMEx is drafting…' }; render();
+  try {
+    const r = await fetch('/api/predict/' + kind, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ province, disease: dis }) });
+    const j = await r.json();
+    if (!r.ok) said[id] = { by: 'CAIMEx', text: j.detail || 'CAIMEx did not answer. Try again.' };
+    else if (kind === 'why') said[id] = { by: `Explained by CAIMEx · ${j.model}`, text: j.answer || 'CAIMEx gave a number we had not computed, so its answer is not shown. Try again.' };
+    else said[id] = { by: `Drafted by CAIMEx · ${j.model} · not sent`, text: `Text message for community health workers (${j.sms.length} of 160 characters):\n${j.sms || '(left out: it held a number we had not computed)'}\n\nNote for the provincial health office:\n${j.note || '(left out: it held a number we had not computed)'}\n\nNothing is sent from this page. A person checks and sends it.` };
+  } catch (e) { said[id] = { by: 'CAIMEx', text: 'CAIMEx could not be reached.' }; }
+  render();
+}
+async function poll() {
+  try {
+    const r = await fetch('/api/national');
+    if (r.status === 401) { $('pinSheet').hidden = false; return; }
+    const j = await r.json(), sig = JSON.stringify({ ...j, now: 0 });
+    if (sig === poll.sig) return;
+    poll.sig = sig; d = j; render();
+  } catch (e) {}
+}
+$('pinForm').onsubmit = async e => {
+  e.preventDefault();
+  const fd = new FormData(); fd.append('pin', $('pin').value);
+  const r = await fetch('/api/nurse/login', { method: 'POST', body: fd });
+  if (r.ok) { $('pinSheet').hidden = true; poll(); } else { $('pinMsg').textContent = 'That PIN is not right.'; }
+};
+Promise.all([fetch('/zw_provinces.json').then(r => r.json()).then(g => { geo = g; }),
+  ...['vomiting', 'fever', 'breathing'].map(n => Art.load(n).then(t => { pictures[n] = t; }))]).then(() => { poll(); setInterval(poll, 30000); });
+</script>
+<script src="help.js"></script>
+</body>
+</html>

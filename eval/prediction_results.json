@@ -1,0 +1,158 @@
+{
+ "ran_at": "2026-11-26 12:35",
+ "about": "Simulated clinics with planted outbreaks; see the top of tools/evaluate_prediction.py. Not real patients, and not validation on real outbreaks. Settings were chosen on the tuning clinics and scored on the test clinics.",
+ "clinics": {
+  "tuning": 12,
+  "test": 30,
+  "series_each": 27,
+  "days_scored_each": 320
+ },
+ "settings": {
+  "z_alert": 2.0,
+  "min_week": 4,
+  "calm": [
+   14,
+   4.0,
+   0.6
+  ],
+  "rise": [
+   7,
+   1.0,
+   0.6
+  ],
+  "phi": 0.5,
+  "kappa": 1.5
+ },
+ "detection_test": {
+  "this_detector": {
+   "outbreaks": 235,
+   "caught_within_14_days": 203,
+   "median_days_to_flag": 8,
+   "false_alarms_per_ward_year": 3.72
+  },
+  "weekly_count": {
+   "outbreaks": 235,
+   "caught_within_14_days": 207,
+   "median_days_to_flag": 8,
+   "false_alarms_per_ward_year": 5.57
+  }
+ },
+ "detection_tuning": {
+  "weekly_count": {
+   "outbreaks": 96,
+   "caught_within_14_days": 89,
+   "median_days_to_flag": 7,
+   "false_alarms_per_ward_year": 5.55
+  },
+  "this_detector_by_threshold": {
+   "1.0": {
+    "outbreaks": 96,
+    "caught_within_14_days": 92,
+    "median_days_to_flag": 6.0,
+    "false_alarms_per_ward_year": 8.5
+   },
+   "1.25": {
+    "outbreaks": 96,
+    "caught_within_14_days": 92,
+    "median_days_to_flag": 7.0,
+    "false_alarms_per_ward_year": 7.33
+   },
+   "1.5": {
+    "outbreaks": 96,
+    "caught_within_14_days": 91,
+    "median_days_to_flag": 7,
+    "false_alarms_per_ward_year": 6.02
+   },
+   "1.75": {
+    "outbreaks": 96,
+    "caught_within_14_days": 87,
+    "median_days_to_flag": 7,
+    "false_alarms_per_ward_year": 4.75
+   },
+   "2.0": {
+    "outbreaks": 96,
+    "caught_within_14_days": 83,
+    "median_days_to_flag": 8,
+    "false_alarms_per_ward_year": 3.63
+   },
+   "2.25": {
+    "outbreaks": 96,
+    "caught_within_14_days": 79,
+    "median_days_to_flag": 9,
+    "false_alarms_per_ward_year": 2.62
+   },
+   "2.5": {
+    "outbreaks": 96,
+    "caught_within_14_days": 77,
+    "median_days_to_flag": 9,
+    "false_alarms_per_ward_year": 2.01
+   },
+   "2.75": {
+    "outbreaks": 96,
+    "caught_within_14_days": 73,
+    "median_days_to_flag": 9,
+    "false_alarms_per_ward_year": 1.44
+   },
+   "3.0": {
+    "outbreaks": 96,
+    "caught_within_14_days": 70,
+    "median_days_to_flag": 9.5,
+    "false_alarms_per_ward_year": 1.02
+   },
+   "3.25": {
+    "outbreaks": 96,
+    "caught_within_14_days": 66,
+    "median_days_to_flag": 9.5,
+    "false_alarms_per_ward_year": 0.64
+   },
+   "3.5": {
+    "outbreaks": 96,
+    "caught_within_14_days": 62,
+    "median_days_to_flag": 10.0,
+    "false_alarms_per_ward_year": 0.41
+   },
+   "3.75": {
+    "outbreaks": 96,
+    "caught_within_14_days": 58,
+    "median_days_to_flag": 10.0,
+    "false_alarms_per_ward_year": 0.27
+   },
+   "4.0": {
+    "outbreaks": 96,
+    "caught_within_14_days": 57,
+    "median_days_to_flag": 10,
+    "false_alarms_per_ward_year": 0.19
+   }
+  },
+  "rule": "fewest false alarms while catching at least 9 in 10 of what the weekly count catches"
+ },
+ "forecast_test": {
+  "weeks_scored": 36450,
+  "mean_error_cases_a_week": {
+   "this_forecast": 1.721,
+   "same_as_last_week": 2.171,
+   "the_usual": 1.786
+  },
+  "during_outbreaks": {
+   "weeks": 927,
+   "this_forecast": 4.781,
+   "same_as_last_week": 5.122,
+   "the_usual": 5.532
+  },
+  "weeks_flagged_by_the_detector": {
+   "weeks": 1829,
+   "this_forecast": 2.673,
+   "same_as_last_week": 5.147,
+   "the_usual": 2.902
+  },
+  "quiet_weeks": {
+   "weeks": 35523,
+   "this_forecast": 1.641,
+   "same_as_last_week": 2.094,
+   "the_usual": 1.688
+  },
+  "share_of_weeks_inside_the_80_range": 0.889,
+  "inside_the_range_during_outbreaks": 0.643
+ },
+ "seconds": 4
+}

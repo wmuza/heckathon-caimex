@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.not_doctor-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.not_doctor-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.not_doctor-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.not_doctor-fill{fill:var(--accent,#2563EB)}.not_doctor-tint{fill:var(--tint,#E8F0FE)}.not_doctor-hot{fill:var(--danger,#CF2A30)}.not_doctor-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.not_doctor-bar{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(.65);animation:not_doctor-eq 2.8s ease-in-out infinite}
+.not_doctor-b2{animation-delay:-.4s}
+.not_doctor-b3{animation-delay:-.9s}
+.not_doctor-slash{stroke-dasharray:1;stroke-dashoffset:0;animation:not_doctor-draw 2.8s ease-in-out infinite}
+@keyframes not_doctor-eq{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes not_doctor-draw{0%{stroke-dashoffset:1}40%,100%{stroke-dashoffset:0}}
+
+@media (prefers-reduced-motion:reduce){.not_doctor-move{animation:none}}
+</style>
+
+<rect class="not_doctor-body" x="28" y="40" width="96" height="156" rx="18"/>
+<rect class="not_doctor-fill not_doctor-bar not_doctor-move not_doctor-b1" x="48" y="100" width="10" height="44" rx="5"/><rect class="not_doctor-fill not_doctor-bar not_doctor-move not_doctor-b2" x="66" y="100" width="10" height="44" rx="5"/><rect class="not_doctor-fill not_doctor-bar not_doctor-move not_doctor-b3" x="84" y="100" width="10" height="44" rx="5"/>
+<path class="not_doctor-quiet" d="M156 70v34c0 30 40 30 40 0V78"/>
+<circle class="not_doctor-quiet" cx="156" cy="64" r="11"/>
+<circle class="not_doctor-quiet" cx="196" cy="64" r="11"/>
+<circle class="not_doctor-quiet" cx="176" cy="154" r="16"/>
+<path class="not_doctor-line not_doctor-slash not_doctor-move" pathLength="1" d="M142 176L210 92"/>
+
+</svg>

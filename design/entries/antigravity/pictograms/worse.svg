@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .worse-b2 { animation: worse-step2 3.2s ease-in-out infinite; transform-origin: 120px 186px; }
+    .worse-b3 { animation: worse-step3 3.2s ease-in-out infinite; transform-origin: 170px 186px; }
+    .worse-arrow { animation: worse-rise 3.2s ease-in-out infinite; }
+    @keyframes worse-step2 {
+      0%, 100% { transform: scaleY(0.9); }
+      35%, 80% { transform: scaleY(1); }
+    }
+    @keyframes worse-step3 {
+      0%, 25%, 100% { transform: scaleY(0.84); }
+      60%, 85% { transform: scaleY(1.04); }
+    }
+    @keyframes worse-rise {
+      0%, 100% { transform: translate(0, 4px); opacity: 0.65; }
+      60% { transform: translate(4px, -6px); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .worse-b2, .worse-b3, .worse-arrow { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <path d="M36 186h168" stroke="var(--quiet, #5B6474)" stroke-width="6" stroke-linecap="round"/>
+  <rect x="48" y="142" width="36" height="44" rx="10" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <rect class="worse-b2" x="102" y="110" width="36" height="76" rx="10" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <rect class="worse-b3" x="156" y="72" width="36" height="114" rx="10" fill="var(--danger, #CF2A30)" fill-opacity="0.16" stroke="var(--danger, #CF2A30)" stroke-width="6"/>
+  <g class="worse-arrow" fill="none" stroke="var(--danger, #CF2A30)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M52 106Q108 78 164 42"/>
+    <path d="M144 40h22v22"/>
+  </g>
+</svg>

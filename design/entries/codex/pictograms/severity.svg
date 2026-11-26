@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .severity-motion {
+      animation: severity-loop 3.2s ease-in-out infinite;
+      transform-origin: 120px 78px;
+    }
+    @keyframes severity-loop {
+      0%, 100% { transform: scale(1); }
+      45%, 65% { transform: scale(1.12); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .severity-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="106" r="43" fill="var(--paper, #FFFFFF)"/>
+    <path d="M59 207v-12q0-29 26-40m96 52v-12q0-29-26-40"/>
+    <path d="m86 154-27-29q-6-7 0-14 7-6 14 0l16 16m65 27 27-29q6-7 0-14-7-6-14 0l-16 16" fill="var(--paper, #FFFFFF)"/>
+    <path d="m98 98 12 7-12 5m44-12-12 7 12 5m-31 22q9-10 18 0"/>
+    <g class="severity-motion" stroke="var(--accent, #2563EB)">
+      <path d="m116 26-9 16 15 3-8 13m-51 0-15 5 9 11-16 8m136-24 15 5-9 11 16 8"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .chronic-day { animation: chronic-pass 3.8s ease-in-out infinite; }
+    .chronic-second { animation-delay: -3.04s; }
+    .chronic-third { animation-delay: -2.28s; }
+    .chronic-fourth { animation-delay: -1.52s; }
+    .chronic-fifth { animation-delay: -.76s; }
+    @keyframes chronic-pass {
+      0%, 8% { stroke: var(--accent, #2563EB); }
+      20%, 86% { stroke: var(--quiet, #5B6474); }
+      100% { stroke: var(--accent, #2563EB); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chronic-day { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="49" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M67 139v-23q0-34 34-34h38q34 0 34 34v23z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M120 129c-5-5-19-12-19-22 0-12 14-15 19-5 5-10 19-7 19 5 0 10-14 17-19 22z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+    <g stroke="var(--quiet, #5B6474)">
+      <path class="chronic-day" d="M84 177v10"/>
+      <path class="chronic-day chronic-second" d="M102 177v10"/>
+      <path class="chronic-day chronic-third" d="M120 177v10"/>
+      <path class="chronic-day chronic-fourth" d="M138 177v10"/>
+      <path class="chronic-day chronic-fifth" d="M156 177v10"/>
+    </g>
+    <path d="M162 159h8a23 23 0 0 1 0 46H70a23 23 0 0 1 0-46h21m-11-10 11 10-11 10" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

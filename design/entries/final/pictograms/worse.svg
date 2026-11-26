@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .worse-largest {
+      animation: worse-grow 3.4s ease-in-out infinite;
+      transform-origin: 175px 79px;
+    }
+    @keyframes worse-grow {
+      0%, 14%, 100% { transform: scale(.91); }
+      56%, 78% { transform: scale(1.08); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .worse-largest { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m55 110-13 13 14 4-13 13m73-50-20 20 22 6-20 20"/>
+    <path class="worse-largest" d="m189 42-32 32 35 10-32 32"/>
+    <path d="M39 185q101 10 162-57m-25 6 25-6-5 25"/>
+  </g>
+</svg>

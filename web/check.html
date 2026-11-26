@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: voice check</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="rec.js"></script>
+<style>
+  :root { --col: 760px; }
+  .band-in { flex-wrap: wrap; }
+  .wrap { display: flex; flex-direction: column; gap: 14px; }
+  textarea.field { min-height: 96px; resize: none; line-height: 1.45; }
+  .field::placeholder { color: var(--ink-2); opacity: 1; }
+  .recrow { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .res { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; }
+  .res dt { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); padding-top: 3px; }
+  .res dd { margin: 0; overflow-wrap: anywhere; }
+  .big { font-size: 1.875rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .two { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+  span.lab { display: block; font-weight: 600; font-size: 0.9375rem; margin-bottom: 6px; }
+  @media (max-width: 520px) { .two { grid-template-columns: 1fr; } .res { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Voice check</h1>
+      <p class="sub">How well does the recogniser hear a real person?</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="panel stack">
+    <p>Type a sentence the way a patient might say it, then say exactly that. Your typed sentence is the reference, so the score is measured against words no model wrote. Use made-up complaints, not your own health.</p>
+    <div class="two">
+      <div>
+        <label class="lab" for="speaker">Your first name or a nickname</label>
+        <input class="field" id="speaker" autocomplete="off" maxlength="40">
+      </div>
+      <div>
+        <span class="lab" id="langLab">Language you will speak</span>
+        <div class="seg" role="group" aria-labelledby="langLab">
+          <button data-l="sn" aria-pressed="true">ChiShona</button>
+          <button data-l="en" aria-pressed="false">English</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label class="lab" for="ref">The sentence you will say</label>
+      <textarea class="field" id="ref" placeholder="Ndine musoro uri kurwadza kubva nezuro"></textarea>
+    </div>
+    <div class="recrow">
+      <button id="rec" class="btn primary">Start recording</button>
+      <span id="status" class="quiet strong" role="status"></span>
+    </div>
+  </div>
+
+  <div class="panel stack" id="result" hidden>
+    <p class="strong">This sentence</p>
+    <p><span class="big" id="cer"></span> <span class="quiet">character error</span></p>
+    <dl class="res">
+      <dt>You typed</dt><dd id="rRef"></dd>
+      <dt>Mukoti heard</dt><dd id="rHeard"></dd>
+    </dl>
+  </div>
+
+  <div class="panel stack">
+    <p class="strong">Everyone so far</p>
+    <div id="summary" class="quiet">No sentences yet.</div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pct = x => (x * 100).toFixed(1) + '%';
+let lang = 'sn', stream = null, recorder = null, ctx = null, recording = false;
+try { $('speaker').value = localStorage.getItem('mukoti-speaker') || ''; } catch (e) {}
+const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+document.querySelectorAll('[data-l]').forEach(b => {
+  b.insertAdjacentHTML('afterbegin', CK);
+  b.onclick = () => {
+    lang = b.dataset.l;
+    document.querySelectorAll('[data-l]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    $('ref').placeholder = lang === 'sn' ? 'Ndine musoro uri kurwadza kubva nezuro' : 'I have had a headache since yesterday';
+  };
+});
+
+$('rec').onclick = async () => {
+  if (recording) { recording = false; send(recorder.stop().blob); return; }
+  if (!$('ref').value.trim()) { $('status').textContent = 'Type the sentence first.'; $('ref').focus(); return; }
+  ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+  if (ctx.state === 'suspended') ctx.resume();
+  try {
+    if (!stream) {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      recorder = new WavRecorder(ctx, ctx.createMediaStreamSource(stream));
+    }
+  } catch (e) { $('status').textContent = 'The microphone is not available.'; return; }
+  await recorder.start(); recording = true;
+  $('rec').textContent = 'Stop'; $('rec').className = 'btn danger'; $('status').textContent = 'Recording. Say the sentence, then press Stop.';
+};
+
+async function send(blob) {
+  $('rec').textContent = 'Start recording'; $('rec').className = 'btn primary'; $('rec').disabled = true;
+  $('status').textContent = 'Listening to it…';
+  try { localStorage.setItem('mukoti-speaker', $('speaker').value); } catch (e) {}
+  const fd = new FormData();
+  fd.append('audio', blob, 'check.wav');
+  fd.append('reference', $('ref').value); fd.append('speaker', $('speaker').value); fd.append('lang', lang);
+  try {
+    const r = await fetch('/api/voicecheck', { method: 'POST', body: fd });
+    if (r.status === 401) { $('status').textContent = "Open the nurse's queue and enter the PIN first."; $('rec').disabled = false; return; }
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    $('result').hidden = false;
+    $('cer').textContent = d.cer == null ? 'n/a' : pct(d.cer);
+    $('rRef').textContent = d.reference; $('rHeard').textContent = d.heard || '(nothing)';
+    $('status').textContent = 'Saved. Type another sentence.'; $('ref').value = '';
+    summary();
+  } catch (e) { $('status').textContent = 'That did not work. Please try again.'; }
+  $('rec').disabled = false;
+}
+
+async function summary() {
+  try {
+    const d = await (await fetch('/api/voicecheck')).json();
+    if (!d.lines) return;
+    $('summary').className = '';
+    $('summary').innerHTML = `<p><span class="big">${pct(d.cer)}</span> <span class="quiet">character error over ${d.lines} sentence${d.lines === 1 ? '' : 's'}</span></p>
+      <div class="scroll-x" style="margin-top:8px"><table class="t"><thead><tr><th>Speaker</th><th class="r">Sentences</th><th class="r">Character error</th><th class="r">Word error</th></tr></thead><tbody>
+      ${d.speakers.map(s => `<tr><td>${esc(s.speaker)}</td><td class="r num">${s.lines}</td><td class="r num">${pct(s.cer)}</td><td class="r num">${pct(s.wer)}</td></tr>`).join('')}</tbody></table></div>`;
+  } catch (e) {}
+}
+summary();
+</script>
+</body>
+</html>

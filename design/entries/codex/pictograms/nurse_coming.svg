@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .nurse_coming-motion {
+      animation: nurse_coming-loop 3.6s ease-in-out infinite;
+
+    }
+    @keyframes nurse_coming-loop {
+      0%, 15%, 100% { transform: translateX(0); }
+      62%, 78% { transform: translateX(-9px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nurse_coming-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M142 175V48h64v127" stroke="var(--quiet, #5B6474)"/>
+    <path d="M25 199h190" stroke="var(--quiet, #5B6474)"/>
+    <circle cx="51" cy="106" r="15" fill="var(--paper, #FFFFFF)"/>
+    <path d="M35 173v-36q0-10 11-10h14q9 0 13 10l8 16h16q8 0 8 8v31H90l-6-19z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M27 142v34h55m-55 0v21m55-21v21" stroke="var(--quiet, #5B6474)"/>
+    <path d="M91 110h24m-22-8-8 8 8 8" stroke="var(--accent, #2563EB)"/>
+    <g class="nurse_coming-motion">
+      <circle cx="160" cy="87" r="20" fill="var(--paper, #FFFFFF)"/>
+      <path d="M135 156l-16 39m48-39 12 38" stroke="var(--ink, #1F2430)"/>
+      <path d="M132 157v-23q0-19 19-19h18q19 0 19 19v23z" fill="var(--paper, #FFFFFF)"/>
+      <path d="M166 126v17m-8-8h16" stroke="var(--accent, #2563EB)"/>
+    </g>
+  </g>
+</svg>

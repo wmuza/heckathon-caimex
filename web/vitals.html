@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: vitals</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 980px; }
+  .band-in { flex-wrap: wrap; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+  .tk {
+    display: grid; grid-template-columns: 72px 1fr; gap: 4px 12px; align-items: center; text-align: left; cursor: pointer;
+    background: var(--panel); border: 1px solid var(--hairline); border-radius: 22px; padding: 14px;
+    box-shadow: var(--shadow-panel); min-height: 104px; width: 100%;
+  }
+  .tk:hover { border-color: var(--blue-edge); }
+  .tk .art { width: 72px; height: 72px; border-radius: 16px; background: var(--panel-sunk); padding: 6px; }
+  .tk .no { font-size: 2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tk .lab { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .tk .got { grid-column: 1 / -1; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .tk:disabled { cursor: default; opacity: 0.75; }
+  .tk:disabled:hover { border-color: var(--hairline); }
+  .tag .ck { width: 12px; height: 12px; }
+  .tag.todo { background: none; box-shadow: inset 0 0 0 1px var(--hairline); color: var(--ink-2); }
+  .empty { text-align: center; display: grid; gap: 12px; justify-items: center; padding: 32px 20px; }
+  .empty .art { width: 150px; height: 150px; }
+
+  /* The sheet for one ticket: what is being measured, the number, the key pad */
+  .head { display: grid; grid-template-columns: 84px 1fr auto; gap: 14px; align-items: center; }
+  .head .art { width: 84px; height: 84px; border-radius: 18px; background: var(--panel-sunk); padding: 6px; }
+  .readout {
+    display: flex; align-items: baseline; justify-content: center; gap: 8px; min-height: 76px;
+    border: 1px solid var(--field-edge); border-radius: 18px; background: var(--panel-sunk); padding: 8px 16px;
+  }
+  .readout .n { font-size: 2.75rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .readout .n.none { color: var(--ink-2); font-weight: 400; }
+  .readout .u { font-size: 1.25rem; font-weight: 600; color: var(--ink-2); }
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pad button {
+    min-height: 60px; border-radius: 16px; border: 1px solid var(--ghost-edge); background: var(--ghost-fill);
+    font-size: 1.5rem; font-weight: 600; cursor: pointer;
+  }
+  .pad button:active { transform: scale(0.97); }
+  .pad button svg { width: 24px; height: 24px; vertical-align: middle; }
+  .msg { display: flex; gap: 8px; align-items: center; font-weight: 600; min-height: 24px; }
+  .msg .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--warn-dot); flex: none; }
+  .msg.bad { color: var(--red-ink); } .msg.bad .dot { background: var(--red-fill); }
+  .photo { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; }
+  .photo img, .photo video, .photo .none { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; background: var(--panel-sunk); display: block; }
+  .photo video { transform: scaleX(-1); }
+  .photo .none { display: grid; place-items: center; color: var(--ink-2); }
+  .photo .none svg { width: 34px; height: 34px; }
+  .tk img.face { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+  .kept { display: flex; gap: 6px; flex-wrap: wrap; }
+  @media (max-width: 480px) { .head { grid-template-columns: 64px 1fr; } .head .art { width: 64px; height: 64px; } .head .btn { grid-column: 1 / -1; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Vitals</h1>
+      <p class="sub">Weight, height and blood pressure by ticket number. No names are kept.</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals" aria-current="page">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="grid" class="grid" aria-label="Tickets waiting"></div>
+  <div id="empty" class="panel empty" hidden>
+    <div class="art" id="emptyArt" hidden></div>
+    <p class="strong">No one is waiting</p>
+    <p class="quiet small">A ticket appears here when a patient finishes speaking.</p>
+  </div>
+</div>
+
+<footer class="foot noprint">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+</footer>
+
+<div id="sheetBack" class="sheet-back" hidden>
+  <div class="sheet stack" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+    <div class="head">
+      <div class="art" id="shArt"></div>
+      <div><h2 class="title" id="shTitle"></h2><div class="kept" id="shKept" style="margin-top:6px"></div></div>
+      <button class="btn sm" id="shClose">Close</button>
+    </div>
+    <div class="seg big" role="group" aria-label="What you are measuring">
+      <button data-field="weight" aria-pressed="true"></button>
+      <button data-field="height" aria-pressed="false"></button>
+      <button data-field="bp" aria-pressed="false"></button>
+    </div>
+    <div class="readout" aria-live="polite"><span class="n" id="rdN"></span><span class="u" id="rdU"></span></div>
+    <p class="msg" id="msg" role="alert"></p>
+    <div class="pad" id="pad"></div>
+    <button class="btn primary block" id="save"></button>
+    <div>
+      <span class="eyebrow">Photo on the ticket</span>
+      <div class="photo" style="margin-top:6px">
+        <div id="phShow"></div>
+        <div class="stack" style="gap:6px">
+          <div class="row-gap"><button class="btn sm" id="phTake"></button><button class="linkbtn" id="phDrop" hidden>Remove</button></div>
+          <p class="quiet small" id="phNote">Taken with the patient's agreement. Deleted with the visit. No names are kept.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label class="lab" for="area">Area the patient lives in</label>
+      <select class="field" id="area"></select>
+    </div>
+    <div>
+      <span class="eyebrow" id="sexLab">Sex</span>
+      <div class="seg big" role="group" aria-labelledby="sexLab" style="margin-top:6px">
+        <button data-sex="female"></button><button data-sex="male"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pinSheet" class="sheet-back" hidden>
+  <form class="sheet stack" id="pinForm">
+    <h2 class="title">Nurse's PIN</h2>
+    <input class="field" id="pin" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN">
+    <p class="small" id="pinMsg" style="color:var(--red-ink)" role="alert"></p>
+    <button class="btn primary block">Open</button>
+  </form>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+const BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Delete"><path d="M9 6h11v12H9l-6-6zM13 10l4 4M17 10l-4 4"/></svg>';
+const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.500-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.500"/></svg>';
+const FIELD = { weight: { name: 'Weight', unit: 'kg', dot: true, len: 5 }, height: { name: 'Height', unit: 'cm', dot: false, len: 3 },
+  bp: { name: 'Blood pressure', short: 'BP', unit: 'mmHg', slash: true } };
+const ORDER = ['weight', 'height', 'bp'];
+const pictures = {};
+let rows = [], open = null, field = 'weight', typed = '';
+
+const art = name => `<span class="art" aria-hidden="true">${pictures[name] || pictures.other || ''}</span>`;
+const shown = d => d && d.value != null ? `${d.value}${d.unit ? ' ' + d.unit : ''}` : null;
+function chips(d) {
+  const one = (label, v) => v ? `<span class="tag blue">${CK}${label} ${v}</span>` : `<span class="tag todo">${label}</span>`;
+  return one('Weight', shown(d.weight)) + one('Height', shown(d.height)) + one('BP', shown(d.bp));
+}
+
+function renderGrid() {
+  $('empty').hidden = rows.length > 0;
+  $('grid').innerHTML = rows.map(r => {
+    const now = r.level === 'emergency';
+    return `<button class="tk" data-id="${r.id}" ${now ? 'disabled' : ''}>
+      ${r.photo && !now ? `<img class="face" src="${r.photo}" alt="Photo on ticket ${r.number}">` : art(now ? 'nurse_coming' : r.picture)}
+      <span><span class="lab">Ticket</span><br><span class="no">${r.number}</span></span>
+      <span class="got">${now ? '<span class="tag emergency"><span class="dot"></span>Straight to the nurse</span>' : chips(r.details)}</span>
+    </button>`;
+  }).join('');
+  $('grid').querySelectorAll('.tk:not(:disabled)').forEach(b => b.onclick = () => openSheet(b.dataset.id));
+}
+
+function renderSheet() {
+  const r = rows.find(x => x.id === open);
+  if (!r) { $('sheetBack').hidden = true; open = null; return; }
+  const f = FIELD[field], have = r.details[field];
+  $('shTitle').textContent = 'Ticket ' + r.number;
+  $('shArt').innerHTML = pictures[field] || pictures.chronic || '';
+  $('shKept').innerHTML = chips(r.details);
+  document.querySelectorAll('[data-field]').forEach(b => {
+    const on = b.dataset.field === field;
+    b.setAttribute('aria-pressed', on); b.innerHTML = CK + (FIELD[b.dataset.field].short || FIELD[b.dataset.field].name);
+  });
+  $('rdN').textContent = typed || (have ? have.value : f.slash ? '120/80' : '0');
+  $('dotKey').textContent = f.slash ? '/' : '.'; $('dotKey').setAttribute('aria-label', f.slash ? 'Over' : 'Point');
+  $('rdN').className = 'n' + (typed ? '' : ' none');
+  $('rdU').textContent = f.unit;
+  const whole = typed && (!f.slash || /^\d{2,3}\/\d{2,3}$/.test(typed));
+  $('save').textContent = whole ? `Save ${typed} ${f.unit} to ticket ${r.number}` : f.slash ? 'Type the upper number, then /, then the lower' : `Type the ${f.name.toLowerCase()} in ${f.unit}`;
+  $('save').disabled = !whole;
+  document.querySelectorAll('[data-sex]').forEach(b => {
+    const on = r.details.sex && r.details.sex.value === b.dataset.sex;
+    b.setAttribute('aria-pressed', !!on); b.innerHTML = CK + (b.dataset.sex === 'female' ? 'Female' : 'Male');
+  });
+  if (!typed && have && have.flag) say(have.flag, false); else if (!typed) say('');
+  $('area').value = r.details.area ? r.details.area.value : '';
+  if (!cam) {
+    $('phShow').innerHTML = r.photo ? `<img src="${r.photo}" alt="Photo on ticket ${r.number}">` : `<span class="none">${CAM}</span>`;
+    $('phTake').textContent = r.photo ? 'Take it again' : 'Take a photo';
+    $('phDrop').hidden = !r.photo;
+  }
+}
+
+/* The photo: the camera opens in the round frame, and the same button takes the picture. */
+let cam = null;
+function stopCam() { if (cam) { cam.getTracks().forEach(t => t.stop()); cam = null; } }
+$('phTake').onclick = async () => {
+  if (!cam) {
+    try { cam = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 640 }, audio: false }); }
+    catch (e) { $('phNote').textContent = 'The camera could not be opened. Allow the camera for this page and try again.'; return; }
+    $('phShow').innerHTML = '<video autoplay playsinline muted></video>';
+    $('phShow').firstChild.srcObject = cam;
+    $('phTake').textContent = 'Use this picture'; $('phDrop').hidden = true;
+    return;
+  }
+  const v = $('phShow').firstChild, side = Math.min(v.videoWidth, v.videoHeight) || 320;
+  const c = document.createElement('canvas'); c.width = c.height = 320;
+  c.getContext('2d').drawImage(v, (v.videoWidth - side) / 2, (v.videoHeight - side) / 2, side, side, 0, 0, 320, 320);
+  stopCam();
+  const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.82));
+  const fd = new FormData(); fd.append('file', blob, 'photo.jpg');
+  const r = await fetch(`/api/visits/${open}/photo`, { method: 'POST', body: fd });
+  if (r.ok) { const d = await r.json(); rows = rows.map(x => x.id === d.id ? d : x); renderGrid(); }
+  renderSheet();
+};
+$('phDrop').onclick = async () => {
+  const r = await fetch(`/api/visits/${open}/photo`, { method: 'DELETE' });
+  if (r.ok) { const d = await r.json(); rows = rows.map(x => x.id === d.id ? d : x); renderGrid(); renderSheet(); }
+};
+function say(text, bad) { $('msg').className = 'msg' + (bad ? ' bad' : ''); $('msg').innerHTML = text ? `<span class="dot"></span><span>${text}</span>` : ''; }
+function openSheet(id) { open = id; field = 'weight'; typed = ''; say(''); $('sheetBack').hidden = false; renderSheet(); }
+function closeSheet() { stopCam(); open = null; $('sheetBack').hidden = true; }
+
+function press(k) {
+  const f = FIELD[field];
+  if (f.slash) {
+    const [a, b] = typed.split('/');
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === '.' || k === '/') { if (a && a.length >= 2 && b === undefined) typed += '/'; }
+    else if (b === undefined ? a.length < 3 : b.length < 3) typed += k;
+    say(''); renderSheet(); return;
+  }
+  if (k === 'back') typed = typed.slice(0, -1);
+  else if (k === '.') { if (f.dot && typed && !typed.includes('.')) typed += '.'; }
+  else if (typed.replace('.', '').length < (f.dot ? 4 : f.len) && !(typed.includes('.') && typed.split('.')[1].length >= 1)) typed = (typed === '0' ? '' : typed) + k;
+  say(''); renderSheet();
+}
+async function post(body) {
+  const r = await fetch(`/api/visits/${open}/details`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { $('pinSheet').hidden = false; return null; }
+  if (!r.ok) { say(d.detail || 'That was not saved', true); return null; }
+  rows = rows.map(x => x.id === d.id ? d : x);
+  return d;
+}
+$('save').onclick = async () => {
+  const d = await post({ field, value: typed, source: 'measured' });
+  if (!d) return;
+  typed = '';
+  renderGrid(); renderSheet();
+  const flag = d.details[field] && d.details[field].flag;
+  if (flag) say(flag, false);
+  else { const next = ORDER.find(x => !d.details[x]); if (next) { field = next; renderSheet(); } else closeSheet(); }
+};
+document.querySelectorAll('[data-field]').forEach(b => b.onclick = () => { field = b.dataset.field; typed = ''; say(''); renderSheet(); });
+document.querySelectorAll('[data-sex]').forEach(b => b.onclick = async () => {
+  const on = b.getAttribute('aria-pressed') === 'true';
+  if (await post({ field: 'sex', value: on ? null : b.dataset.sex })) { renderGrid(); renderSheet(); }
+});
+$('area').onchange = async () => { if (await post({ field: 'area', value: $('area').value || null })) { renderGrid(); renderSheet(); } };
+fetch('/api/outbreaks').then(r => r.json()).then(j => { $('area').innerHTML = '<option value="">Not asked</option>' + j.all_areas.map(a => `<option>${a}</option>`).join(''); }).catch(() => {});
+$('pad').innerHTML = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'back'].map(k =>
+  `<button data-k="${k}" ${k === '.' ? 'id="dotKey" aria-label="Point"' : ''}>${k === 'back' ? BACK : k}</button>`).join('');
+$('pad').querySelectorAll('button').forEach(b => b.onclick = () => press(b.dataset.k));
+$('shClose').onclick = closeSheet;
+$('sheetBack').onclick = e => { if (e.target === $('sheetBack')) closeSheet(); };
+document.addEventListener('keydown', e => {
+  if (!open) return;
+  if (/^[0-9./]$/.test(e.key)) press(e.key);
+  else if (e.key === 'Backspace') press('back');
+  else if (e.key === 'Enter' && typed) $('save').click();
+  else if (e.key === 'Escape') closeSheet();
+});
+
+async function poll() {
+  try {
+    const r = await fetch('/api/vitals');
+    if (r.status === 401) { $('pinSheet').hidden = false; return; }
+    const d = await r.json();
+    const sig = JSON.stringify(d.visits);
+    if (sig === poll.sig) return;
+    poll.sig = sig; rows = d.visits;
+    renderGrid(); if (open) renderSheet();
+  } catch (e) {}
+}
+$('pinForm').onsubmit = async e => {
+  e.preventDefault();
+  const fd = new FormData(); fd.append('pin', $('pin').value);
+  const r = await fetch('/api/nurse/login', { method: 'POST', body: fd });
+  if (r.ok) { $('pinSheet').hidden = true; poll(); } else { $('pinMsg').textContent = 'That PIN is not right.'; }
+};
+
+const NAMES = ['who', 'age', 'onset', 'worse', 'where', 'severity', 'fever', 'breathing', 'drinking', 'vomiting', 'fits', 'bleeding', 'neck', 'pregnancy', 'chronic', 'medicines', 'allergy', 'other', 'wait', 'nurse_coming', 'weight', 'height', 'bp'];
+Promise.all(NAMES.map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(() => {
+  Art.show($('emptyArt'), 'weight', '');
+  poll(); setInterval(poll, 2000);
+});
+</script>
+<script src="help.js"></script>
+</body>
+</html>

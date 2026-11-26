@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .welcome-motion {
+      animation: welcome-loop 3.3s ease-in-out infinite;
+      transform-origin: 78px 172px;
+    }
+    @keyframes welcome-loop {
+      0%, 13%, 100% { transform: rotate(0); }
+      35%, 56% { transform: rotate(12deg); }
+      73%, 86% { transform: rotate(3deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M119 199V49h80v150" fill="var(--paper, #FFFFFF)"/>
+    <path d="M144 49v150l-25 12V49z" fill="var(--tint, #E8F0FE)"/>
+    <path d="M132 128h1" stroke="var(--accent, #2563EB)"/>
+    <path d="M161 75h23m-11-11v22" stroke="var(--accent, #2563EB)"/>
+    <path d="M153 139q0-7 7-7h20q7 0 7 7v15q0 7-7 7h-12l-10 7v-7q-5-1-5-7z" stroke="var(--accent, #2563EB)" fill="var(--paper, #FFFFFF)"/>
+    <path d="M162 147h2m6-4v8m7-4h2" stroke="var(--accent, #2563EB)"/>
+    <circle cx="60" cy="113" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M29 201v-24q0-27 24-32h17q23 4 23 32v24z" fill="var(--paper, #FFFFFF)"/>
+    <path class="welcome-motion" d="m69 167 18-22 6-23q2-7 9-6 6 1 5 8l-3 30-18 27" fill="var(--paper, #FFFFFF)"/>
+    <path d="M24 211h192" stroke="var(--quiet, #5B6474)"/>
+  </g>
+</svg>

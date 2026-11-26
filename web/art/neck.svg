@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .neck-head {
+      animation: neck-try-turn 3.4s ease-in-out infinite;
+      transform-origin: 120px 125px;
+    }
+    @keyframes neck-try-turn {
+      0%, 15%, 100% { transform: rotate(0); }
+      46%, 66% { transform: rotate(13deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .neck-head { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M44 196v-15q0-25 27-37l27-11 5-24h37l4 24 26 11q26 12 26 37v15z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m100 129 2-14h39l2 14z" fill="var(--accent, #2563EB)" stroke="none"/>
+    <g class="neck-head">
+      <path d="M96 105a34 34 0 1 1 55-35l13 17-13 7-2 9q-2 10-12 10h-18q-13 0-23-8z" fill="var(--paper, #FFFFFF)"/>
+      <path d="M143 75h1m-5 24h8"/>
+    </g>
+  </g>
+</svg>

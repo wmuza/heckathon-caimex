@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.bleeding-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.bleeding-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.bleeding-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.bleeding-fill{fill:var(--accent,#2563EB)}.bleeding-tint{fill:var(--tint,#E8F0FE)}.bleeding-hot{fill:var(--danger,#CF2A30)}.bleeding-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.bleeding-lo{opacity:1}
+.bleeding-hi{opacity:.35;animation:bleeding-form 3.2s ease-in-out infinite}
+@keyframes bleeding-form{0%,100%{opacity:.2}40%,70%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){.bleeding-move{animation:none}}
+</style>
+
+<rect class="bleeding-body" x="24" y="72" width="150" height="46" rx="23"/>
+<circle class="bleeding-body" cx="186" cy="95" r="24"/>
+<circle class="bleeding-hot" cx="108" cy="95" r="8"/>
+<path class="bleeding-hot bleeding-hi bleeding-move" d="M108 112c7 8 11 14 11 20a11 11 0 0 1-22 0c0-6 4-12 11-20z"/>
+<path class="bleeding-hot bleeding-lo bleeding-move" d="M108 148c10 14 16 22 16 32a16 16 0 0 1-32 0c0-10 6-18 16-32z"/>
+
+</svg>

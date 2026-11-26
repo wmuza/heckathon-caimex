@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .recording-dot { transform-origin: 184px 62px; animation: recording-pulse 2.2s ease-in-out infinite; }
+    .recording-b1 { transform-origin: 142px 118px; animation: recording-bar 2.2s ease-in-out infinite 0s; }
+    .recording-b2 { transform-origin: 164px 118px; animation: recording-bar 2.2s ease-in-out infinite 0.3s; }
+    .recording-b3 { transform-origin: 186px 118px; animation: recording-bar 2.2s ease-in-out infinite 0.6s; }
+    @keyframes recording-pulse {
+      0%, 100% { transform: scale(0.88); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+    @keyframes recording-bar {
+      0%, 100% { transform: scaleY(0.55); }
+      50% { transform: scaleY(1.1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .recording-dot, .recording-b1, .recording-b2, .recording-b3 { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle cx="120" cy="120" r="76" fill="var(--tint, #E8F0FE)"/>
+  <rect x="64" y="64" width="38" height="68" rx="19" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <path d="M48 118a35 35 0 0 0 70 0M83 153v29M63 182h40" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="recording-dot" cx="184" cy="62" r="14" fill="var(--danger, #CF2A30)"/>
+  <g fill="none" stroke="var(--accent, #2563EB)" stroke-width="8" stroke-linecap="round">
+    <path class="recording-b1" d="M142 100v36"/>
+    <path class="recording-b2" d="M164 88v60"/>
+    <path class="recording-b3" d="M186 102v32"/>
+  </g>
+</svg>

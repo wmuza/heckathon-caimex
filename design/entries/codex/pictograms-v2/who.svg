@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .who-ring { animation: who-settle 3.6s ease-in-out infinite; }
+    .who-adult { transform-origin: 79px 75px; }
+    .who-child { transform-origin: 167px 106px; animation-delay: -1.8s; }
+    @keyframes who-settle {
+      0%, 30%, 100% { opacity: 1; transform: scale(1); }
+      41% { opacity: 0; transform: scale(1); }
+      88% { opacity: 0; transform: scale(1.14); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .who-ring { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="79" cy="75" r="26" fill="var(--paper, #FFFFFF)"/>
+    <path d="M31 191v-32a30 30 0 0 1 30-30h30a30 30 0 0 1 30 30v32z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M55 168v23m42-23v23"/>
+    <circle cx="167" cy="106" r="19" fill="var(--paper, #FFFFFF)"/>
+    <path d="M137 191v-20a23 23 0 0 1 23-23h14a23 23 0 0 1 23 23v20z" fill="var(--paper, #FFFFFF)"/>
+    <circle class="who-ring who-adult" cx="79" cy="75" r="38" stroke="var(--accent, #2563EB)"/>
+    <circle class="who-ring who-child" cx="167" cy="106" r="31" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

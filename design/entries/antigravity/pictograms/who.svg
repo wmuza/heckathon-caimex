@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .who-ring-a { animation: who-pulse-a 3.2s ease-in-out infinite; transform-origin: 84px 124px; }
+    .who-ring-b { animation: who-pulse-b 3.2s ease-in-out infinite; transform-origin: 164px 146px; }
+    .who-adult { animation: who-nudge-a 3.2s ease-in-out infinite; }
+    .who-child { animation: who-nudge-b 3.2s ease-in-out infinite; }
+    @keyframes who-pulse-a {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      45% { opacity: 1; transform: scale(1.06); }
+      55%, 90% { opacity: 0.25; transform: scale(0.95); }
+    }
+    @keyframes who-pulse-b {
+      0%, 45%, 100% { opacity: 0.25; transform: scale(0.95); }
+      55%, 90% { opacity: 1; transform: scale(1.06); }
+    }
+    @keyframes who-nudge-a {
+      0%, 40%, 100% { transform: translateY(0); }
+      20% { transform: translateY(-5px); }
+    }
+    @keyframes who-nudge-b {
+      0%, 50%, 100% { transform: translateY(0); }
+      72% { transform: translateY(-5px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .who-ring-a, .who-ring-b, .who-adult, .who-child { animation: none !important; opacity: 1; transform: none; }
+    }
+  </style>
+  <circle class="who-ring-a" cx="84" cy="124" r="52" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)" stroke-width="3.5" stroke-dasharray="12 10" stroke-linecap="round"/>
+  <circle class="who-ring-b" cx="164" cy="146" r="40" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)" stroke-width="3.5" stroke-dasharray="12 10" stroke-linecap="round"/>
+  <path d="M36 184h168" stroke="var(--quiet, #5B6474)" stroke-width="6" stroke-linecap="round"/>
+  <g class="who-adult" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="84" cy="76" r="21" fill="var(--paper, #FFFFFF)"/>
+    <path d="M52 184v-44c0-18 14-30 32-30s32 12 32 30v44z" fill="var(--paper, #FFFFFF)"/>
+  </g>
+  <g class="who-child" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="164" cy="112" r="16" fill="var(--paper, #FFFFFF)"/>
+    <path d="M139 184v-28c0-14 11-23 25-23s25 9 25 23v28z" fill="var(--paper, #FFFFFF)"/>
+  </g>
+</svg>

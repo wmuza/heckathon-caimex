@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .chronic-motion {
+      animation: chronic-loop 3.8s ease-in-out infinite;
+      transform-origin: 160px 154px;
+    }
+    @keyframes chronic-loop {
+      0%, 15%, 100% { transform: rotate(-22deg); }
+      52%, 75% { transform: rotate(21deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chronic-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="29" y="53" width="122" height="112" rx="14" fill="var(--paper, #FFFFFF)"/>
+    <path d="M29 82h122M57 41v23m66-23v23"/>
+    <path d="M53 104h11m18 0h11m18 0h11m-69 22h11m18 0h11m-40 22h11" stroke="var(--quiet, #5B6474)"/>
+    <circle cx="160" cy="151" r="42" fill="var(--paper, #FFFFFF)"/>
+    <path d="M133 154a27 27 0 0 1 54 0M160 191v11q0 9 9 9h21" stroke="var(--quiet, #5B6474)"/>
+    <path class="chronic-motion" d="m160 154 12-15" stroke="var(--accent, #2563EB)"/>
+    <circle cx="160" cy="154" r="4" stroke="var(--accent, #2563EB)" fill="var(--accent, #2563EB)"/>
+  </g>
+</svg>

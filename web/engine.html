@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: the engine</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 1180px; }
+  .band-in { flex-wrap: wrap; }
+  section { margin-top: 34px; }
+  section:first-child { margin-top: 4px; }
+  .sec-head { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .sec-head h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.25; flex: 1; min-width: 12ch; }
+  .lede { color: var(--ink-2); max-width: 64ch; margin-top: 4px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.875rem; font-weight: 600; color: var(--ink-2); margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 22px; height: 14px; border-radius: 5px; border: 1.5px solid var(--ink); background: var(--panel); }
+  .legend i.own { border-style: dashed; border-color: var(--ghost-edge); background: none; }
+
+  /* One sentence travelling through the steps. A dot moves along the rail and each step lights as it arrives. */
+  .pipe { position: relative; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; margin-top: 16px; --dur: 9.8s; }
+  .rail { position: absolute; left: 7.143%; right: 7.143%; top: 34px; height: 4px; border-radius: 2px; background: var(--divider); }
+  .packet { position: absolute; top: 26px; left: 7.143%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--blue-fill); box-shadow: 0 0 0 6px var(--blue-halo); z-index: 0; }
+  .node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 0 6px; }
+  .node .ico { width: 68px; height: 68px; border-radius: 20px; display: grid; place-items: center; background: var(--panel); border: 1.5px solid var(--ink); color: var(--ink); }
+  .node .ico svg { width: 30px; height: 30px; }
+  .node.own .ico { border: 1.5px dashed var(--ghost-edge); background: var(--page); color: var(--ink-2); }
+  .node.end .ico { border: 0; background: none; width: 68px; height: 68px; padding: 0; }
+  .node.end .ico .art { width: 68px; height: 68px; }
+  .node.end .ico .art svg { width: 100%; height: 100%; }
+  .node .txt { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .node h3 { font-size: 1.0625rem; font-weight: 700; line-height: 1.2; }
+  .node .model { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); overflow-wrap: anywhere; line-height: 1.3; }
+  .node .t { font-size: 0.8125rem; font-weight: 700; color: var(--blue-ink); font-variant-numeric: tabular-nums; }
+  .node.own .t { color: var(--ink-2); }
+  .run .packet { animation: travel-x var(--dur) linear infinite; }
+  .run .node .ico { animation: lit var(--dur) linear infinite; animation-delay: calc(var(--i) * var(--dur) / 7); }
+  @keyframes travel-x {
+    0%, 9.5% { left: 7.143%; opacity: 1; } 14.286%, 23.8% { left: 21.43%; } 28.571%, 38.1% { left: 35.71%; }
+    42.857%, 52.4% { left: 50%; } 57.143%, 66.7% { left: 64.29%; } 71.429%, 80.9% { left: 78.57%; }
+    85.714%, 96% { left: 92.86%; opacity: 1; } 100% { left: 92.86%; opacity: 0; }
+  }
+  @keyframes travel-y {
+    0%, 9.5% { top: 7.143%; opacity: 1; } 14.286%, 23.8% { top: 21.43%; } 28.571%, 38.1% { top: 35.71%; }
+    42.857%, 52.4% { top: 50%; } 57.143%, 66.7% { top: 64.29%; } 71.429%, 80.9% { top: 78.57%; }
+    85.714%, 96% { top: 92.86%; opacity: 1; } 100% { top: 92.86%; opacity: 0; }
+  }
+  @keyframes lit { 0%, 10% { box-shadow: 0 0 0 5px var(--blue-halo); transform: scale(1.06); } 14%, 100% { box-shadow: none; transform: none; } }
+
+  /* When the talk ends: four lights, and the highest becomes the level */
+  .vote { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; margin-top: 16px; }
+  .vbox { border-radius: 18px; padding: 14px 16px; border: 1.5px solid var(--ink); background: var(--panel); display: flex; flex-direction: column; gap: 6px; height: 100%; }
+  .vbox.own { border: 1.5px dashed var(--ghost-edge); background: none; }
+  .vbox h3 { font-size: 1.0625rem; font-weight: 700; }
+  .vbox .model { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .vbox p { font-size: 0.875rem; color: var(--ink-2); }
+  .arrow { width: 28px; height: 28px; color: var(--ink-2); }
+  .lights { display: flex; gap: 10px; align-items: flex-end; margin-top: 4px; }
+  .light { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; color: var(--ink-2); text-align: center; width: 56px; line-height: 1.2; }
+  .lvl { width: 28px; height: 28px; flex: none; }
+  .lvl.big { width: 44px; height: 44px; }
+  .result { display: flex; align-items: center; gap: 10px; font-weight: 700; margin-top: 6px; }
+  .run2 .light:nth-child(1) .lvl { animation: pop 6s ease-in-out infinite; }
+  .run2 .light:nth-child(2) .lvl { animation: pop 6s ease-in-out infinite 0.5s; }
+  .run2 .light:nth-child(3) .lvl { animation: pop 6s ease-in-out infinite 1s; }
+  .run2 .light:nth-child(4) .lvl { animation: pop 6s ease-in-out infinite 1.5s; }
+  .run2 .result .lvl { animation: pop 6s ease-in-out infinite 2.3s; }
+  @keyframes pop { 0%, 2% { transform: scale(0.6); opacity: 0.25; } 9%, 100% { transform: none; opacity: 1; } }
+
+  /* Numbers as pictures */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+  .tile { padding: 16px 18px; border-radius: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .tile .v { font-size: 2rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .tile .l { color: var(--ink-2); font-size: 0.875rem; }
+  .split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; }
+  .split i { display: block; min-width: 3px; }
+  .c-hear { background: var(--blue-fill); } .c-ask { background: var(--blue-soft); } .c-rest { background: var(--ghost-edge); }
+  .keys { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .keys b { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* Evidence as dots: one dot per patient */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; align-items: start; }
+  .unit { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--divider); }
+  .unit:first-of-type { border-top: 0; }
+  .dotgrid { display: grid; grid-template-columns: repeat(12, 12px); gap: 5px; }
+  .dotgrid i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ghost-edge); }
+  .dotgrid i.on { border: 0; background: var(--ink); }
+  .dotgrid.good i.on { background: var(--green-dot); }
+  .dotgrid.bad i.on { background: var(--red-fill); }
+  .unit .n { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .unit .w { color: var(--ink-2); font-size: 0.875rem; }
+  .caveat { margin-top: 12px; padding: 10px 14px; background: var(--panel-sunk); border-radius: 14px; font-size: 0.875rem; color: var(--ink-2); }
+
+  .wont { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .wont .panel { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; padding: 16px; border-radius: 18px; }
+  .wont .art { width: 64px; height: 64px; }
+  .wont h3 { font-size: 1rem; font-weight: 700; }
+  .wont p { font-size: 0.875rem; color: var(--ink-2); }
+  details > summary { cursor: pointer; font-weight: 600; color: var(--blue-ink); min-height: 44px; display: inline-flex; align-items: center; gap: 6px; list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary svg { width: 16px; height: 16px; transition: transform 160ms ease; }
+  details[open] > summary svg { transform: rotate(90deg); }
+  ol.top3 { padding-left: 22px; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  ol.top3 b { font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .pipe { grid-template-columns: 1fr; gap: 0; }
+    .pipe .node { flex-direction: row; text-align: left; align-items: center; gap: 14px; min-height: 96px; padding: 0; }
+    .pipe .node .txt { align-items: flex-start; gap: 2px; }
+    .rail { left: 32px; right: auto; top: 7.143%; bottom: 7.143%; width: 4px; height: auto; }
+    .packet { left: 34px; top: 7.143%; margin: -10px 0 0 -10px; }
+    .run .packet { animation-name: travel-y; }
+    .vote { grid-template-columns: 1fr; } .arrow { transform: rotate(90deg); justify-self: center; }
+    .tiles { grid-template-columns: repeat(2, 1fr); } .two, .wont { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } .dotgrid { grid-template-columns: repeat(12, 10px); gap: 4px; } .dotgrid i { width: 10px; height: 10px; } }
+  @media (prefers-reduced-motion: reduce) { .packet { display: none; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>The engine</h1>
+      <p class="sub">How Mukoti uses CAIMEx</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section>
+    <div class="sec-head"><h2>One sentence, five steps</h2><button class="btn sm" id="replay">Play again</button></div>
+    <div class="legend"><span><i></i>A CAIMEx model</span><span><i class="own"></i>Mukoti's own code, no AI</span></div>
+    <div class="pipe run" id="pipe"></div>
+    <p class="quiet small" id="under1" style="margin-top:14px"></p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>When the talk ends, four checks vote</h2></div>
+    <p class="lede">The highest level wins. A check that fails can never lower it, and only the nurse can.</p>
+    <div class="vote run2" id="vote"></div>
+  </section>
+
+  <section>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section id="lastSec" hidden>
+    <div class="sec-head"><h2 id="lastTitle"></h2></div>
+    <div class="panel" style="margin-top:14px"><div class="scroll-x"><table class="t" id="last"></table></div>
+      <p class="quiet small" style="margin-top:10px">Chat and decision costs are what the gateway reported. Speech costs are worked out from the catalogue's price list and the clip's length, because the gateway reports none for them.</p></div>
+  </section>
+
+  <section id="heldSec" hidden>
+    <div class="sec-head"><h2>Tried on 60 statements it was never written against</h2></div>
+    <p class="lede">One dot is one patient statement, written by a separate AI that could not see Mukoti's rules. Not a clinical test.</p>
+    <div class="two" id="held"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Tried on our own 30 sample patients</h2></div>
+    <p class="lede">Made up by us and written together with the rules, so this shows only that the pipeline holds together.</p>
+    <div class="two" id="evals"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Tried on real voices</h2></div>
+    <div class="panel" id="voices" style="margin-top:14px"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What Mukoti will not do</h2></div>
+    <div class="wont" id="wont"></div>
+    <div class="panel" style="margin-top:12px">
+      <details><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span id="rulesTitle">The danger signs the fixed rules look for</span></summary>
+        <div class="scroll-x"><table class="t" id="rules"></table></div>
+        <p class="caveat">The signs are drawn from the published tools named beside them. The Shona wording of the patterns is ours. No clinician has reviewed the list.</p>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2 id="issuesTitle">What broke, logged for the CAIMEx team</h2></div>
+    <div class="panel" style="margin-top:14px">
+      <ol class="top3" id="top3"></ol>
+      <details style="margin-top:8px"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span id="allIssues">Every issue</span></summary>
+        <div class="scroll-x"><table class="t" id="issues"></table></div></details>
+    </div>
+  </section>
+</div>
+
+<footer class="foot">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+  <span class="quiet small">Live numbers from this server</span>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const LABEL = { emergency: 'Emergency', urgent: 'Urgent', routine: 'Routine' };
+const STEP = { hear: 'Heard the patient', ask: 'Chose the next question', speak: 'Spoke to the patient', note: "Wrote the nurse's note", second_opinion: 'Second opinion' };
+const TOP = [15, 2, 16];                    // the three issues shown first
+const have = x => x != null && !Number.isNaN(x);
+const secs = ms => (ms / 1000).toFixed(ms < 950 ? 2 : 1) + ' s';
+const money = x => x < 0.005 ? '$' + x.toFixed(4) : '$' + x.toFixed(2);
+const pct = x => (x * 100).toFixed(1) + '%';
+const code = s => esc(s).replace(/`([^`]+)`/g, '<b>$1</b>');
+const I = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICON = {
+  hear: I('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.500V21"/>'),
+  check: I('<path d="M12 3l7 3v5.500c0 4.200-2.900 7.600-7 9.500-4.100-1.900-7-5.300-7-9.500V6z"/><path d="M9 12l2.200 2.200L15.200 10"/>'),
+  ask: I('<path d="M5 6h9M5 12h14M5 18h9"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/>'),
+  fixed: I('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+  speak: I('<path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/>'),
+  note: I('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>'),
+  second: I('<path d="M12 4v16M7 20h10M5 8h14M5 8l-2 6h4zM19 8l-2 6h4z"/>'),
+  arrow: '<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>',
+};
+function glyph(level, big) {
+  const c = big ? 'lvl big' : 'lvl', t = `<title>${LABEL[level] || 'No verdict'}</title>`;
+  if (level === 'emergency') return `<svg class="${c}" viewBox="0 0 28 28" role="img">${t}<circle cx="14" cy="14" r="13" fill="var(--red-fill)"/><path d="M14 7v9" stroke="var(--ink-on)" stroke-width="3.2" stroke-linecap="round"/><circle cx="14" cy="20.500" r="1.900" fill="var(--ink-on)"/></svg>`;
+  if (level === 'urgent') return `<svg class="${c}" viewBox="0 0 28 28" role="img">${t}<circle cx="14" cy="14" r="11.500" fill="none" stroke="var(--warn-dot)" stroke-width="3"/><circle cx="14" cy="14" r="5" fill="var(--warn-dot)"/></svg>`;
+  if (level === 'routine') return `<svg class="${c}" viewBox="0 0 28 28" role="img">${t}<circle cx="14" cy="14" r="11.500" fill="none" stroke="var(--green-dot)" stroke-width="3"/><path d="M9 14.500l3.500 3.500 6.500-7" fill="none" stroke="var(--green-dot)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  return `<svg class="${c}" viewBox="0 0 28 28" role="img">${t}<circle cx="14" cy="14" r="11.500" fill="none" stroke="var(--ghost-edge)" stroke-width="3" stroke-dasharray="4 5"/></svg>`;
+}
+const dots = (total, on, cls) => `<span class="dotgrid ${cls || ''}" role="img" aria-label="${on} of ${total}">${Array.from({ length: total }, (_, i) => `<i class="${i < on ? 'on' : ''}"></i>`).join('')}</span>`;
+const unit = (total, on, cls, words) => `<div class="unit">${dots(total, on, cls)}<div><span class="n">${on} of ${total}</span><div class="w">${words}</div></div></div>`;
+
+let pictures = {}, built = false;
+function buildDiagram(d) {
+  const by = Object.fromEntries(d.steps.map(s => [s.step, s]));
+  const t = s => have(s.median_ms) ? secs(s.median_ms) : '';
+  const node = (i, cls, ico, title, model, time) => `<div class="node ${cls}" style="--i:${i}"><span class="ico">${ico}</span><span class="txt"><h3>${title}</h3>${model ? `<span class="model">${esc(model)}</span>` : ''}${time ? `<span class="t">${esc(time)}</span>` : ''}</span></div>`;
+  const pic = n => `<span class="art">${pictures[n] || ''}</span>`;
+  $('pipe').innerHTML = '<span class="rail"></span><span class="packet"></span>' +
+    node(0, 'end', pic('other'), 'The patient speaks', '', '') +
+    node(1, '', ICON.hear, 'Hear', by.hear.model, t(by.hear)) +
+    node(2, 'own', ICON.check, 'Check the words', 'fixed danger-sign rules', 'no waiting') +
+    node(3, '', ICON.ask, 'Choose a topic', by.ask.model, t(by.ask)) +
+    node(4, 'own', ICON.fixed, 'Fixed sentence only', 'written in advance', 'no waiting') +
+    node(5, '', ICON.speak, 'Speak', by.speak.model, 'saved audio') +
+    node(6, 'end', pic('listening'), 'The helper answers', '', have(by.hear.median_ms) && have(by.ask.median_ms) ? 'about ' + secs(by.hear.median_ms + by.ask.median_ms) : '');
+  const light = (name, level) => `<span class="light">${glyph(level)}${name}</span>`;
+  $('vote').innerHTML =
+    `<div class="vbox"><h3>Write the note</h3><span class="model">${esc(by.note.model)}, with reasoning</span><p>The complaint, the history and what to check first, in English.${have(by.note.median_ms) ? ' About ' + secs(by.note.median_ms) + '.' : ''}</p></div>
+     ${ICON.arrow}
+     <div class="vbox"><h3>Second opinion</h3><span class="model">${esc(by.second_opinion.model)}</span><p>A different, smaller model reads the note cold and scores each level. It can move a visit ahead of the queue, never sound the alarm alone.${have(by.second_opinion.median_ms) ? ' About ' + secs(by.second_opinion.median_ms) + '.' : ''}</p></div>
+     ${ICON.arrow}
+     <div class="vbox own"><h3>The highest wins</h3>
+       <div class="lights">${light('Rules', 'emergency')}${light('Interview', null)}${light('Note', 'urgent')}${light('Second opinion', 'urgent')}</div>
+       <div class="result">${ICON.arrow}${glyph('emergency', true)}<span>Emergency, to the nurse</span></div></div>`;
+}
+
+function evalPanel(name, e) {
+  if (!e) return `<div class="panel"><p class="strong">${name}</p><p class="quiet" style="margin-top:8px">Not run yet.</p></div>`;
+  const s = e.summary, under = s.under_triaged.length;
+  const urgent = e.rows.filter(r => r.expect === 'urgent'), urgentOk = urgent.filter(r => r.level && r.level !== 'routine').length;
+  return `<div class="panel">
+    <p class="strong">${name}</p><p class="quiet small">${esc(e.ran_at)}</p>
+    ${unit(s.patients, s.patients - under, under ? 'bad' : 'good', under ? `${under} given a lower level than they should have had` : 'given at least the level they should have had')}
+    ${unit(s.emergencies, s.emergencies_caught, 'good', `emergencies given the emergency level, ${s.emergencies_alarmed_first_sentence} on the first sentence`)}
+    ${unit(urgent.length, urgentOk, '', 'urgent cases put ahead of the queue')}
+    ${unit(s.expected.routine, s.routine_kept_routine, '', 'ordinary visits left as routine')}
+    <p class="caveat">${have(s.round_trip_cer) ? `Character error ${pct(s.round_trip_cer)} on a synthetic voice heard back, which flatters the recogniser. ` : ''}${e.mode === 'spoken' && have(s.cost_hearing_share) ? `One visit cost ${money(s.cost_per_visit)} at list prices for about ${Math.round(s.audio_seconds_per_visit)} seconds of speech; real patients say more. ` : ''}No clinician set the levels.</p>
+  </div>`;
+}
+
+const open = new Set();
+async function load() {
+  let d;
+  try { d = await (await fetch('/api/engine')).json(); } catch (e) { return; }
+  document.querySelectorAll('details').forEach((x, i) => { if (x.open) open.add(i); else open.delete(i); });
+  const by = Object.fromEntries(d.steps.map(s => [s.step, s]));
+  const models = [...new Set(d.steps.map(s => s.model))], services = new Set(d.steps.map(s => s.path)).size;
+  const zw = d.steps.every(s => s.country === 'ZW');
+  if (!built) { buildDiagram(d); built = true; }
+  $('under1').textContent = `${models.length} CAIMEx models through ${services} services.` + (zw ? ' The CAIMEx catalogue lists every one of them as hosted in Zimbabwe; we have not checked that ourselves.' : '');
+
+  const ev = d.evaluation && d.evaluation.spoken;
+  const cost = have(d.cost_per_visit) ? d.cost_per_visit : ev ? ev.summary.cost_per_visit : null;
+  const share = have(d.cost_per_visit) ? d.cost_share_hearing : ev ? ev.summary.cost_hearing_share : null;
+  const h = by.hear.median_ms, a = by.ask.median_ms;
+  const tiles = [];
+  if (have(h) && have(a)) tiles.push(`<p class="v">${secs(h + a)}</p><div class="split" role="img" aria-label="Hearing ${secs(h)}, choosing ${secs(a)}"><i class="c-hear" style="flex:${h}"></i><i class="c-ask" style="flex:${a}"></i></div>
+    <div class="keys"><span><b class="c-hear"></b>hear ${secs(h)}</span><span><b class="c-ask"></b>choose ${secs(a)}</span></div><p class="l">from the end of the patient's sentence to the helper answering; the voice is saved audio and adds nothing</p>`);
+  if (have(cost)) tiles.push(`<p class="v">${money(cost)}</p>${have(share) ? `<div class="split" role="img" aria-label="${Math.round(share * 100)}% speech recognition"><i class="c-hear" style="flex:${share}"></i><i class="c-rest" style="flex:${Math.max(0.02, 1 - share)}"></i></div>
+    <div class="keys"><span><b class="c-hear"></b>speech recognition ${Math.round(share * 100)}%</span><span><b class="c-rest"></b>everything else</span></div>` : ''}<p class="l">CAIMEx cost of one spoken visit at list prices</p>`);
+  tiles.push(`<p class="v">${models.length}</p><div class="chips">${models.map(m => `<span class="tag">${esc(m)}</span>`).join('')}</div><p class="l">CAIMEx models, through ${services} services</p>`);
+  tiles.push(`<p class="v">${d.issues}</p><p class="l">technical issues logged for the CAIMEx team, with how to reproduce each</p>`);
+  $('tiles').innerHTML = tiles.map(t => `<div class="panel tile">${t}</div>`).join('');
+
+  const lv = d.last_visit;
+  $('lastSec').hidden = !lv;
+  if (lv) {
+    $('lastTitle').textContent = `Ticket ${lv.number}, call by call` + (lv.sample ? ' (a sample patient)' : '');
+    $('last').innerHTML = '<thead><tr><th>Step</th><th>CAIMEx model</th><th class="r">Time</th><th class="r">Cost</th></tr></thead><tbody>' +
+      lv.trace.map(c => `<tr><td>${esc(STEP[c.step] || c.step)}</td><td class="strong">${esc(c.model)}</td>
+        <td class="r num">${c.cached ? 'saved audio' : secs(c.ms)}</td><td class="r num">${c.cached || !have(c.cost) ? '' : '$' + c.cost.toFixed(5)}</td></tr>`).join('') +
+      `<tr><td class="strong">The whole visit</td><td></td><td></td><td class="r num strong">$${lv.cost.toFixed(4)}</td></tr></tbody>`;
+  }
+
+  const hd = d.heldout;
+  $('heldSec').hidden = !(hd && hd.pipeline);
+  if (hd && hd.pipeline) {
+    const col = (title, t, note) => `<div class="panel"><p class="strong">${title}</p>
+      ${unit(t.emergencies, t.emergencies_given_emergency, t.emergencies_given_emergency === t.emergencies ? 'good' : 'bad', 'emergencies given the emergency level')}
+      ${unit(t.urgent, t.urgent_given_urgent_or_higher, '', 'urgent cases put ahead of the queue')}
+      ${unit(t.routine, t.routine_kept_routine, '', 'ordinary visits left as routine')}
+      <p class="caveat">${note}</p></div>`;
+    $('held').innerHTML =
+      col('The four checks together', hd.pipeline, 'Run once, before any rule was changed because of it. The six routine visits pushed ahead are safe, but cost the nurse time.') +
+      col('The fixed rules on their own', hd.rules_alone, 'This is why there are four checks, and why a model that fails must never leave a patient at routine. The rules were then extended from these misses, so they can no longer be scored on this set.');
+  }
+  $('evals').innerHTML = evalPanel('Spoken: each line in a synthetic voice, then recognised', d.evaluation && d.evaluation.spoken)
+    + evalPanel('Typed: the same patients without the speech models', d.evaluation && d.evaluation.typed);
+
+  const vc = d.voicecheck;
+  $('voices').innerHTML = vc && vc.lines ? `
+    <div class="unit"><span class="n" style="font-size:1.75rem">${pct(vc.cer)}</span><div class="w">character error over ${vc.lines} sentence${vc.lines === 1 ? '' : 's'} from ${vc.speakers.length} speaker${vc.speakers.length === 1 ? '' : 's'}, each scored against what the speaker typed</div></div>
+    <div class="scroll-x" style="margin-top:10px"><table class="t"><thead><tr><th>Speaker</th><th class="r">Sentences</th><th class="r">Character error</th><th class="r">Word error</th></tr></thead><tbody>
+    ${vc.speakers.map(s => `<tr><td>${esc(s.speaker)}</td><td class="r num">${s.lines}</td><td class="r num">${pct(s.cer)}</td><td class="r num">${pct(s.wer)}</td></tr>`).join('')}</tbody></table></div>
+    <p style="margin-top:12px"><a class="btn sm" href="/check">Add more sentences</a></p>`
+    : `<p>No real voice has been checked on this server yet. A teammate types a sentence, then says it, and the recogniser is scored against what they typed.</p><p style="margin-top:12px"><a class="btn primary sm" href="/check">Check a voice now</a></p>`;
+
+  const pic = n => `<span class="art">${pictures[n] || ''}</span>`;
+  $('wont').innerHTML = [
+    ['not_doctor', 'Never diagnoses or advises', 'Every sentence it can say was written in advance. The model only chooses which.'],
+    ['nurse_coming', 'Never lowers a level', 'Rules and models can only raise one. Lowering is the nurse\'s decision.'],
+    ['recording', `Keeps recordings ${d.keep_hours} hours`, 'So the nurse can check a line. She can delete a visit at once.'],
+    ['other', 'Never hides its work', 'The nurse sees the patient\'s own words and which check set the level.'],
+    ['welcome', 'Never pretends', 'Sample patients, synthetic voices and every note are labelled as what they are.'],
+    ['listening', zw ? 'Stays in the country' : 'Uses only CAIMEx models', zw ? 'It calls only models the CAIMEx catalogue lists as hosted in Zimbabwe.' : 'Every model call goes through the CAIMEx gateway.'],
+  ].map(([p, t, x]) => `<div class="panel">${pic(p)}<h3>${esc(t)}</h3><p>${esc(x)}</p></div>`).join('');
+  $('rulesTitle').textContent = `The ${d.rules.length} danger signs the fixed rules look for`;
+  $('rules').innerHTML = '<thead><tr><th>Sign</th><th>Level</th><th>Drawn from</th></tr></thead><tbody>' +
+    d.rules.map(r => `<tr><td>${esc(r.label)}</td><td><span style="display:inline-flex;gap:6px;align-items:center">${glyph(r.level)}${LABEL[r.level]}</span></td><td class="quiet small">${esc(r.source)}</td></tr>`).join('') + '</tbody>';
+
+  const rows = d.issue_rows || [];
+  $('issuesTitle').textContent = `What broke: ${rows.length} issues logged for the CAIMEx team`;
+  $('top3').innerHTML = TOP.map(n => rows.find(r => r.n === n)).filter(Boolean).map(r =>
+    `<li><b>${code(r.area)}.</b> ${code(r.what)} <span class="quiet">What we did: ${code(r.workaround)}</span></li>`).join('');
+  $('allIssues').textContent = `All ${rows.length} issues`;
+  $('issues').innerHTML = '<thead><tr><th>#</th><th>Area</th><th>What happened</th><th>How we worked round it</th></tr></thead><tbody>' +
+    rows.map(r => `<tr><td class="num">${r.n}</td><td>${code(r.area)}</td><td>${code(r.what)}</td><td>${code(r.workaround)}</td></tr>`).join('') + '</tbody>';
+  document.querySelectorAll('details').forEach((x, i) => { x.open = open.has(i); });
+}
+
+$('replay').onclick = () => {
+  for (const [id, cls] of [['pipe', 'run'], ['vote', 'run2']]) { const el = $(id); el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+};
+const NAMES = ['other', 'listening', 'not_doctor', 'nurse_coming', 'recording', 'welcome'];
+Promise.all(NAMES.map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(() => { load(); setInterval(load, 6000); });
+</script>
+</body>
+</html>

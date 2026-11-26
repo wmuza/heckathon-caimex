@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .fits-body, .fits-arcs { animation: fits-shiver 3.2s ease-in-out infinite; }
+    .fits-body { transform-origin: 120px 171px; --fits-lift: rotate(-5deg); }
+    .fits-arcs { --fits-lift: translateY(-7px); }
+    @keyframes fits-shiver {
+      0%, 21%, 54%, 100% { transform: none; }
+      38%, 70% { transform: var(--fits-lift); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fits-body, .fits-arcs { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 179h192" stroke="var(--quiet, #5B6474)"/>
+    <circle cx="57" cy="145" r="24" fill="var(--paper, #FFFFFF)"/>
+    <path class="fits-body" d="M94 174v-13q0-18 17-18l11-15q5-7 11-3 6 4 2 11l-4 7h5l20-28q7-10 17-2l32 35q6 7 0 13-6 6-13 0l-25-23-15 23q-8 13-24 13z" fill="var(--paper, #FFFFFF)"/>
+    <path class="fits-arcs" d="M75 104q8-15 24-18m51 8q18-12 35-1" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

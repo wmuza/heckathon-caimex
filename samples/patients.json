@@ -1,0 +1,575 @@
+{
+ "about": "Thirty made-up patients. No real person is described. The lines were written by an AI assistant and have not been read by a native speaker. The level each one is expected to get was set by the same assistant from the published tools in docs/SOURCES.md (mainly the WHO, ICRC and MSF Interagency Integrated Triage Tool), not by a clinician. They exist to demonstrate Mukoti without personal data and to check that it does not miss an emergency. 'expect' is the lowest acceptable level.",
+ "defaults": {
+  "sn": {
+   "who": "Ndini ndiri kurwara.",
+   "age": "Ndine makore makumi matatu.",
+   "onset": "Zvakatanga nezuro.",
+   "worse": "Kwete, zvakangofanana.",
+   "severity": "Zviri pakati nepakati.",
+   "breathing": "Kwete, ndiri kufema zvakanaka.",
+   "drinking": "Hongu, ari kunwa zvakanaka.",
+   "bleeding": "Kwete, hapana ropa.",
+   "pregnancy": "Kwete, handina pamuviri.",
+   "chronic": "Kwete, handina chirwere chenguva refu.",
+   "medicines": "Kwete, handisi kunwa mishonga.",
+   "allergy": "Kwete, hapana.",
+   "other": "Kwete.",
+   "main": "Ndiri kurwara.",
+   "where": "Ipapo pandakuudzai.",
+   "fever": "Kwete, handisi kupisa muviri.",
+   "vomiting": "Kwete, handisi kurutsa.",
+   "fits": "Kwete, hapana pfari.",
+   "neck": "Kwete, mutsipa hauna kuoma."
+  },
+  "en": {
+   "who": "It is me.",
+   "age": "I am thirty years old.",
+   "onset": "It started yesterday.",
+   "worse": "No, it is about the same.",
+   "severity": "It is not too bad.",
+   "breathing": "No, I am breathing well.",
+   "drinking": "Yes, drinking well.",
+   "bleeding": "No, there is no blood.",
+   "pregnancy": "No, I am not pregnant.",
+   "chronic": "No, I have no long-term illness.",
+   "medicines": "No, I am not taking any medicines.",
+   "allergy": "No, none.",
+   "other": "No.",
+   "main": "I am not feeling well.",
+   "where": "Where I told you.",
+   "fever": "No, I do not have a fever.",
+   "vomiting": "No, I am not vomiting.",
+   "fits": "No, no fits.",
+   "neck": "No, my neck is not stiff."
+  }
+ },
+ "patients": [
+  {
+   "id": "baby-breathing",
+   "demo": true,
+   "lang": "sn",
+   "voice": "rufaro",
+   "expect": "emergency",
+   "title": "A mother whose baby cannot breathe",
+   "about": "Eight-month-old with trouble breathing and fever. The alarm should go on the first sentence.",
+   "opening": "Mwana wangu ane mwedzi misere ari kutadza kufema, uye ari kupisa muviri.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane mwedzi misere.",
+    "onset": "Kubva husiku hwapfuura.",
+    "worse": "Hongu, zviri kuwedzera.",
+    "breathing": "Hongu, ari kutadza kufema.",
+    "fever": "Hongu, ari kupisa muviri.",
+    "fits": "Kwete, hapana pfari.",
+    "vomiting": "Kwete, haasi kurutsa."
+   }
+  },
+  {
+   "id": "child-cannot-drink",
+   "demo": true,
+   "lang": "sn",
+   "voice": "thandi",
+   "expect": "emergency",
+   "title": "A child with diarrhoea who has stopped drinking",
+   "about": "Starts as an ordinary complaint. The danger sign only comes out when Mukoti asks about drinking.",
+   "opening": "Mwana wangu ane manyoka kubva nezuro.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane gore rimwe chete.",
+    "onset": "Kubva nezuro manheru.",
+    "worse": "Hongu, zviri kuwedzera, ava kuneta.",
+    "severity": "Hongu, zvakanyanya.",
+    "breathing": "Kwete, ari kufema zvakanaka.",
+    "drinking": "Kwete, haachagoni kunwa kana kuyamwa, uye anorutsa zvese zvaanodya.",
+    "bleeding": "Kwete, hapana ropa mumanyoka.",
+    "other": "Haachagoni kunwa kana kuyamwa.",
+    "fever": "Kwete, haasi kupisa muviri.",
+    "vomiting": "Hongu, anorutsa zvese zvaanodya.",
+    "fits": "Kwete, hapana pfari."
+   }
+  },
+  {
+   "id": "pregnancy-bleeding",
+   "demo": false,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "emergency",
+   "title": "A pregnant woman who is bleeding",
+   "about": "Seven months pregnant, bleeding since morning.",
+   "opening": "Ndine pamuviri pemwedzi minomwe, ndatanga kubuda ropa mangwanani ano.",
+   "answers": {
+    "age": "Ndine makore makumi maviri nematanhatu.",
+    "onset": "Mangwanani ano.",
+    "worse": "Hongu, riri kuwedzera.",
+    "bleeding": "Hongu, ropa riri kubuda.",
+    "pregnancy": "Hongu, ndine pamuviri pemwedzi minomwe."
+   }
+  },
+  {
+   "id": "child-fits",
+   "demo": false,
+   "lang": "sn",
+   "voice": "thandi",
+   "expect": "emergency",
+   "title": "A child who had fits in the night",
+   "about": "Three-year-old with two fits.",
+   "opening": "Mwana wangu ane makore matatu abatwa nepfari kaviri husiku hwapfuura.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane makore matatu.",
+    "onset": "Husiku hwapfuura.",
+    "worse": "Hongu.",
+    "fits": "Hongu, kaviri husiku hwapfuura.",
+    "fever": "Hongu, ari kupisa muviri."
+   }
+  },
+  {
+   "id": "snake-bite",
+   "demo": false,
+   "lang": "sn",
+   "voice": "rufaro",
+   "expect": "emergency",
+   "title": "A man bitten by a snake",
+   "about": "Bitten on the leg in the field.",
+   "opening": "Murume wangu arumwa nenyoka pagumbo tiri kumunda.",
+   "answers": {
+    "who": "Murume wangu.",
+    "age": "Ane makore makumi mana.",
+    "onset": "Awa imwe chete yapfuura."
+   }
+  },
+  {
+   "id": "grandmother-fainted",
+   "demo": false,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "urgent",
+   "title": "A grandmother who fainted",
+   "about": "Fainted at home and is now confused.",
+   "opening": "Mbuya vangu vafenda kumba, vazomuka asi vava kutaura zvisinganzwisisike.",
+   "answers": {
+    "who": "Mbuya vangu.",
+    "age": "Vane makore makumi manomwe.",
+    "onset": "Mangwanani ano.",
+    "chronic": "Hongu, vane shuga."
+   },
+   "why": "Recent fainting and confusion are yellow criteria for an adult."
+  },
+  {
+   "id": "self-harm",
+   "demo": false,
+   "lang": "sn",
+   "voice": "tim",
+   "expect": "emergency",
+   "title": "A man with thoughts of ending his life",
+   "about": "Has not slept for weeks.",
+   "opening": "Ndave nemavhiki ndisingarari, uye ndava kufunga kuzviuraya.",
+   "answers": {
+    "age": "Ndine makore makumi matatu nemashanu.",
+    "onset": "Mavhiki matatu apfuura.",
+    "worse": "Hongu."
+   }
+  },
+  {
+   "id": "deep-cut",
+   "demo": false,
+   "lang": "sn",
+   "voice": "tim",
+   "expect": "emergency",
+   "title": "A deep cut that will not stop bleeding",
+   "about": "Cut on the arm with a knife.",
+   "opening": "Ndazvicheka nebanga paruoko, ropa riri kubuda rakawanda uye harisi kumira.",
+   "answers": {
+    "age": "Ndine makore makumi maviri nemapfumbamwe.",
+    "onset": "Maminitsi makumi maviri apfuura.",
+    "bleeding": "Hongu, ropa rakawanda."
+   }
+  },
+  {
+   "id": "asthma-boy-en",
+   "demo": false,
+   "lang": "en",
+   "voice": "thandi",
+   "expect": "emergency",
+   "title": "A boy with asthma who is struggling to breathe",
+   "about": "Ten-year-old, in English.",
+   "opening": "My son is ten. He has asthma and he has been struggling to breathe since last night.",
+   "answers": {
+    "who": "My son.",
+    "age": "He is ten years old.",
+    "onset": "Since last night.",
+    "worse": "Yes, it is getting worse.",
+    "breathing": "Yes, he is struggling to breathe.",
+    "chronic": "Yes, he has asthma."
+   }
+  },
+  {
+   "id": "newborn-fever",
+   "demo": false,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "emergency",
+   "title": "A three-week-old baby with fever",
+   "about": "Hot and not feeding.",
+   "opening": "Mwana wangu ane mavhiki matatu ari kupisa muviri uye haasi kuyamwa.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane mavhiki matatu.",
+    "onset": "Kubva nezuro.",
+    "drinking": "Kwete, haasi kuyamwa.",
+    "worse": "Hongu.",
+    "fever": "Hongu, ari kupisa muviri."
+   }
+  },
+  {
+   "id": "chest-pain-en",
+   "demo": true,
+   "lang": "en",
+   "voice": "tim",
+   "expect": "emergency",
+   "title": "A man with chest pain, in English",
+   "about": "Shows Mukoti working in English. Chest pain must never be left in the routine queue.",
+   "opening": "I have a very bad pain in my chest since this morning, and I am sweating.",
+   "answers": {
+    "age": "I am fifty-eight years old.",
+    "onset": "Since this morning.",
+    "worse": "Yes, it is getting worse.",
+    "severity": "Yes, it is very bad.",
+    "breathing": "A little, when I walk.",
+    "chronic": "Yes, I have high blood pressure.",
+    "medicines": "Yes, tablets for blood pressure.",
+    "where": "In the middle of my chest.",
+    "fever": "No."
+   },
+   "why": "Acute chest pain in a person over 50 is a red criterion."
+  },
+  {
+   "id": "stiff-neck",
+   "demo": true,
+   "lang": "sn",
+   "voice": "tim",
+   "expect": "emergency",
+   "title": "A man with a bad headache, fever and a stiff neck",
+   "about": "No single emergency word, but a combination a nurse should see ahead of the queue.",
+   "opening": "Ndine musoro unorwadza zvakanyanya, ndiri kupisa muviri, uye mutsipa wangu wakaoma.",
+   "answers": {
+    "age": "Ndine makore makumi maviri nemana.",
+    "onset": "Kubva nezuro husiku.",
+    "worse": "Hongu, zviri kuwedzera.",
+    "severity": "Hongu, zvakanyanya.",
+    "fever": "Hongu, ndiri kupisa muviri.",
+    "neck": "Hongu, mutsipa wakaoma.",
+    "where": "Musoro nemutsipa.",
+    "vomiting": "Kwete."
+   },
+   "why": "Stiff neck with fever and headache: 'any two of' is a red criterion."
+  },
+  {
+   "id": "bloody-diarrhoea",
+   "demo": false,
+   "lang": "sn",
+   "voice": "rufaro",
+   "expect": "urgent",
+   "title": "A child with blood in the stool",
+   "about": "Four-year-old.",
+   "opening": "Mwana ane makore mana ane manyoka ane ropa kubva nezuro.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane makore mana.",
+    "onset": "Kubva nezuro.",
+    "worse": "Zvakangofanana.",
+    "bleeding": "Hongu, pane ropa mumanyoka.",
+    "drinking": "Hongu, ari kunwa.",
+    "fever": "Kwete.",
+    "vomiting": "Kwete, haasi kurutsa."
+   }
+  },
+  {
+   "id": "pregnant-fever",
+   "demo": false,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "urgent",
+   "title": "A pregnant woman with a high fever",
+   "about": "Five months pregnant, fever and chills, no bleeding.",
+   "opening": "Ndine pamuviri pemwedzi mishanu, ndiri kupisa muviri zvakanyanya uye ndiri kutonhorwa.",
+   "answers": {
+    "age": "Ndine makore makumi maviri nemaviri.",
+    "onset": "Mazuva maviri apfuura.",
+    "worse": "Hongu.",
+    "pregnancy": "Hongu, pemwedzi mishanu.",
+    "bleeding": "Kwete, hapana ropa.",
+    "fever": "Hongu, zvakanyanya."
+   }
+  },
+  {
+   "id": "scald",
+   "demo": false,
+   "lang": "sn",
+   "voice": "thandi",
+   "expect": "urgent",
+   "title": "A child scalded with hot water",
+   "about": "On the arm and chest.",
+   "opening": "Mwana wangu atsva nemvura inopisa paruoko nepadumbu.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane makore maviri.",
+    "onset": "Awa imwe chete yapfuura.",
+    "severity": "Hongu, ari kuchema zvakanyanya.",
+    "where": "Paruoko nepadumbu."
+   }
+  },
+  {
+   "id": "diabetic-foot-en",
+   "demo": false,
+   "lang": "en",
+   "voice": "getrude",
+   "expect": "urgent",
+   "title": "A diabetic with an infected foot wound",
+   "about": "In English.",
+   "opening": "I have sugar diabetes, and the wound on my foot is swollen and smells bad.",
+   "answers": {
+    "age": "I am sixty-two.",
+    "onset": "It started two weeks ago.",
+    "worse": "Yes, it is getting worse.",
+    "chronic": "Yes, diabetes.",
+    "medicines": "Yes, metformin.",
+    "where": "On my left foot.",
+    "fever": "A little, at night."
+   }
+  },
+  {
+   "id": "abdominal-pain",
+   "demo": false,
+   "lang": "sn",
+   "voice": "rufaro",
+   "expect": "urgent",
+   "title": "Severe abdominal pain since the night",
+   "about": "Cannot stand up straight.",
+   "opening": "Ndine dumbu riri kurwadza zvakanyanya kubva husiku, handisi kugona kumira ndakatwasuka.",
+   "answers": {
+    "age": "Ndine makore makumi matatu nerimwe.",
+    "onset": "Kubva husiku hwapfuura.",
+    "worse": "Hongu, zviri kuwedzera.",
+    "severity": "Hongu, zvakanyanya.",
+    "where": "Mudumbu, kurudyi.",
+    "vomiting": "Kwete.",
+    "fever": "Kwete."
+   }
+  },
+  {
+   "id": "coughing-blood",
+   "demo": false,
+   "lang": "sn",
+   "voice": "tim",
+   "expect": "urgent",
+   "title": "Three weeks of cough, now with blood",
+   "about": "Adult man.",
+   "opening": "Ndave nemavhiki matatu ndichikosora, uye nezuro ndakosora ropa.",
+   "answers": {
+    "age": "Ndine makore makumi mana nemashanu.",
+    "onset": "Mavhiki matatu apfuura.",
+    "worse": "Hongu.",
+    "bleeding": "Hongu, ndakosora ropa nezuro."
+   }
+  },
+  {
+   "id": "broken-arm-en",
+   "demo": false,
+   "lang": "en",
+   "voice": "tim",
+   "expect": "urgent",
+   "title": "A fall from a ladder",
+   "about": "In English. Thinks the arm is broken.",
+   "opening": "I fell from a ladder and I think my arm is broken.",
+   "answers": {
+    "age": "I am forty.",
+    "onset": "One hour ago.",
+    "severity": "Yes, it is very painful.",
+    "where": "My right arm."
+   }
+  },
+  {
+   "id": "headache-cough",
+   "demo": true,
+   "lang": "sn",
+   "voice": "rufaro",
+   "expect": "routine",
+   "title": "A woman with a headache and a cough",
+   "about": "An ordinary visit: six questions and a routine note.",
+   "opening": "Ndine musoro uri kurwadza uye ndiri kukosora.",
+   "answers": {
+    "age": "Ndine makore makumi matatu nemaviri.",
+    "onset": "Mazuva maviri apfuura.",
+    "worse": "Kwete, zvakangofanana.",
+    "where": "Musoro.",
+    "fever": "Zvishoma chete."
+   }
+  },
+  {
+   "id": "bp-refill",
+   "demo": true,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "routine",
+   "title": "A woman collecting her blood pressure tablets",
+   "about": "Nothing is wrong: she only needs a refill. Mukoti should keep it short.",
+   "opening": "Ndauya kuzotora mapiritsi angu eBP, apera.",
+   "answers": {
+    "age": "Ndine makore makumi matanhatu nemana.",
+    "onset": "Mapiritsi apera nezuro.",
+    "chronic": "Hongu, ndine BP.",
+    "medicines": "Hongu, mapiritsi eBP.",
+    "severity": "Kwete, hapana chiri kurwadza."
+   }
+  },
+  {
+   "id": "itchy-rash",
+   "demo": false,
+   "lang": "sn",
+   "voice": "thandi",
+   "expect": "routine",
+   "title": "A child with an itchy rash",
+   "about": "Six-year-old, playing and eating normally.",
+   "opening": "Mwana wangu ane makore matanhatu ane mapundu anovava pamaoko kwevhiki.",
+   "answers": {
+    "who": "Mwana wangu.",
+    "age": "Ane makore matanhatu.",
+    "onset": "Vhiki rapfuura.",
+    "breathing": "Kwete, ari kufema zvakanaka.",
+    "drinking": "Hongu, ari kudya nekunwa zvakanaka.",
+    "fever": "Kwete, haasi kupisa muviri.",
+    "where": "Pamaoko."
+   }
+  },
+  {
+   "id": "backache",
+   "demo": false,
+   "lang": "sn",
+   "voice": "tim",
+   "expect": "routine",
+   "title": "Backache after lifting a sack",
+   "about": "Adult man.",
+   "opening": "Ndine musana uri kurwadza kubva pandakasimudza saga svondo rapfuura.",
+   "answers": {
+    "age": "Ndine makore makumi mana nemaviri.",
+    "onset": "Svondo rapfuura.",
+    "where": "Musana, nechezasi."
+   }
+  },
+  {
+   "id": "family-planning",
+   "demo": false,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "routine",
+   "title": "A family planning injection",
+   "about": "Checks that an injection is not read as an injury.",
+   "opening": "Ndauya kuzobaiwa jekiseni rekuronga mhuri.",
+   "answers": {
+    "age": "Ndine makore makumi maviri nemasere.",
+    "onset": "Hapana chiri kurwadza.",
+    "severity": "Kwete, hapana chiri kurwadza."
+   }
+  },
+  {
+   "id": "cold-en",
+   "demo": false,
+   "lang": "en",
+   "voice": "thandi",
+   "expect": "routine",
+   "title": "A cold, in English",
+   "about": "Runny nose and sore throat.",
+   "opening": "I have a runny nose and a sore throat for three days.",
+   "answers": {
+    "age": "I am twenty-five.",
+    "onset": "Three days ago."
+   }
+  },
+  {
+   "id": "toothache",
+   "demo": false,
+   "lang": "sn",
+   "voice": "rufaro",
+   "expect": "routine",
+   "title": "A toothache",
+   "about": "Two days.",
+   "opening": "Ndine zino riri kurwadza kwemazuva maviri.",
+   "answers": {
+    "age": "Ndine makore makumi matatu nemana.",
+    "onset": "Mazuva maviri apfuura.",
+    "where": "Zino rekuseri."
+   }
+  },
+  {
+   "id": "immunisation",
+   "demo": false,
+   "lang": "sn",
+   "voice": "thandi",
+   "expect": "routine",
+   "title": "A baby due for immunisation",
+   "about": "A well child.",
+   "opening": "Ndauya nemwana kuzobaiwa majekiseni ake emwedzi mipfumbamwe.",
+   "answers": {
+    "who": "Mwana wangu, asi haasi kurwara.",
+    "age": "Ane mwedzi mipfumbamwe.",
+    "onset": "Haasi kurwara, majekiseni chete.",
+    "breathing": "Kwete, ari kufema zvakanaka.",
+    "drinking": "Hongu, ari kuyamwa zvakanaka.",
+    "fever": "Kwete, haasi kupisa muviri.",
+    "vomiting": "Kwete, haasi kurutsa."
+   }
+  },
+  {
+   "id": "itchy-eyes-en",
+   "demo": false,
+   "lang": "en",
+   "voice": "getrude",
+   "expect": "routine",
+   "title": "Itchy eyes, in English",
+   "about": "Since yesterday.",
+   "opening": "My eyes are itchy and red since yesterday.",
+   "answers": {
+    "age": "I am nineteen.",
+    "onset": "Since yesterday."
+   }
+  },
+  {
+   "id": "cold-with-denials",
+   "demo": false,
+   "lang": "sn",
+   "voice": "ava",
+   "expect": "routine",
+   "title": "A cold, with every danger sign denied",
+   "about": "Checks that 'no trouble breathing' is not read as trouble breathing.",
+   "opening": "Ndine dzihwa nechipfuva kwemazuva matatu.",
+   "answers": {
+    "age": "Ndine makore makumi maviri nerimwe.",
+    "onset": "Mazuva matatu apfuura.",
+    "breathing": "Kwete, handisi kunetseka kufema.",
+    "bleeding": "Kwete, hapana ropa randiri kuona.",
+    "pregnancy": "Kwete, handina pamuviri.",
+    "fever": "Kwete, handisi kupisa muviri.",
+    "neck": "Kwete, mutsipa hauna kuoma."
+   }
+  },
+  {
+   "id": "period-pain",
+   "demo": false,
+   "lang": "sn",
+   "voice": "thandi",
+   "expect": "routine",
+   "title": "Period pain",
+   "about": "Checks that ordinary menstrual bleeding is not read as heavy bleeding.",
+   "opening": "Ndine dumbu rinorwadza pandinenge ndiri kumwedzi.",
+   "answers": {
+    "age": "Ndine makore gumi nemanomwe.",
+    "onset": "Mwedzi woga woga.",
+    "bleeding": "Ropa rekumwedzi chete, harina kuwanda.",
+    "severity": "Zviri pakati nepakati.",
+    "where": "Dumbu rezasi."
+   }
+  }
+ ]
+}

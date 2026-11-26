@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="sn" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mukoti</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="rec.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 560px; }
+  body { display: flex; flex-direction: column; min-height: 100dvh; }
+  body.talking { height: 100dvh; overflow: hidden; }   /* the dock stays put; only the talk scrolls */
+  main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .wrap { flex: 1; width: 100%; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+  body.talking .band .sub { display: none; }          /* the question needs the room */
+  body.talking .band-in { padding-top: 10px; padding-bottom: 10px; }
+  body.talking .band .mark { width: 36px; height: 36px; border-radius: 10px; }
+  body.talking .band h1 { font-size: 1.25rem; }
+
+  /* Welcome */
+  .welcome { display: flex; flex-direction: column; gap: 16px; padding: 24px 20px; }
+  .welcome h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+  .welcome h2 { text-align: center; }
+  .hero { width: clamp(140px, 30vh, 240px); height: clamp(140px, 30vh, 240px); margin: -4px auto -4px; }
+  .facts { display: flex; flex-direction: column; gap: 10px; }
+  .fact { display: flex; gap: 12px; align-items: center; font-size: 0.9375rem; color: var(--ink-2); }
+  .mini { flex: none; width: 48px; height: 48px; }
+  .pic { width: clamp(104px, 28vh, 232px); height: clamp(104px, 28vh, 232px); margin: 0 auto; }
+  /* In the talk the picture takes the room that is left, so the patient's last words fit above the dock. */
+  #pic { flex: 1 1 0; min-height: 96px; max-height: 232px; width: 100%; height: auto; }
+  #pic svg { width: auto; max-width: 100%; margin: 0 auto; }
+  details.more summary { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--blue-ink); cursor: pointer; list-style: none; }
+  details.more summary::-webkit-details-marker { display: none; }
+  details.more summary svg { width: 16px; height: 16px; transition: transform 160ms ease; }
+  details.more[open] summary svg { transform: rotate(90deg); }
+  .opts { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+  .opt { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--ghost-edge); background: var(--panel); font-weight: 600; cursor: pointer; text-align: left; }
+  .opt .box { flex: none; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--ghost-edge); display: grid; place-items: center; color: var(--ink-on); }
+  .opt .box svg { width: 14px; height: 14px; opacity: 0; }
+  .opt[aria-checked="true"] { border-color: var(--blue-fill); }
+  .opt[aria-checked="true"] .box { background: var(--blue-fill); border-color: var(--blue-fill); }
+  .opt[aria-checked="true"] .box svg { opacity: 1; }
+
+  /* The talk: progress, who is speaking, the question, what was heard */
+  #talk { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .progress { display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .trail { display: flex; gap: 8px; align-items: center; justify-content: center; }
+  .trail .t { position: relative; width: 40px; height: 40px; border-radius: 12px; background: var(--panel); border: 1.5px solid var(--hairline); padding: 3px; }
+  .trail .t.now { border: 2px solid var(--blue-fill); box-shadow: 0 0 0 3px var(--blue-halo); }
+  .trail .t .tick { position: absolute; right: -5px; bottom: -5px; width: 16px; height: 16px; border-radius: 50%; background: var(--blue-fill); color: var(--ink-on); display: grid; place-items: center; }
+  .trail .t .tick svg { width: 10px; height: 10px; }
+  .trail .d { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ghost-edge); }
+  .trail .still svg * { animation: none !important; }
+  @media (max-height: 700px) { .trail .t { width: 32px; height: 32px; border-radius: 10px; } }
+  .pips { display: flex; gap: 6px; flex: 1; }
+  .pips i { flex: 1; height: 6px; border-radius: 3px; background: var(--ghost-edge); opacity: 0.45; transition: background 420ms ease, opacity 420ms ease, transform 420ms ease; transform-origin: left center; }
+  .pips i.on { background: var(--blue-fill); opacity: 1; }
+  .pips i.now { animation: pip 2.6s ease-in-out infinite; }
+  @keyframes pip { 50% { opacity: 0.55; } }
+  .progress span { font-size: 0.875rem; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+
+  .stage { flex: 1 0 auto; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 6px 4px 0; }
+  .who { display: inline-flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 600; color: var(--ink-2); }
+  .bars { display: inline-flex; align-items: center; gap: 3px; height: 20px; }
+  .bars i { width: 4px; height: 4px; border-radius: 2px; background: var(--blue-fill); transition: height 80ms linear; }
+  .question { font-size: 1.5rem; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; overflow-wrap: anywhere; max-width: 22ch; }
+  .gloss { color: var(--ink-2); font-size: 1rem; line-height: 1.4; }
+  /* A long line (the greeting) reads better left-aligned on a panel. */
+  .stage.long { align-items: stretch; text-align: left; background: var(--panel); border: 1px solid var(--hairline); border-radius: 22px; box-shadow: var(--shadow-panel); padding: 18px 20px; }
+  .stage.long .question { font-size: 1.1875rem; font-weight: 600; line-height: 1.4; letter-spacing: 0; max-width: none; }
+
+  .said { flex: none; background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .said .words { font-size: 1.125rem; line-height: 1.45; color: var(--ink); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+  .said.pending .words { color: var(--ink-2); }
+
+  /* The dock: the state in words, and the microphone */
+  .dock { background: var(--page); border-top: 1px solid var(--hairline); flex: none; }
+  .dock-in { max-width: var(--col); margin: 0 auto; padding: 12px 16px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .status { min-height: 1.5em; font-size: 1.1875rem; font-weight: 700; color: var(--ink); text-align: center; line-height: 1.3; }
+  .status.quiet-state { color: var(--ink-2); font-weight: 600; }
+  .mic-wrap { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
+  .ring { position: absolute; inset: 12px; border-radius: 50%; background: var(--blue-halo); transform: scale(var(--lvl, 1)); transition: transform 90ms linear; }
+  .mic-wrap.rec .ring { background: var(--red-halo); }
+  /* It is the patient's turn and nothing is being recorded: the ring breathes, slowly, to invite a tap. */
+  .mic-wrap.invite .ring { animation: invite 2.6s ease-in-out infinite; }
+  @keyframes invite { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.22); opacity: 0.35; } }
+  .mic-wrap.off .ring { display: none; }
+  .mic {
+    position: relative; width: 108px; height: 108px; border-radius: 50%; border: 1px solid var(--blue-edge); cursor: pointer;
+    background: var(--blue-fill); color: var(--ink-on); display: grid; place-items: center;
+    box-shadow: var(--blue-shadow); transition: transform 160ms ease, background 160ms ease;
+  }
+  .mic svg { width: 44px; height: 44px; }
+  .mic:active { transform: scale(0.97); }
+  .mic-wrap.rec .mic { background: var(--red-fill); border-color: transparent; box-shadow: var(--red-shadow); }
+  .mic:disabled { background: var(--disabled); color: var(--disabled-ink); border: 1.5px solid var(--ghost-edge); box-shadow: none; cursor: default; }
+  .typed { width: 100%; display: flex; gap: 8px; }
+  .typed .field { flex: 1; }
+  @media (max-height: 700px) {
+    .dock-in { padding: 8px 16px 10px; gap: 4px; }
+    .mic-wrap { width: 92px; height: 92px; }
+    .ring { inset: 8px; }
+    .mic { width: 76px; height: 76px; }
+    .mic svg { width: 32px; height: 32px; }
+    .status { font-size: 1.0625rem; }
+    .question { font-size: 1.3125rem; }
+  }
+
+  /* The ticket */
+  .ticket { text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; padding: 28px 20px; }
+  .ticket .n { font-size: 4.5rem; font-weight: 700; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .ticket .big { font-size: 1.1875rem; font-weight: 600; max-width: 24ch; }
+
+  .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .pick button {
+    text-align: left; background: var(--panel); border: 1px solid var(--ghost-edge); border-radius: 16px; padding: 12px 14px;
+    cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-height: 48px;
+  }
+  .pick button:hover { border-color: var(--blue-fill); }
+  .pick .t { font-weight: 600; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .pick .d { color: var(--ink-2); font-size: 0.875rem; }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Mukoti</h1>
+      <p class="sub" data-t="sub"></p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section id="start" class="panel welcome">
+      <div class="art hero" id="artWelcome" hidden></div>
+      <h2 data-t="welcome"></h2>
+      <div class="seg big" role="group" aria-label="Mutauro / Language">
+        <button data-lang="sn" aria-pressed="true">ChiShona</button>
+        <button data-lang="en" aria-pressed="false">English</button>
+      </div>
+      <button id="go" class="btn primary block" data-t="start"></button>
+      <div class="facts">
+        <div class="fact"><span class="art mini" id="artRec" hidden></span><span data-t="consent"></span></div>
+        <div class="fact"><span class="art mini" id="artDoc" hidden></span><span data-t="notdoctor"></span></div>
+      </div>
+      <button id="samples" class="btn block" data-t="sample"></button>
+      <details class="more">
+        <summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span data-t="more"></span></summary>
+        <div class="opts">
+          <button class="opt" id="optAuto" role="switch" aria-checked="true"><span class="box"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span data-t="auto"></span></button>
+          <button class="opt" id="optType" role="switch" aria-checked="false"><span class="box"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span data-t="type"></span></button>
+          <button class="opt" id="optGloss" role="switch" aria-checked="false"><span class="box"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span data-t="captions"></span></button>
+        </div>
+      </details>
+    </section>
+
+    <section id="talk" hidden>
+      <span class="tag" id="sampleTag" style="align-self:center" hidden><span class="dot"></span><span data-t="sampleTag"></span></span>
+      <div class="progress">
+        <div class="trail" id="trail" role="img"></div>
+        <div class="pips" id="pips" hidden></div>
+        <span id="qof" class="sr"></span>
+      </div>
+      <div class="stage" id="stage">
+        <div class="art pic" id="pic" hidden></div>
+        <span class="who"><span data-t="helper"></span><span class="bars" id="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></span>
+        <p id="question" class="question" aria-live="polite"></p>
+        <p id="questionEn" class="gloss" lang="en" hidden></p>
+      </div>
+      <div id="said" class="said" hidden>
+        <span class="tag blue" id="saidWho"></span>
+        <span class="words" id="saidText"></span>
+        <span class="gloss" id="saidEn" lang="en" hidden></span>
+      </div>
+      <div id="hist" hidden></div>
+    </section>
+
+    <section id="done" class="panel ticket" hidden>
+      <div class="art pic" id="ticketArt" hidden></div>
+      <span class="tag lg routine" id="doneTag"><span class="dot"></span><span id="doneTagText"></span></span>
+      <p class="quiet" data-t="yourNumber"></p>
+      <p class="n" id="num">1</p>
+      <p class="big" id="doneText"></p>
+      <button id="again" class="btn block" style="max-width:320px" data-t="next"></button>
+    </section>
+  </div>
+
+  <div id="dock" class="dock" hidden>
+    <div class="dock-in">
+      <p id="status" class="status" role="status"></p>
+      <div class="mic-wrap" id="micWrap">
+        <span class="ring" id="ring"></span>
+        <button id="mic" class="mic" aria-label="Maikorofoni">
+          <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+          <svg id="stopIcon" viewBox="0 0 24 24" fill="currentColor" hidden><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+          <svg id="earIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4zM15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+        </button>
+      </div>
+      <form id="typed" class="typed" hidden>
+        <input id="text" class="field" autocomplete="off" aria-label="Nyorai mhinduro yenyu">
+        <button class="btn primary sm" data-t="send"></button>
+      </form>
+      <button id="retry" class="btn primary sm" type="button" data-t="retry" hidden></button>
+      <button id="finish" class="btn sm" type="button" data-t="finish"></button>
+    </div>
+  </div>
+</main>
+
+<footer class="foot" id="foot">
+  <div class="seg" role="group" aria-label="Chitarisiko / Appearance">
+    <button data-theme-choice="light"><span data-t="light"></span></button>
+    <button data-theme-choice="dark"><span data-t="dark"></span></button>
+    <button data-theme-choice="match"><span data-t="match"></span></button>
+  </div>
+  <a class="linkbtn" href="/nurse" data-t="staff"></a>
+</footer>
+
+<div id="sheet" class="sheet-back" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <h2 class="title" id="sheetTitle" data-t="sampleTitle"></h2>
+    <p class="quiet small" style="margin-top:6px" data-t="sampleAbout"></p>
+    <div class="pick" id="pick"></div>
+    <button id="closeSheet" class="btn block" style="margin-top:14px" data-t="close"></button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const T = {
+  sn: {
+    sub: 'Mubatsiri wemukoti. Taurai, mukurumidze kubatsirwa', welcome: 'Mauya kukiriniki',
+    intro: 'Ndichakubvunzai mibvunzo mishoma. Mhinduro dzenyu dzinopiwa mukoti kuti akubatsirei nekukurumidza.',
+    consent: 'Izwi renyu rinorekodhwa kuti mukoti azorinzwa, rozodzimwa mushure mezuva rimwe chete.',
+    start: 'Ndinobvuma, tanga kutaura', sample: 'Ona murwere wemuenzaniso',
+    notdoctor: 'Mubatsiri uyu ikombiyuta, haasi chiremba. Kana zvakaoma, udzai mukoti iye zvino.',
+    sampleTag: 'Muenzaniso, izwi rekombiyuta', more: 'Zvimwe', helper: 'Mubatsiri',
+    yourNumber: 'Nhamba yenyu', next: 'Murwere anotevera', send: 'Tumira',
+    auto: 'Maikorofoni inozvivhura nekuzvivhara yoga', type: 'Nyora panzvimbo pekutaura', captions: 'Ratidza Chirungu pasi pemashoko',
+    finish: 'Ndapedza', light: 'Chiedza', dark: 'Rima', match: 'Sefoni',
+    staff: 'Vashandi', sampleTitle: 'Varwere vemuenzaniso', close: 'Vhara',
+    sampleAbout: 'Vanhu ava havasi chaivo uye mazwi avo nderekombiyuta. Mubatsiri anovanzwa nekuvapindura chaizvo.',
+    idle: 'Dzvanyai maikorofoni mutaure', listen: 'Taurai iye zvino, ndiri kuteerera', hearing: 'Ndiri kunyora zvamataura…',
+    thinking: 'Ndiri kufunga…', speaking: 'Mubatsiri ari kutaura, teererai', writeHere: 'Nyorai mhinduro yenyu',
+    micDenied: 'Maikorofoni haisi kushanda. Nyorai mhinduro yenyu.', failed: 'Pane chakanganisika. Edzai zvakare.',
+    you: 'Imi', samplePatient: 'Murwere wemuenzaniso', patientSpeaking: 'Murwere ari kutaura…',
+    qof: (n, m) => `Mubvunzo ${n} pa ${m}`, placeholder: 'Nyorai pano',
+    done: 'Zvapera', alarmTag: 'Mukoti ari kuuya', retry: 'Edza zvakare',
+    doneText: 'Ndatenda. Garai muchimirira, mukoti achakudaidzai.',
+    alarmText: 'Ndatenda. Mukoti adaidzwa iye zvino. Ndapota garai pano.',
+  },
+  en: {
+    sub: "The nurse's helper. Speak, and be helped sooner", welcome: 'Welcome to the clinic',
+    intro: 'I will ask you a few short questions. Your answers go to the nurse, so she can help you sooner.',
+    consent: 'Your voice is recorded so the nurse can listen to it. It is deleted after one day.',
+    start: 'I agree, start talking', sample: 'Watch a sample patient',
+    notdoctor: 'This helper is a computer, not a doctor. If it is serious, tell the nurse now.',
+    sampleTag: 'Sample, synthetic voice', more: 'More options', helper: 'Helper',
+    yourNumber: 'Your number', next: 'Next patient', send: 'Send',
+    auto: 'The microphone opens and closes by itself', type: 'Type instead of speaking', captions: 'Show English under the words',
+    finish: 'I have finished', light: 'Light', dark: 'Dark', match: 'Match phone',
+    staff: 'Staff', sampleTitle: 'Sample patients', close: 'Close',
+    sampleAbout: 'These people are made up and their voices are synthetic. The helper really hears them and really answers.',
+    idle: 'Tap the microphone to speak', listen: 'Speak now, I am listening', hearing: 'Writing down what you said…',
+    thinking: 'Thinking…', speaking: 'The helper is speaking, listen', writeHere: 'Type your answer',
+    micDenied: 'The microphone is not working. Type your answer.', failed: 'Something went wrong. Please try again.',
+    you: 'You', samplePatient: 'Sample patient', patientSpeaking: 'The patient is speaking…',
+    qof: (n, m) => `Question ${n} of ${m}`, placeholder: 'Type here',
+    done: 'Finished', alarmTag: 'The nurse is coming', retry: 'Try again',
+    doneText: 'Thank you. Please take a seat, the nurse will call you.',
+    alarmText: 'Thank you. The nurse has been called. Please stay here.',
+  },
+};
+const params = new URLSearchParams(location.search);
+let lang = 'sn', S = T.sn;
+let visit = null, sample = null, busy = false, maxQ = 6;
+let autoListen = true, typing = false, captions = params.get('captions') === '1';
+try {
+  lang = params.get('lang') || localStorage.getItem('mukoti-lang') || 'sn';
+  autoListen = localStorage.getItem('mukoti-auto') !== '0';
+  typing = localStorage.getItem('mukoti-type') === '1';
+  if (!params.has('captions')) captions = localStorage.getItem('mukoti-captions') === '1';
+} catch (e) {}
+
+function applyLang(l) {
+  lang = T[l] ? l : 'sn'; S = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = S[el.dataset.t]; });
+  document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  $('text').placeholder = S.placeholder;
+  try { localStorage.setItem('mukoti-lang', lang); } catch (e) {}
+}
+document.querySelectorAll('[data-lang]').forEach(b => {
+  b.insertAdjacentHTML('afterbegin', '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>');
+  b.onclick = () => applyLang(b.dataset.lang);
+});
+function option(id, get, set, key) {
+  const b = $(id); b.setAttribute('aria-checked', String(get()));
+  b.onclick = () => { set(!get()); b.setAttribute('aria-checked', String(get())); try { localStorage.setItem(key, get() ? '1' : '0'); } catch (e) {} };
+}
+option('optAuto', () => autoListen, v => autoListen = v, 'mukoti-auto');
+option('optType', () => typing, v => typing = v, 'mukoti-type');
+option('optGloss', () => captions, v => captions = v, 'mukoti-captions');
+
+/* ── Sound: one audio context for playing the helper and for hearing the patient ── */
+let ctx = null, outMeter = null, micStream = null, micMeter = null, playing = null;
+let rec = null, recorder = null, floor = 0.012, micLevel = 0;
+function audio() {
+  if (!ctx) {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    outMeter = ctx.createAnalyser(); outMeter.fftSize = 256; outMeter.connect(ctx.destination);
+  }
+  if (ctx.state === 'suspended') ctx.resume();
+  return ctx;
+}
+function bytes(b64) { const s = atob(b64), a = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+async function play(b64) {
+  if (!b64) return;
+  let buf;
+  try { buf = await audio().decodeAudioData(bytes(b64).buffer); } catch (e) { return; }
+  return new Promise(res => {
+    const src = ctx.createBufferSource(); src.buffer = buf; src.connect(outMeter);
+    src.onended = () => { if (playing === src) playing = null; res(); };
+    playing = src; src.start();
+  });
+}
+function hush() { if (playing) { try { playing.stop(); } catch (e) {} playing = null; } }
+function rms(meter) {
+  if (!meter) return 0;
+  const a = new Float32Array(meter.fftSize); meter.getFloatTimeDomainData(a);
+  let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * a[i];
+  return Math.sqrt(s / a.length);
+}
+const barEls = [...$('bars').children], shape = [0.55, 0.85, 1, 0.8, 0.5];
+(function draw() {
+  const out = playing ? rms(outMeter) : 0;
+  barEls.forEach((b, i) => { b.style.height = (4 + Math.min(16, out * 110 * shape[i])) + 'px'; });
+  $('ring').style.setProperty('--lvl', (1 + Math.min(0.3, micLevel * 4)).toFixed(3));
+  requestAnimationFrame(draw);
+})();
+// The "has the patient stopped?" check runs on a timer, not on the drawing
+// loop: a browser stops drawing a tab that is not in front, but not its timers.
+setInterval(() => { micLevel = rec ? rms(micMeter) : 0; if (rec) watch(micLevel); }, 50);
+
+async function openMic() {
+  if (micStream) return true;
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+  } catch (e) { return false; }
+  const src = audio().createMediaStreamSource(micStream);
+  micMeter = ctx.createAnalyser(); micMeter.fftSize = 1024; src.connect(micMeter);
+  recorder = new WavRecorder(ctx, src);
+  return true;
+}
+
+/* ── Recording, with a simple "has the patient stopped talking?" check ── */
+function watch(level) {
+  const now = performance.now(), thr = Math.max(0.028, floor * 3.2);
+  if (level > thr) {
+    rec.loud += now - rec.last;
+    if (rec.loud > 140) rec.spoke = true;
+    rec.voiceAt = now;
+  } else rec.loud = 0;
+  // The quietest recent level is the room's own noise. It drops at once in a
+  // pause and creeps up otherwise, so a steady loud room cannot hold a turn
+  // open, and loud speech cannot be mistaken for the room.
+  floor = level < floor ? floor * 0.7 + level * 0.3 : Math.min(floor * 1.004, 0.2);
+  floor = Math.max(floor, 0.004);
+  rec.last = now;
+  if (rec.auto) {
+    if (rec.spoke && now - rec.voiceAt > 1500) return stopRec(true);
+    if (!rec.spoke && now - rec.t0 > 9000) return stopRec(false);
+  }
+  if (now - rec.t0 > 45000) stopRec(true);
+}
+let opening = false;
+async function startRec(auto) {
+  if (busy || rec || opening || !visit || sample || typing) return;
+  opening = true;
+  hush();
+  const ok = await openMic();
+  if (ok) await recorder.start();
+  opening = false;
+  if (!ok) { typing = true; mode('idle', S.micDenied); return; }
+  if (busy || rec || !visit) { recorder.stop(); return; }
+  const now = performance.now();
+  rec = { auto, t0: now, last: now, loud: 0, spoke: false, voiceAt: now };
+  mode('rec', S.listen);
+}
+function stopRec(wanted) {
+  if (!rec || !recorder) return;
+  const r = rec, now = performance.now(); rec = null;
+  // Drop the silence that ended the turn, keeping a third of a second of it.
+  const tail = r.spoke ? Math.max(0, (now - r.voiceAt) / 1000 - 0.35) : 0;
+  const { blob, seconds } = recorder.stop(tail);
+  if (!wanted || !(r.spoke || now - r.t0 > 700) || seconds < 0.4) { mode('idle', S.idle); return; }
+  const fd = new FormData(); fd.append('audio', blob, 'turn.wav');
+  send(fd);
+}
+
+/* ── What the dock shows: one state at a time, said in words ── */
+function mode(m, text) {
+  $('retry').hidden = true;
+  const wrap = $('micWrap'), off = m === 'wait' || m === 'speak' || !!sample;
+  wrap.classList.toggle('rec', m === 'rec'); wrap.classList.toggle('off', off);
+  wrap.classList.toggle('invite', m === 'idle' && !off && !typing);
+  $('mic').disabled = off || typing;
+  // toggleAttribute, not .hidden: these are SVG elements, which have no hidden property.
+  $('micIcon').toggleAttribute('hidden', m === 'rec' || m === 'speak');
+  $('stopIcon').toggleAttribute('hidden', m !== 'rec'); $('earIcon').toggleAttribute('hidden', m !== 'speak');
+  $('status').textContent = text; $('status').classList.toggle('quiet-state', m === 'wait');
+  $('typed').hidden = !(typing && !sample); $('micWrap').hidden = typing && !sample;
+  $('typed').querySelector('button').disabled = off; $('text').disabled = off;
+}
+function setBusy(b) { busy = b; }
+let again = null;                            // what "Try again" does after a failure
+function failed(redo) {
+  setBusy(false); again = redo; mode('idle', S.failed); $('retry').hidden = false; $('finish').hidden = false;
+}
+function gloss(el, text) { el.textContent = text || ''; el.hidden = !(captions || sample) || !text; }
+const PICTURES = ['welcome', 'who', 'age', 'onset', 'worse', 'where', 'severity', 'fever', 'breathing', 'drinking', 'vomiting',
+  'fits', 'bleeding', 'neck', 'pregnancy', 'chronic', 'medicines', 'allergy', 'other', 'repeat', 'nurse_coming', 'wait'];
+function picture(name) { Art.show($('pic'), name, $('question').textContent); }
+/* Progress without reading: a small picture for each question asked, a check on
+   the ones answered, a ring on the one being asked, a dot for each still to come. */
+let asked = [];
+const TICK = '<span class="tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span>';
+async function trail(n) {
+  const row = $('trail'), todo = Math.max(0, maxQ - asked.length);
+  row.setAttribute('aria-label', $('qof').textContent);
+  const cells = await Promise.all(asked.map(async (name, i) => {
+    const svg = await Art.load(name);
+    return `<span class="t still ${i === asked.length - 1 && n ? 'now' : ''}"><span class="art">${svg}</span>${i < asked.length - 1 || !n ? TICK : ''}</span>`;
+  }));
+  row.innerHTML = cells.join('') + '<span class="d"></span>'.repeat(todo);
+}
+function setQuestion(text, en, n) {
+  $('question').textContent = text; gloss($('questionEn'), en);
+  $('stage').classList.toggle('long', text.length > 90);
+  hist(S.helper, text);
+  if (n) {
+    $('qof').textContent = S.qof(Math.min(n, maxQ), maxQ);
+    [...$('pips').children].forEach((p, i) => { p.classList.toggle('on', i < n); p.classList.toggle('now', i === n - 1); });
+  }
+}
+function hist(who, text) { const p = document.createElement('p'); p.textContent = who + ': ' + text; $('hist').append(p); }
+function showSaid(text, pending) {
+  $('said').hidden = false; $('said').classList.toggle('pending', !!pending);
+  $('saidWho').textContent = sample ? S.samplePatient : S.you; $('saidText').textContent = text; $('saidEn').hidden = true;
+}
+
+async function begin(sampleInfo) {
+  audio();                                   // inside the tap, so the browser lets us play sound
+  sample = sampleInfo || null;
+  $('go').disabled = true;
+  try {
+    const q = new URLSearchParams({ lang: sample ? sample.lang : lang }); if (sample) q.set('sample', sample.id);
+    const r = await fetch('/api/visits?' + q, { method: 'POST' });
+    if (!r.ok) throw new Error(r.status);
+    visit = await r.json();
+  } catch (e) { $('go').disabled = false; sample = null; alert(S.failed); return; }
+  if (visit.lang !== lang) applyLang(visit.lang);
+  maxQ = visit.of || 6;
+  $('pips').innerHTML = '<i></i>'.repeat(maxQ); $('hist').innerHTML = ''; $('said').hidden = true;
+  document.body.classList.add('talking');
+  $('start').hidden = true; $('foot').hidden = true; $('talk').hidden = false; $('dock').hidden = false;
+  $('sampleTag').hidden = !sample; $('finish').hidden = !!sample;
+  Art.warm(PICTURES);
+  asked = ['welcome'];
+  setQuestion(visit.show || visit.text, visit.en, 1); picture('welcome'); trail(1);
+  setBusy(true); mode('speak', S.speaking);
+  await play(visit.audio);
+  setBusy(false);
+  next('main');
+}
+
+function next(topic) {
+  if (!visit) return;
+  if (sample) return sampleTurn(topic);
+  if (typing) { mode('idle', S.writeHere); $('text').focus(); return; }
+  if (autoListen) { mode('idle', S.listen); startRec(true); } else mode('idle', S.idle);
+}
+
+async function sampleTurn(topic) {
+  setBusy(true); mode('wait', S.patientSpeaking); showSaid('…', true);
+  try {
+    const r = await fetch(`/api/samples/${sample.id}/line?topic=${encodeURIComponent(topic)}`);
+    if (!r.ok) throw new Error(r.status);
+    const line = await r.json();
+    await play(line.audio);
+    const fd = new FormData(); fd.append('audio', new Blob([bytes(line.audio)], { type: 'audio/mpeg' }), 'turn.mp3');
+    send(fd, true, () => sampleTurn(topic));
+  } catch (e) { failed(() => sampleTurn(topic)); }
+}
+
+async function send(fd, keepBubble, redo) {
+  setBusy(true); mode('wait', S.hearing);
+  if (!keepBubble) showSaid('…', true);
+  let done = false, alarm = false, topic = 'other', spoke = null, heard = null;
+  const mine = visit;                       // the patient may press "I have finished" meanwhile
+  try {
+    const r = await fetch('/api/visits/' + visit.id + '/turn', { method: 'POST', body: fd });
+    if (!r.ok) throw new Error(r.status);
+    const reader = r.body.getReader(), dec = new TextDecoder(); let buf = '';
+    for (;;) {
+      const { value, done: end } = await reader.read();
+      if (end) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, i); buf = buf.slice(i + 1);
+        if (!line.trim()) continue;
+        const ev = JSON.parse(line);
+        if (visit !== mine) return;
+        if (ev.type === 'heard') {
+          heard = ev.text;
+          if (ev.text) { showSaid(ev.text); hist(sample ? S.samplePatient : S.you, ev.text); mode('wait', S.thinking); }
+          else $('said').hidden = true;
+        } else if (ev.type === 'reply') {
+          done = ev.done; alarm = ev.alarm; topic = ev.topic;
+          if (heard) gloss($('saidEn'), ev.heard_en && ev.heard_en !== heard ? ev.heard_en : '');
+          setQuestion(ev.text, ev.en, done ? 0 : ev.question); mode('speak', S.speaking);
+          picture(done ? (alarm ? 'nurse_coming' : 'wait') : ev.repeat ? 'repeat' : topic);
+          if (!done && !ev.repeat) asked.push(topic);
+          trail(done ? 0 : ev.question);
+        } else if (ev.type === 'audio') spoke = play(ev.b64);
+        else if (ev.type === 'gloss') gloss($('saidEn'), ev.heard_en);
+        else if (ev.type === 'error') throw new Error(ev.message);
+      }
+    }
+    if (spoke) await spoke;
+  } catch (e) {
+    if (visit !== mine) return;
+    if (heard === null) $('said').hidden = true;
+    failed(redo || (() => next('other'))); return;
+  }
+  if (visit !== mine) return;
+  setBusy(false);
+  if (done) finished(alarm); else next(topic);
+}
+
+function finished(alarm) {
+  document.body.classList.remove('talking');
+  $('talk').hidden = true; $('dock').hidden = true; $('done').hidden = false; $('foot').hidden = false; $('sampleTag').hidden = true;
+  $('num').textContent = visit.number;
+  // Calm on purpose: the patient is told a nurse is coming, not shown an alarm.
+  $('doneTag').className = 'tag lg ' + (alarm ? 'urgent' : 'routine');
+  $('doneTagText').textContent = alarm ? S.alarmTag : S.done;
+  $('doneText').textContent = alarm ? S.alarmText : S.doneText;
+  Art.show($('ticketArt'), alarm ? 'nurse_coming' : 'wait', $('doneText').textContent);
+  visit = null;
+}
+
+$('go').onclick = () => begin(null);
+$('mic').onclick = () => { if (rec) stopRec(true); else startRec(autoListen); };
+$('typed').onsubmit = e => {
+  e.preventDefault();
+  const v = $('text').value.trim(); if (!v || busy) return;
+  $('text').value = '';
+  const fd = new FormData(); fd.append('text', v); send(fd);
+};
+$('retry').onclick = () => { const f = again; again = null; $('retry').hidden = true; if (f) f(); };
+$('finish').onclick = async () => {
+  if (!visit) return;
+  stopRec(false); hush();
+  const v = visit;
+  setBusy(false);
+  try { await fetch('/api/visits/' + v.id + '/end', { method: 'POST' }); } catch (e) {}
+  if (visit === v) finished(false);
+};
+$('again').onclick = () => { sample = null; $('done').hidden = true; $('start').hidden = false; $('go').disabled = false; };
+
+/* ── Sample patients ── */
+$('samples').onclick = async () => {
+  audio();
+  $('sheet').hidden = false;
+  if ($('pick').children.length) return;
+  try {
+    const d = await (await fetch('/api/samples')).json();
+    d.samples.forEach(p => {
+      const b = document.createElement('button');
+      const t = document.createElement('span'); t.className = 't'; t.textContent = p.title;
+      const g = document.createElement('span'); g.className = 'tag'; g.textContent = p.lang === 'sn' ? 'ChiShona' : 'English'; t.append(g);
+      const d2 = document.createElement('span'); d2.className = 'd'; d2.textContent = p.about;
+      b.append(t, d2);
+      b.onclick = () => { $('sheet').hidden = true; begin(p); };
+      $('pick').append(b);
+    });
+  } catch (e) { $('pick').textContent = S.failed; }
+};
+$('closeSheet').onclick = () => { $('sheet').hidden = true; };
+$('sheet').onclick = e => { if (e.target === $('sheet')) $('sheet').hidden = true; };
+
+applyLang(lang);
+Art.show($('artWelcome'), 'welcome', ''); Art.show($('artRec'), 'recording', ''); Art.show($('artDoc'), 'not_doctor', '');
+</script>
+</body>
+</html>

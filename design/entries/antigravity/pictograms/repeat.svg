@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .repeat-arrow { transform-origin: 120px 120px; animation: repeat-turn 3.2s ease-in-out infinite; }
+    .repeat-wave { animation: repeat-pulse 3.2s ease-in-out infinite; }
+    @keyframes repeat-turn {
+      0%, 100% { transform: rotate(0deg); }
+      55% { transform: rotate(-32deg); }
+    }
+    @keyframes repeat-pulse {
+      0%, 100% { opacity: 0.45; }
+      55% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .repeat-arrow, .repeat-wave { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle cx="120" cy="120" r="62" fill="var(--tint, #E8F0FE)"/>
+  <g class="repeat-arrow" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M54 114a66 66 0 1 1 20 52"/>
+    <path d="M40 94l14 22 20-14"/>
+  </g>
+  <path d="M106 108a22 22 0 1 1 36 18c-8 6-10 14-10 22a10 10 0 0 1-20 0" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+  <path class="repeat-wave" d="M90 102a36 36 0 0 0 0 36" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+</svg>

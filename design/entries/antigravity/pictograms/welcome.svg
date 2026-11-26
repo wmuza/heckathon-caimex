@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .welcome-arm { transform-origin: 146px 142px; animation: welcome-wave 3.2s ease-in-out infinite; }
+    .welcome-arc { animation: welcome-glow 3.2s ease-in-out infinite; }
+    @keyframes welcome-wave {
+      0%, 100% { transform: rotate(0deg); }
+      35% { transform: rotate(-16deg); }
+      55% { transform: rotate(4deg); }
+      75% { transform: rotate(-12deg); }
+    }
+    @keyframes welcome-glow {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-arm, .welcome-arc { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <path d="M46 196V98a74 74 0 0 1 148 0v98z" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M120 42v20M110 52h20" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M32 196h176" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+  <g stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="112" cy="108" r="21" fill="var(--paper, #FFFFFF)"/>
+    <path d="M78 196v-34c0-18 15-30 34-30s34 12 34 30v34z" fill="var(--paper, #FFFFFF)"/>
+  </g>
+  <path class="welcome-arm" d="M142 146l20-22" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+  <path class="welcome-arc" d="M164 104a18 18 0 0 1 14 14" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+</svg>

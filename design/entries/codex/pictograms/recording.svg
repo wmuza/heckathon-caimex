@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .recording-motion {
+      animation: recording-loop 3.5s ease-in-out infinite;
+      transform-origin: 120px 110px;
+    }
+    @keyframes recording-loop {
+      0%, 100% { transform: scaleY(.7); }
+      51%, 72% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .recording-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="44" y="34" width="152" height="172" rx="23" fill="var(--paper, #FFFFFF)"/>
+    <circle cx="69" cy="60" r="6" fill="var(--danger, #CF2A30)" stroke="var(--danger, #CF2A30)"/>
+    <path d="M65 153h110" stroke="var(--quiet, #5B6474)"/>
+    <g class="recording-motion" stroke="var(--accent, #2563EB)">
+      <path d="M71 104v12m16-22v32m16-46v60m17-49v38m17-31v24m16-42v60m16-38v16"/>
+    </g>
+    <path d="m110 169 23 12-23 12z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

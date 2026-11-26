@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .fever-motion {
+      animation: fever-loop 3.4s ease-in-out infinite;
+      transform-origin: 181px 164px;
+    }
+    @keyframes fever-loop {
+      0%, 100% { transform: scaleY(.75); }
+      56%, 78% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fever-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="87" cy="111" r="32" fill="var(--paper, #FFFFFF)"/>
+    <path d="M37 194v-10a26 26 0 0 1 26-26h48a26 26 0 0 1 26 26v10z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M66 65q-7-9 0-18m21 15q-7-9 0-18m21 21q-7-9 0-18" stroke="var(--accent, #2563EB)"/>
+    <path d="M169 65a12 12 0 0 1 24 0v83a23 23 0 1 1-24 0z" fill="var(--paper, #FFFFFF)"/>
+    <path class="fever-motion" d="M181 164V83" stroke="var(--accent, #2563EB)"/>
+    <circle cx="181" cy="168" r="8" fill="var(--accent, #2563EB)" stroke="var(--accent, #2563EB)"/>
+    <path d="M194 85h12m-12 18h8m-8 18h12" stroke="var(--quiet, #5B6474)"/>
+  </g>
+</svg>

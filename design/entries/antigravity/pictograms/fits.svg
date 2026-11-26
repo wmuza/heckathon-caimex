@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .fits-body { animation: fits-shake 2.4s ease-in-out infinite; }
+    .fits-zig { animation: fits-pulse 2.4s ease-in-out infinite; }
+    @keyframes fits-shake {
+      0%, 15%, 85%, 100% { transform: translateX(0); }
+      25%, 45%, 65% { transform: translateX(-4px); }
+      35%, 55%, 75% { transform: translateX(4px); }
+    }
+    @keyframes fits-pulse {
+      0%, 100% { opacity: 0.45; }
+      45%, 65% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fits-body, .fits-zig { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle cx="120" cy="126" r="68" fill="var(--tint, #E8F0FE)"/>
+  <g class="fits-body" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="64" r="21" fill="var(--paper, #FFFFFF)"/>
+    <path d="M84 190v-56c0-20 16-34 36-34s36 14 36 34v56z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M84 126l-18 28M156 126l18 28" fill="none"/>
+  </g>
+  <g class="fits-zig" fill="none" stroke="var(--danger, #CF2A30)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M52 84l-14 14 14 14-14 14"/>
+    <path d="M188 84l14 14-14 14 14 14"/>
+  </g>
+</svg>

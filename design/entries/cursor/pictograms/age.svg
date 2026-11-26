@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.age-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.age-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.age-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.age-fill{fill:var(--accent,#2563EB)}.age-tint{fill:var(--tint,#E8F0FE)}.age-hot{fill:var(--danger,#CF2A30)}.age-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.age-move{transform-box:fill-box;transform-origin:50% 50%;animation:age-pop 3.6s ease-in-out infinite}
+.age-d2{animation-delay:-2.4s}
+.age-d3{animation-delay:-1.2s}
+@keyframes age-pop{0%,18%{transform:scale(1.45)}36%,100%{transform:scale(1)}}
+
+@media (prefers-reduced-motion:reduce){.age-move{animation:none}}
+</style>
+<path class="age-line" d="M28 208H212"/><path class="age-body" d="M32 200V180C32 162 64 162 64 180V200Z"/><circle class="age-body" cx="48" cy="156" r="12"/><path class="age-body" d="M97 200V145C97 127 143 127 143 145V200Z"/><circle class="age-body" cx="120" cy="118" r="17"/><path class="age-body" d="M162 200V106C162 86 226 86 226 106V200Z"/><circle class="age-body" cx="194" cy="74" r="23"/><circle class="age-fill age-move age-d1" cx="48" cy="128" r="8"/><circle class="age-fill age-move age-d2" cx="120" cy="88" r="8"/><circle class="age-fill age-move age-d3" cx="194" cy="40" r="8"/>
+</svg>

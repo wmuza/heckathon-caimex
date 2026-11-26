@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .vomiting-motion {
+      animation: vomiting-loop 3.3s ease-in-out infinite;
+
+    }
+    @keyframes vomiting-loop {
+      0%, 12%, 100% { transform: translateY(0); }
+      55%, 78% { transform: translateY(11px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .vomiting-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M28 180q0-24 13-44 17-26 47-28l27 10q6 22 32 38 8 5 5 13-3 8-14 6l-36-23-5 28z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M90 111a32 32 0 1 1 57 7l-2 12-14-3-7 8q-6 6-13 0l-8-7" fill="var(--paper, #FFFFFF)"/>
+    <path d="m139 110-6 1m-7 15-6-5"/>
+    <path d="M127 180h88q-7 24-28 24h-32q-21 0-28-24z" fill="var(--tint, #E8F0FE)"/>
+    <path class="vomiting-motion" d="m142 137 9 6m4-5 12 15m4 3 5 8" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

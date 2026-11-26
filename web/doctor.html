@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: doctor</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<script src="rec.js"></script>
+<style>
+  :root { --col: 1180px; }
+  .band-in { flex-wrap: wrap; }
+  .layout { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .group { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 10px 2px 0; }
+  .group:first-child { margin-top: 0; }
+  .row {
+    display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; width: 100%; text-align: left; cursor: pointer; align-items: center;
+    background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 10px 14px; box-shadow: var(--shadow-panel);
+  }
+  .row[aria-current="true"] { border-color: var(--blue-fill); box-shadow: 0 0 0 2px var(--blue-fill); }
+  .row .cc { font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .row .sub { color: var(--ink-2); font-size: 0.8125rem; font-weight: 600; }
+  .face { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: var(--panel-sunk); display: block; flex: none; }
+  span.face { padding: 6px; border-radius: 14px; }
+  .face.lg { width: 104px; height: 104px; }
+  span.face.lg { border-radius: 22px; padding: 8px; }
+  .still svg * { animation: none !important; }
+  .hero { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: center; }
+  .hero h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.25; margin-top: 4px; }
+  .who-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* Where the patient is: five steps, the done ones ticked */
+  .steps { display: flex; gap: 4px; margin-top: 16px; }
+  .steps li { list-style: none; flex: 1; text-align: center; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); position: relative; padding-top: 34px; }
+  .steps li::before { content: ''; position: absolute; top: 12px; left: -50%; right: 50%; height: 3px; background: var(--hairline); }
+  .steps li:first-child::before { display: none; }
+  .steps li i { position: absolute; top: 0; left: 50%; margin-left: -14px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--panel); box-shadow: inset 0 0 0 2px var(--hairline); color: var(--ink-on); z-index: 1; }
+  .steps li i svg { width: 14px; height: 14px; display: none; }
+  .steps li.done::before, .steps li.here::before { background: var(--blue-fill); }
+  .steps li.done i { background: var(--blue-fill); box-shadow: none; }
+  .steps li.done i svg { display: block; }
+  .steps li.here { color: var(--blue-ink); font-weight: 700; }
+  .steps li.here i { box-shadow: inset 0 0 0 2px var(--blue-fill), 0 0 0 4px var(--blue-halo); }
+  .steps li.here i::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); }
+  ul.steps { padding: 0; }
+
+  .dets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .det { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 12px; border-radius: 999px; background: var(--panel-sunk);
+    box-shadow: inset 0 0 0 1px var(--hairline); font-weight: 600; font-size: 0.9375rem; }
+  .det b { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .det.todo { background: none; color: var(--ink-2); }
+  .det .wdot { width: 9px; height: 9px; border-radius: 50%; background: var(--warn-dot); }
+  h3 { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 18px 0 8px; }
+  ul.facts { padding-left: 20px; display: grid; gap: 4px; }
+  .signs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .heard { border-left: 3px solid var(--blue-soft); padding-left: 12px; }
+  .picks { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .pick { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--ghost-edge); background: var(--ghost-fill); font-weight: 600; font-size: 0.9375rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .pick .ck { width: 14px; height: 14px; display: none; }
+  .pick[aria-pressed="true"] { background: var(--selected); border-color: var(--blue-fill); color: var(--blue-ink); }
+  .pick[aria-pressed="true"] .ck { display: block; }
+  .rxadd { display: grid; grid-template-columns: 1fr 96px 140px auto; gap: 8px; align-items: end; }
+  @media (max-width: 640px) { .rxadd { grid-template-columns: 1fr 96px; } }
+  .rx { display: grid; gap: 8px; margin: 10px 0 0; padding: 0; }
+  .rx li { list-style: none; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 14px; background: var(--panel-sunk); }
+  .rx .q { color: var(--ink-2); font-weight: 600; font-size: 0.9375rem; }
+  .msg { display: flex; gap: 8px; align-items: center; font-weight: 600; min-height: 24px; color: var(--red-ink); }
+  .msg .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--red-fill); }
+  .sent { display: flex; gap: 10px; align-items: flex-start; background: var(--green-tint); color: var(--green-ink); border-radius: 16px; padding: 12px 14px; font-weight: 600; }
+  .sent svg { width: 20px; height: 20px; flex: none; margin-top: 2px; }
+  .draft { display: flex; gap: 8px; color: var(--ink-2); font-size: 0.875rem; margin-top: 16px; }
+  .draft svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+  .ai { background: var(--panel-sunk); border-radius: 18px; padding: 14px 16px; margin-top: 18px; }
+  .ai h4 { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 12px 0 6px; }
+  .ai ul { padding-left: 20px; display: grid; gap: 4px; }
+  .ai .cs { display: grid; gap: 8px; }
+  .ai .c { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+  .ai .by { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+  .ai .live { width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  .dxrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+  .empty { text-align: center; padding: 32px 20px; }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Doctor</h1>
+      <p class="sub">The helper's note and the vitals, then your diagnosis and prescription</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor" aria-current="page">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+    <div>
+      <div id="list" class="list" aria-label="Patients"></div>
+      <div id="empty" class="panel empty" hidden><p class="strong">No one is waiting</p><p class="quiet small">A patient appears here when they finish speaking to the helper.</p></div>
+    </div>
+    <div id="detail" class="panel" hidden></div>
+  </div>
+</div>
+
+<footer class="foot noprint">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+</footer>
+
+<div id="pinSheet" class="sheet-back" hidden>
+  <form class="sheet stack" id="pinForm">
+    <h2 class="title">Staff PIN</h2>
+    <input class="field" id="pin" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN">
+    <p class="small" id="pinMsg" style="color:var(--red-ink)" role="alert"></p>
+    <button class="btn primary block">Open</button>
+  </form>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+const LABEL = { emergency: 'Emergency', urgent: 'Urgent', routine: 'Routine' };
+const STEPS = [['intake', 'Helper'], ['nurse', 'Nurse'], ['doctor', 'Doctor'], ['pharmacy', 'Pharmacy'], ['done', 'Done']];
+const OUT = { treated: 'Treated here', referred: 'Referred', admitted: 'Admitted' };
+const pictures = {};
+let d = null, current = null, form = null, editing = false, lastSig = '';
+
+const face = (v, cls) => v.photo ? `<img class="face ${cls || ''}" src="${v.photo}" alt="Photo on ticket ${v.number}">`
+  : `<span class="face art still ${cls || ''}" aria-hidden="true">${pictures[v.picture] || pictures.other || ''}</span>`;
+const med = id => d.medicines.find(m => m.id === id) || { name: id, unit: '' };
+const val = x => `${x.value}${x.unit ? ' ' + x.unit : ''}`;
+
+function renderList() {
+  $('empty').hidden = d.visits.length > 0;
+  const groups = [['doctor', 'Waiting for you'], ['nurse', 'With the nurse'], ['pharmacy', 'At the pharmacy'], ['done', 'Finished']];
+  $('list').innerHTML = groups.map(([st, title]) => {
+    const rows = d.visits.filter(v => v.stage === st);
+    return rows.length ? `<p class="group">${title} (${rows.length})</p>` + rows.map(v => `<button class="row" data-id="${v.id}" aria-current="${v.id === current}">
+      ${face(v)}<span><span class="cc">${esc(v.complaint || 'The note is being written')}</span><span class="sub">Ticket ${v.number}</span></span>
+      <span class="tag ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span></button>`).join('') : '';
+  }).join('');
+  $('list').querySelectorAll('.row').forEach(b => b.onclick = () => { current = b.dataset.id; form = null; editing = false; lastSig = ''; render(); });
+}
+
+function steps(stage) {
+  const at = STEPS.findIndex(s => s[0] === stage);
+  return `<ul class="steps" aria-label="Where the patient is">${STEPS.map(([k, name], i) =>
+    `<li class="${i < at || stage === 'done' ? 'done' : i === at ? 'here' : ''}"><i>${CK}</i>${name}</li>`).join('')}</ul>`;
+}
+function dets(v) {
+  const x = v.details, one = (label, f, todo) => f && f.value != null
+    ? `<span class="det">${f.flag ? '<span class="wdot"></span>' : ''}${label} <b>${esc(val(f))}</b></span>` : `<span class="det todo">${todo}</span>`;
+  return `<div class="dets">${one('Age', x.age, 'Age not said')}${x.sex && x.sex.value ? `<span class="det"><b>${x.sex.value === 'female' ? 'Female' : 'Male'}</b></span>` : ''}
+    ${one('Weight', x.weight, 'Not weighed')}${one('Height', x.height, 'Height not measured')}${one('Blood pressure', x.bp, 'Blood pressure not taken')}</div>
+    ${[x.weight, x.bp].filter(f => f && f.flag).map(f => `<p class="quiet small" style="margin-top:6px">${esc(f.flag)}.</p>`).join('')}`;
+}
+
+/* Dictation: the doctor presses "Say it", speaks, presses "Stop". The recogniser writes it into the box to be checked. */
+const dict = { on: false, busy: false, msg: '', rec: null, stream: null };
+async function micPress() {
+  if (!dict.on) {
+    try {
+      dict.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      dict.rec = new WavRecorder(ctx, ctx.createMediaStreamSource(dict.stream)); dict.ctx = ctx;
+      await dict.rec.start();
+      dict.on = true; dict.msg = 'Listening. Say the diagnosis, then press Stop.';
+    } catch (e) { dict.msg = 'The microphone could not be opened. Allow it for this page and try again.'; }
+    return renderDetail();
+  }
+  const { blob, seconds } = dict.rec.stop();
+  dict.stream.getTracks().forEach(t => t.stop()); dict.ctx.close();
+  dict.on = false; dict.busy = true; dict.msg = 'CAIMEx is writing down what you said.'; renderDetail();
+  const fd = new FormData(); fd.append('file', blob, 'dictation.wav'); fd.append('lang', 'en');
+  try {
+    const r = await fetch('/api/dictate', { method: 'POST', body: fd }), j = await r.json().catch(() => ({}));
+    if (r.ok && j.text) { form.diagnosis = j.text.slice(0, 120); form.suggested = false; dict.msg = `Written from ${seconds.toFixed(1)} seconds of speech. Check it before you send.`; }
+    else dict.msg = j.detail || 'Nothing was heard. Try again.';
+  } catch (e) { dict.msg = 'The recogniser could not be reached.'; }
+  dict.busy = false; renderDetail();
+}
+
+/* What CAIMEx suggests the doctor rule out. Asked for by a press; pressing "Use" only copies the words into the diagnosis box. */
+let asking = null;
+function considerHtml(v, open) {
+  const c = v.consider;
+  if (asking === v.id) return '<p class="by" style="margin:0"><span class="live"></span>CAIMEx is reading the note and the measurements. About 15 seconds.</p>';
+  if (!c) return `<div class="row-gap"><button class="btn sm" id="ask" ${v.has_note ? '' : 'disabled'}>Ask CAIMEx what to consider</button>
+    <span class="quiet small">${v.has_note ? 'A list to widen your thinking. You examine and decide.' : 'The note is still being written.'}</span></div><p class="msg" id="askMsg" role="alert"></p>`;
+  const list = (t, xs) => xs.length ? `<h4>${t}</h4><ul>${xs.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+  return `<p class="strong">To consider</p>
+    <div class="cs" style="margin-top:8px">${c.consider.map(x => `<div class="c"><span><span class="strong">${esc(x.name)}</span><br><span class="quiet small">${esc(x.why)}</span></span>
+      ${open ? `<button class="btn sm" data-use="${esc(x.name)}">Use</button>` : ''}</div>`).join('')}</div>
+    ${list('Do not miss', c.do_not_miss)}${list('Ask or examine', c.ask)}
+    ${c.local ? `<h4>In this area</h4><p>${esc(c.local)}</p>` : ''}
+    <p class="by">Suggested by CAIMEx · ${esc(c.model)}, from the note and the measurements. It has not seen the patient and names no medicine.</p>`;
+}
+
+function renderDetail() {
+  const v = d.visits.find(x => x.id === current), el = $('detail');
+  el.hidden = !v;
+  if (!v) return;
+  const c = v.consult, open = !c || editing;
+  if (open && !form) form = c ? { diagnosis: c.diagnosis, outcome: c.outcome, rx: c.rx.map(l => ({ ...l })) } : { diagnosis: '', outcome: 'treated', rx: [] };
+  const given = v.given.length ? `<p class="quiet small" style="margin-top:8px">Dispensed so far: ${v.given.map(g => `${esc(med(g.med).name)} × ${g.qty}`).join(', ')}.</p>` : '';
+  el.innerHTML = `
+    <div class="hero">${face(v, 'lg')}
+      <div style="min-width:0"><div class="who-line"><span class="tag lg ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span><span class="tag">Ticket ${v.number}</span></div>
+        <h2>${esc(v.complaint || 'The note is being written')}</h2><p class="quiet">${esc(v.patient || '')}</p></div></div>
+    ${steps(v.stage)}
+    ${dets(v)}
+    <h3>From the helper's note</h3>
+    <div class="heard">
+      ${v.signs.length ? `<div class="signs">${v.signs.map(s => `<span class="tag urgent"><span class="dot"></span>${esc(s)}</span>`).join('')}</div>` : ''}
+      ${v.history.length ? `<ul class="facts" style="margin-top:8px">${v.history.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : '<p class="quiet">Nothing more was said.</p>'}
+    </div>
+    <div class="ai" id="aiBox">${considerHtml(v, open)}</div>
+    ${open ? `
+    <h3><label for="dx">Your diagnosis</label></h3>
+    <div class="dxrow"><input class="field" id="dx" maxlength="120" autocomplete="off" value="${esc(form.diagnosis)}">
+      <button class="btn ${dict.on ? 'danger' : ''}" id="mic" ${dict.busy ? 'disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.500 11a6.500 6.500 0 0 0 13 0M12 17.500V21"/></svg>${dict.on ? 'Stop' : dict.busy ? 'Writing…' : 'Say it'}</button></div>
+    <p class="quiet small" id="micMsg" style="margin-top:6px">${esc(dict.msg)}</p>
+    <div class="picks">${d.diagnoses.map(x => `<button class="pick" data-dx="${esc(x)}" aria-pressed="${x === form.diagnosis}">${CK}${esc(x)}</button>`).join('')}</div>
+    <h3>Prescription</h3>
+    <div class="rxadd">
+      <div><label class="lab" for="rxMed">Medicine</label><select class="field" id="rxMed">${d.medicines.map(m => `<option value="${m.id}">${esc(m.name)}${m.stock <= 0 ? ' (none left)' : ''}</option>`).join('')}</select></div>
+      <div><label class="lab" for="rxQty">How many</label><input class="field num" id="rxQty" inputmode="numeric" autocomplete="off"></div>
+      <div><label class="lab" for="rxHow">How taken</label><select class="field" id="rxHow">${d.how.map(h => `<option>${esc(h)}</option>`).join('')}</select></div>
+      <button class="btn" id="rxAdd">Add</button>
+    </div>
+    <ul class="rx">${form.rx.map((l, i) => `<li><span><span class="strong">${esc(med(l.med).name)}</span><br><span class="q">${l.qty} ${esc(med(l.med).unit)} · ${esc(l.how)}</span></span>
+      <button class="linkbtn" data-drop="${i}">Remove</button></li>`).join('')}</ul>
+    ${form.rx.length ? '' : '<p class="quiet small" style="margin-top:8px">Nothing prescribed yet.</p>'}
+    <h3 id="outLab">What happens next</h3>
+    <div class="seg big" role="group" aria-labelledby="outLab">${Object.keys(OUT).map(k => `<button data-out="${k}" aria-pressed="${k === form.outcome}">${CK}${OUT[k]}</button>`).join('')}</div>
+    <p class="msg" id="msg" role="alert" style="margin-top:10px"></p>
+    <button class="btn primary block" id="send">${form.rx.length ? 'Send the prescription to the pharmacy' : 'Finish the visit'}</button>`
+    : `
+    <h3>Your diagnosis</h3>
+    <p class="title">${esc(c.diagnosis)}</p><p class="quiet">${OUT[c.outcome]}</p>
+    <h3>Prescription</h3>
+    ${c.rx.length ? `<ul class="rx">${c.rx.map(l => `<li><span><span class="strong">${esc(med(l.med).name)}</span><br><span class="q">${l.qty} ${esc(med(l.med).unit)} · ${esc(l.how)}</span></span></li>`).join('')}</ul>` : '<p class="quiet">Nothing was prescribed.</p>'}
+    ${given}
+    <p class="sent" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+      <span>${v.stage === 'pharmacy' ? 'Sent to the pharmacy. Only what you prescribed can be dispensed without the supervisor.' : 'This visit is finished.'}</span></p>
+    <p style="margin-top:12px"><button class="btn sm" id="edit">Change the diagnosis or prescription</button></p>`}
+    <p class="draft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>
+      <span>The note and the list to consider are a computer's drafts. You examine the patient: the diagnosis and the prescription are yours, and the computer never suggests a medicine.</span></p>`;
+  const ask = $('ask');
+  if (ask) ask.onclick = async () => {
+    asking = v.id; renderDetail();
+    const r = await fetch(`/api/visits/${v.id}/consider`, { method: 'POST' });
+    const j = await r.json().catch(() => ({}));
+    asking = null;
+    if (r.ok) { v.consider = j; renderDetail(); }
+    else { renderDetail(); const m = $('askMsg'); if (m) m.innerHTML = `<span class="dot"></span><span>${esc(j.detail || 'CAIMEx did not answer. Try again.')}</span>`; }
+  };
+  el.querySelectorAll('[data-use]').forEach(b => b.onclick = () => { form.diagnosis = b.dataset.use.slice(0, 120); form.suggested = true; renderDetail(); });
+  if (!open) { $('edit').onclick = () => { editing = true; form = null; renderDetail(); }; return; }
+  $('mic').onclick = micPress;
+  $('dx').oninput = e => { form.diagnosis = e.target.value; form.suggested = false; el.querySelectorAll('[data-dx]').forEach(b => b.setAttribute('aria-pressed', b.dataset.dx === form.diagnosis)); };
+  el.querySelectorAll('[data-dx]').forEach(b => b.onclick = () => { form.diagnosis = b.dataset.dx; form.suggested = false; renderDetail(); });
+  el.querySelectorAll('[data-out]').forEach(b => b.onclick = () => { form.outcome = b.dataset.out; renderDetail(); });
+  el.querySelectorAll('[data-drop]').forEach(b => b.onclick = () => { form.rx.splice(+b.dataset.drop, 1); renderDetail(); });
+  const say = t => { $('msg').innerHTML = t ? `<span class="dot"></span><span>${esc(t)}</span>` : ''; };
+  $('rxAdd').onclick = () => {
+    const m = med($('rxMed').value), q = parseInt($('rxQty').value, 10);
+    if (!(q >= 1 && q <= 200)) return say(`Type how many ${m.unit}, from 1 to 200`);
+    if (form.rx.some(l => l.med === m.id)) return say(`${m.name} is already on the prescription`);
+    form.rx.push({ med: m.id, qty: q, how: $('rxHow').value }); renderDetail();
+  };
+  $('send').onclick = async () => {
+    const r = await fetch(`/api/visits/${v.id}/consult`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return say(j.detail || 'Not saved');
+    form = null; editing = false; lastSig = ''; poll();
+  };
+}
+
+function render() { renderList(); renderDetail(); }
+async function poll() {
+  try {
+    const r = await fetch('/api/doctor');
+    if (r.status === 401) { $('pinSheet').hidden = false; return; }
+    const j = await r.json(); d = j;
+    if (!d.visits.some(v => v.id === current)) { current = (d.visits.find(v => v.stage === 'doctor') || d.visits[0] || {}).id || null; form = null; editing = false; }
+    const sig = JSON.stringify(j.visits) + JSON.stringify(j.medicines);
+    if (sig === lastSig) return;
+    lastSig = sig;
+    if (asking || dict.on || dict.busy) { renderList(); return; }
+    const typing = form && document.activeElement && $('detail').contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName);
+    if (typing) renderList(); else render();          // never rebuild the form under the doctor's hands
+  } catch (e) {}
+}
+$('pinForm').onsubmit = async e => {
+  e.preventDefault();
+  const fd = new FormData(); fd.append('pin', $('pin').value);
+  const r = await fetch('/api/nurse/login', { method: 'POST', body: fd });
+  if (r.ok) { $('pinSheet').hidden = true; poll(); } else { $('pinMsg').textContent = 'That PIN is not right.'; }
+};
+const NAMES = ['who', 'age', 'onset', 'worse', 'where', 'severity', 'fever', 'breathing', 'drinking', 'vomiting', 'fits', 'bleeding', 'neck', 'pregnancy', 'chronic', 'medicines', 'allergy', 'other'];
+Promise.all(NAMES.map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(() => { poll(); setInterval(poll, 3000); });
+</script>
+<script src="help.js"></script>
+</body>
+</html>

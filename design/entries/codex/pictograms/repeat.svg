@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .repeat-motion {
+      animation: repeat-loop 3.6s ease-in-out infinite;
+
+    }
+    @keyframes repeat-loop {
+      0%, 100% { transform: translateX(0); }
+      49%, 70% { transform: translateX(-7px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .repeat-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 58h74a16 16 0 0 1 16 16v30a16 16 0 0 1-16 16H78l-23 16v-16h-7a16 16 0 0 1-16-16V74a16 16 0 0 1 16-16z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M151 111h41a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16h-2v15l-23-15h-16a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M58 88h8l7-13 9 24 8-15 7 4h13m38 58h7l7-13 9 24 8-15 7 4" stroke="var(--accent, #2563EB)"/>
+    <path class="repeat-motion" d="M102 174H73q-15 0-15-15v-5m-13 14 13-14 13 14" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.worse-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.worse-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.worse-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.worse-fill{fill:var(--accent,#2563EB)}.worse-tint{fill:var(--tint,#E8F0FE)}.worse-hot{fill:var(--danger,#CF2A30)}.worse-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.worse-c1,.worse-c2,.worse-c3{opacity:1}
+.worse-c1{animation:worse-1 3.2s ease-in-out infinite}
+.worse-c2{animation:worse-2 3.2s ease-in-out infinite}
+.worse-c3{animation:worse-3 3.2s ease-in-out infinite}
+@keyframes worse-1{0%,70%{opacity:1}86%,100%{opacity:.2}}
+@keyframes worse-2{0%,22%{opacity:.2}36%,70%{opacity:1}86%,100%{opacity:.2}}
+@keyframes worse-3{0%,48%{opacity:.2}62%,78%{opacity:1}92%,100%{opacity:.2}}
+
+@media (prefers-reduced-motion:reduce){.worse-move{animation:none}}
+</style>
+<path class="worse-line" d="M28 206H212"/><path class="worse-body" d="M48 198V117C48 98 108 98 108 117V198Z"/><circle class="worse-body" cx="78" cy="86" r="22"/><path class="worse-ray worse-move worse-c1" d="M148 168l22-20 22 20"/><path class="worse-ray worse-move worse-c2" d="M148 128l22-20 22 20"/><path class="worse-ray worse-move worse-c3" d="M148 88l22-20 22 20"/>
+</svg>

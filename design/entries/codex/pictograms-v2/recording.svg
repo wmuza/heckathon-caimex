@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .recording-wave {
+      animation: recording-voice 3.5s ease-in-out infinite;
+      transform-origin: 168px 129px;
+    }
+    @keyframes recording-voice {
+      0%, 100% { transform: scaleY(.68); }
+      52%, 72% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .recording-wave { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="51" y="51" width="46" height="89" rx="23" fill="var(--tint, #E8F0FE)"/>
+    <path d="M34 116v5a40 40 0 0 0 80 0v-5m-40 45v28m-22 0h44"/>
+    <path class="recording-wave" d="M135 123v12m16-23v34m16-45v56m16-46v36m16-24v12" stroke="var(--accent, #2563EB)"/>
+  </g>
+  <circle cx="199" cy="65" r="11" fill="var(--danger, #CF2A30)"/>
+</svg>

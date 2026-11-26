@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.onset-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.onset-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.onset-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.onset-fill{fill:var(--accent,#2563EB)}.onset-tint{fill:var(--tint,#E8F0FE)}.onset-hot{fill:var(--danger,#CF2A30)}.onset-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.onset-s2,.onset-s3{opacity:0}
+.onset-s1{animation:onset-1 3.6s ease-in-out infinite}
+.onset-s2{animation:onset-2 3.6s ease-in-out infinite}
+.onset-s3{animation:onset-3 3.6s ease-in-out infinite}
+@keyframes onset-1{0%,18%{opacity:1}32%,88%{opacity:0}100%{opacity:1}}
+@keyframes onset-2{0%,18%{opacity:0}32%,52%{opacity:1}66%,100%{opacity:0}}
+@keyframes onset-3{0%,52%{opacity:0}66%,82%{opacity:1}96%,100%{opacity:0}}
+
+@media (prefers-reduced-motion:reduce){.onset-move{animation:none}}
+</style>
+
+<path class="onset-quiet" d="M40 150C40 52 200 52 200 150"/>
+<g class="onset-move onset-s1"><path class="onset-ray" d="M78.6 138.9L89.7 143.5"/><path class="onset-ray" d="M68.9 148.6L73.5 159.7"/><path class="onset-ray" d="M55.1 148.6L50.5 159.7"/><path class="onset-ray" d="M45.4 138.9L34.3 143.5"/><path class="onset-ray" d="M45.4 125.1L34.3 120.5"/><path class="onset-ray" d="M55.1 115.4L50.5 104.3"/><path class="onset-ray" d="M68.9 115.4L73.5 104.3"/><path class="onset-ray" d="M78.6 125.1L89.7 120.5"/><circle class="onset-fill" cx="62" cy="132" r="16"/></g><g class="onset-move onset-s2"><path class="onset-ray" d="M136.6 74.9L147.7 79.5"/><path class="onset-ray" d="M126.9 84.6L131.5 95.7"/><path class="onset-ray" d="M113.1 84.6L108.5 95.7"/><path class="onset-ray" d="M103.4 74.9L92.3 79.5"/><path class="onset-ray" d="M103.4 61.1L92.3 56.5"/><path class="onset-ray" d="M113.1 51.4L108.5 40.3"/><path class="onset-ray" d="M126.9 51.4L131.5 40.3"/><path class="onset-ray" d="M136.6 61.1L147.7 56.5"/><circle class="onset-fill" cx="120" cy="68" r="16"/></g><g class="onset-move onset-s3"><path class="onset-ray" d="M194.6 138.9L205.7 143.5"/><path class="onset-ray" d="M184.9 148.6L189.5 159.7"/><path class="onset-ray" d="M171.1 148.6L166.5 159.7"/><path class="onset-ray" d="M161.4 138.9L150.3 143.5"/><path class="onset-ray" d="M161.4 125.1L150.3 120.5"/><path class="onset-ray" d="M171.1 115.4L166.5 104.3"/><path class="onset-ray" d="M184.9 115.4L189.5 104.3"/><path class="onset-ray" d="M194.6 125.1L205.7 120.5"/><circle class="onset-fill" cx="178" cy="132" r="16"/></g>
+<path class="onset-body" d="M100 214V202C100 184 140 184 140 202V214Z"/><circle class="onset-body" cx="120" cy="176" r="16"/>
+</svg>

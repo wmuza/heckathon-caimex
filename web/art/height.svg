@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .height-bar { animation: height-drop 4s ease-in-out infinite; }
+    @keyframes height-drop {
+      0%, 12% { transform: translateY(-34px); }
+      50%, 100% { transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) { .height-bar { animation: none; } }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M176 22v190" />
+    <path d="M176 48h-16M176 74h-10M176 100h-16M176 126h-10M176 152h-16M176 178h-10" stroke="var(--quiet, #5B6474)" stroke-width="5"/>
+    <g fill="var(--paper, #FFFFFF)">
+      <circle cx="104" cy="88" r="21"/>
+      <path d="M72 212v-66q0-30 32-30t32 30v66z"/>
+    </g>
+    <path d="M36 212h176"/>
+    <g class="height-bar" stroke="var(--accent, #2563EB)" stroke-width="7">
+      <path d="M70 60h106"/>
+      <path d="M176 48v24"/>
+    </g>
+  </g>
+</svg>

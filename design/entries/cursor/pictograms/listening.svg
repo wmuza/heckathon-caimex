@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.listening-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.listening-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.listening-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.listening-fill{fill:var(--accent,#2563EB)}.listening-tint{fill:var(--tint,#E8F0FE)}.listening-hot{fill:var(--danger,#CF2A30)}.listening-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.listening-a1,.listening-a2,.listening-a3{opacity:1}
+.listening-a1{animation:listening-1 2.8s ease-in-out infinite}
+.listening-a2{animation:listening-2 2.8s ease-in-out infinite}
+.listening-a3{animation:listening-3 2.8s ease-in-out infinite}
+@keyframes listening-1{0%,24%{opacity:1}40%,100%{opacity:.2}}
+@keyframes listening-2{0%,20%{opacity:.2}36%,60%{opacity:1}76%,100%{opacity:.2}}
+@keyframes listening-3{0%,52%{opacity:.2}68%,92%{opacity:1}100%{opacity:.2}}
+
+@media (prefers-reduced-motion:reduce){.listening-move{animation:none}}
+</style>
+<path class="listening-ray listening-move listening-a1" d="M78 78Q42 114 78 150"/><path class="listening-ray listening-move listening-a2" d="M58 64Q6 114 58 164"/><path class="listening-ray listening-move listening-a3" d="M38 50Q-30 114 38 178"/><path class="listening-body" d="M118 206V137C118 114 182 114 182 137V206Z"/><circle class="listening-body" cx="150" cy="100" r="26"/><path class="listening-line" d="M124 140L168 112"/><circle class="listening-body" cx="178" cy="100" r="14"/>
+</svg>

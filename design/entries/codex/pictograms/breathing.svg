@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .breathing-motion {
+      animation: breathing-loop 3.3s ease-in-out infinite;
+      transform-origin: 153px 104px;
+    }
+    @keyframes breathing-loop {
+      0%, 100% { transform: translateX(0) scaleX(1); }
+      45%, 62% { transform: translateX(5px) scaleX(1.13); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .breathing-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M44 197l9-52q4-18 23-32l13-10 26 13-5 13q19 17 28 68z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M77 87a31 31 0 1 1 58-8l11 15-13 6v13q0 10-11 11l-20-3" fill="var(--paper, #FFFFFF)"/>
+    <path d="M132 103h-10m0-22h1m-62 76 18 16q9 6 17-2l17-22q5-7 0-12-6-5-12 0l-14 15-12-9" />
+    <g class="breathing-motion" stroke="var(--accent, #2563EB)">
+      <path d="M153 104h15m12 0h16m-38 14 12 4m11 4 20 7m-44-42 13-4"/>
+    </g>
+  </g>
+</svg>

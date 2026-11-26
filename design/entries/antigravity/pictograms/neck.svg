@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .neck-head { transform-origin: 112px 134px; animation: neck-try 3.0s ease-in-out infinite; }
+    .neck-lock { animation: neck-alert 3.0s ease-in-out infinite; }
+    @keyframes neck-try {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(5deg); }
+      45% { transform: rotate(1deg); }
+      60% { transform: rotate(5deg); }
+    }
+    @keyframes neck-alert {
+      0%, 100% { opacity: 0.7; }
+      30%, 60% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .neck-head, .neck-lock { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <path d="M58 198v-30c0-24 22-40 54-40s54 16 54 40v30z" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+  <g class="neck-head">
+    <path d="M92 104v30h38v-30" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="114" cy="76" r="28" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  </g>
+  <rect class="neck-lock" x="84" y="114" width="54" height="22" rx="11" fill="var(--danger, #CF2A30)" fill-opacity="0.2" stroke="var(--danger, #CF2A30)" stroke-width="6"/>
+  <g class="neck-lock" fill="none" stroke="var(--danger, #CF2A30)" stroke-width="6" stroke-linecap="round">
+    <path d="M52 106l16 8M52 126l16 0M52 146l16-8"/>
+    <path d="M158 58a34 34 0 0 1 14 26"/>
+    <path d="M160 80l12 6 8-10"/>
+  </g>
+</svg>

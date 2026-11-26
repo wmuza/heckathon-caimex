@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: waiting room</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 1100px; }
+  .band-in { flex-wrap: wrap; }
+  .now { display: grid; grid-template-columns: minmax(140px, 260px) 1fr; gap: 28px; align-items: center; min-height: 320px; }
+  .now .art { width: 100%; aspect-ratio: 1; border-radius: 28px; background: var(--panel-sunk); padding: 16px; }
+  .now .lab { font-size: 1.25rem; font-weight: 600; color: var(--ink-2); }
+  .now .no { font-size: clamp(5rem, 16vw, 11rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .now .to { font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin-top: 8px; color: var(--blue-ink); }
+  .now .to small { display: block; font-size: 0.6em; font-weight: 600; color: var(--ink-2); }
+  .now.flash { animation: flash 1.2s ease-out; }
+  @keyframes flash { from { box-shadow: 0 0 0 6px var(--blue-fill); } to { box-shadow: var(--shadow-panel); } }
+  .past { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
+  .past div { background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 12px 16px; }
+  .past b { font-size: 1.75rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .past span { display: block; color: var(--ink-2); font-weight: 600; font-size: 0.9375rem; }
+  .quietbox { text-align: center; padding: 48px 20px; }
+  .sound { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  @media (max-width: 560px) { .now { grid-template-columns: 1fr; } .now .art { max-width: 160px; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Waiting room</h1>
+      <p class="sub">Listen for your number</p>
+    </div>
+    <div class="sound"><button class="btn primary" id="soundOn">Turn the sound on</button><span class="tag routine" id="soundOk" hidden><span class="dot"></span>Sound is on</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="panel now" id="now" hidden aria-live="polite">
+    <div class="art" id="nowArt"></div>
+    <div><p class="lab" id="nowLab"></p><p class="no" id="nowNo"></p><p class="to" id="nowTo"></p></div>
+  </section>
+  <section class="panel quietbox" id="idle">
+    <p class="title">No number is being called</p>
+    <p class="quiet">Please stay seated. Your number will be shown and said here.</p>
+  </section>
+  <div class="past" id="past" aria-label="Called earlier"></div>
+</div>
+<audio id="player" hidden></audio>
+
+<script>
+const $ = id => document.getElementById(id);
+// Where to go, in both languages, with the picture for it. Shona written by an AI assistant: to be read by a native speaker.
+const PLACE = {
+  nurse: { en: 'Go to the nurse', sn: 'Endai kuna mukoti', pic: 'nurse_coming' },
+  doctor: { en: 'Go to the doctor', sn: 'Endai kuna chiremba', pic: 'not_doctor' },
+  pharmacy: { en: 'Go to the pharmacy', sn: 'Endai kunotora mishonga', pic: 'medicines' },
+};
+let last = null, shown = [], queue = [], playing = false, sound = false;
+
+function render() {
+  const c = shown[shown.length - 1];
+  $('now').hidden = !c; $('idle').hidden = !!c;
+  if (c) {
+    const p = PLACE[c.to];
+    $('nowLab').textContent = 'Nhamba · Ticket';
+    $('nowNo').textContent = c.number;
+    $('nowTo').innerHTML = `${p.sn}<small>${p.en}</small>`;
+    Art.show($('nowArt'), p.pic === 'not_doctor' ? 'welcome' : p.pic, p.en);
+  }
+  $('past').innerHTML = shown.slice(0, -1).reverse().slice(0, 8).map(x => `<div><b>${x.number}</b><span>${PLACE[x.to].en}</span></div>`).join('');
+}
+/* Say each call in the patient's language, then the other, one call after another. */
+async function speak() {
+  if (playing || !sound) return;
+  playing = true;
+  while (queue.length) {
+    const c = queue.shift();
+    for (const lang of c.langs) {
+      await new Promise(done => {
+        const a = $('player');
+        a.src = `/api/board/${c.id}/${lang}.mp3`;
+        a.onended = a.onerror = done;
+        a.play().catch(done);
+      });
+    }
+  }
+  playing = false;
+}
+async function poll() {
+  try {
+    const first = last === null;
+    const r = await fetch('/api/board?after=' + (first ? 0 : last));
+    const j = await r.json();
+    if (first) { last = j.last; shown = j.calls; render(); return; }      // what was called before the board opened is shown, not said again
+    if (!j.calls.length) return;
+    last = j.last;
+    shown = shown.concat(j.calls).slice(-12);
+    queue.push(...j.calls);
+    render();
+    $('now').classList.remove('flash'); void $('now').offsetWidth; $('now').classList.add('flash');
+    speak();
+  } catch (e) {}
+}
+$('soundOn').onclick = () => {
+  // A browser only lets a page speak after someone has pressed something on it.
+  const a = $('player'); a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA='; a.play().catch(() => {});
+  sound = true; $('soundOn').hidden = true; $('soundOk').hidden = false; speak();
+};
+Art.warm(['nurse_coming', 'welcome', 'medicines']);
+poll(); setInterval(poll, 2000);
+</script>
+</body>
+</html>

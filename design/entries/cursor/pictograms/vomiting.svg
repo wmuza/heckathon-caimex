@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.vomiting-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.vomiting-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.vomiting-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.vomiting-fill{fill:var(--accent,#2563EB)}.vomiting-tint{fill:var(--tint,#E8F0FE)}.vomiting-hot{fill:var(--danger,#CF2A30)}.vomiting-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.vomiting-lean{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-50deg);animation:vomiting-bend 3s ease-in-out infinite}
+.vomiting-lo{opacity:1}
+@keyframes vomiting-bend{0%,100%{transform:rotate(-46deg)}50%{transform:rotate(-58deg)}}
+
+@media (prefers-reduced-motion:reduce){.vomiting-move{animation:none}}
+</style>
+<path class="vomiting-line" d="M28 206H212"/>
+<g class="vomiting-lean vomiting-move">
+<path class="vomiting-body" d="M142 198V115C142 97 194 97 194 115V198Z"/><circle class="vomiting-body" cx="168" cy="86" r="20"/>
+</g>
+<circle class="vomiting-fill" cx="78" cy="168" r="7"/>
+<circle class="vomiting-fill vomiting-lo" cx="70" cy="198" r="9"/>
+
+</svg>

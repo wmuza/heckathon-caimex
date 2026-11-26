@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .severity-rays { transform-origin: 120px 134px; animation: severity-throb 2.4s ease-in-out infinite; }
+    .severity-core { transform-origin: 120px 134px; animation: severity-beat 2.4s ease-in-out infinite; }
+    @keyframes severity-throb {
+      0%, 100% { transform: scale(0.9); opacity: 0.65; }
+      45% { transform: scale(1.1); opacity: 1; }
+    }
+    @keyframes severity-beat {
+      0%, 100% { transform: scale(0.95); }
+      45% { transform: scale(1.18); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .severity-rays, .severity-core { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <g stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="64" r="22" fill="var(--paper, #FFFFFF)"/>
+    <path d="M68 196v-50c0-25 22-42 52-42s52 17 52 42v50z" fill="var(--paper, #FFFFFF)"/>
+  </g>
+  <g class="severity-rays" stroke="var(--danger, #CF2A30)" stroke-width="6" stroke-linecap="round">
+    <path d="M120 90v14M120 164v14M76 134h14M150 134h14M89 103l10 10M141 155l10 10M151 103l-10 10M99 155l-10 10"/>
+  </g>
+  <circle class="severity-core" cx="120" cy="134" r="14" fill="var(--danger, #CF2A30)"/>
+</svg>

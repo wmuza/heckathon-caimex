@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .pregnancy-arm {
+      animation: pregnancy-cradle 3.6s ease-in-out infinite;
+      transform-origin: 87px 127px;
+    }
+    @keyframes pregnancy-cradle {
+      0%, 100% { transform: rotate(0); }
+      52%, 73% { transform: rotate(-7deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pregnancy-arm { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="101" cy="53" r="24" fill="var(--paper, #FFFFFF)"/>
+    <path d="M71 199v-75q0-35 32-35 22 0 31 30 9 9 23 13 22 7 22 30 0 32-33 32h-19v5z" fill="var(--paper, #FFFFFF)"/>
+    <path class="pregnancy-arm" d="m87 127 17 30 25 8q9 4 6 11-3 7-13 5l-32-7-14-20"/>
+  </g>
+</svg>

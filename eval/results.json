@@ -1,0 +1,3143 @@
+{
+ "typed": {
+  "ran_at": "2026-11-26 12:13",
+  "mode": "typed",
+  "seconds": 180,
+  "models": {
+   "hear": "languages-lab-stt-large-1.3",
+   "ask": "deepseek-v4-flash",
+   "speak": "languages-lab-tts-large-1.3",
+   "note": "deepseek-v4-flash",
+   "second_opinion": "d3-nano"
+  },
+  "caveat": "Made-up patients written by an AI assistant. Expected levels set from the published tools in docs/SOURCES.md by the same assistant, not by a clinician. The rules and these patients were written together, so this shows the pipeline holds together, not how it does on patients it has never seen. Lines were typed, so this run leaves out the recogniser and its cost.",
+  "summary": {
+   "patients": 30,
+   "completed": 30,
+   "failed": 0,
+   "expected": {
+    "routine": 11,
+    "urgent": 8,
+    "emergency": 11
+   },
+   "exact": 30,
+   "under_triaged": [],
+   "over_triaged": [],
+   "emergencies": 11,
+   "emergencies_caught": 11,
+   "emergencies_alarmed_during_talk": 11,
+   "emergencies_alarmed_first_sentence": 10,
+   "routine_kept_routine": 11,
+   "notes_written": 30,
+   "median_ms": {
+    "hear": null,
+    "ask": 1122,
+    "speak": null,
+    "note": 7876,
+    "second_opinion": 201
+   },
+   "cost_per_visit": 0.00106,
+   "cost_hearing_share": 0.0,
+   "audio_seconds_per_visit": 0,
+   "cost_total": 0.0317
+  },
+  "rows": [
+   {
+    "id": "baby-breathing",
+    "title": "A mother whose baby cannot breathe",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Difficulty breathing",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 9e-05,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [],
+     "speak": [],
+     "note": [
+      20694
+     ],
+     "second_opinion": [
+      203
+     ]
+    }
+   },
+   {
+    "id": "child-cannot-drink",
+    "title": "A child with diarrhoea who has stopped drinking",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Child cannot drink or vomits everything",
+    "alarm_by": "rules",
+    "alarm_on_turn": 3,
+    "patient_turns": 3,
+    "cost": 0.000842,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Mwana ane makore mangani?",
+     "Mwana ari kugona kunwa kana kuyamwa here?",
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      4832,
+      1866
+     ],
+     "speak": [],
+     "note": [
+      9005
+     ],
+     "second_opinion": [
+      205
+     ]
+    }
+   },
+   {
+    "id": "pregnancy-bleeding",
+    "title": "A pregnant woman who is bleeding",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Danger-sign rules",
+     "Note model"
+    ],
+    "alarm": "Bleeding in pregnancy",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.00035,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [],
+     "speak": [],
+     "note": [
+      18101
+     ],
+     "second_opinion": [
+      202
+     ]
+    }
+   },
+   {
+    "id": "child-fits",
+    "title": "A child who had fits in the night",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Danger-sign rules",
+     "Note model"
+    ],
+    "alarm": "Fits or convulsions",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000157,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1578
+     ],
+     "speak": [],
+     "note": [
+      15600
+     ],
+     "second_opinion": [
+      201
+     ]
+    }
+   },
+   {
+    "id": "snake-bite",
+    "title": "A man bitten by a snake",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Poisoning or snake bite",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000683,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1547
+     ],
+     "speak": [],
+     "note": [
+      14816
+     ],
+     "second_opinion": [
+      185
+     ]
+    }
+   },
+   {
+    "id": "grandmother-fainted",
+    "title": "A grandmother who fainted",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001384,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Zviri kuwedzera here?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1533,
+      5783,
+      5899,
+      1344,
+      1324,
+      1525
+     ],
+     "speak": [],
+     "note": [
+      22891
+     ],
+     "second_opinion": [
+      189
+     ]
+    }
+   },
+   {
+    "id": "self-harm",
+    "title": "A man with thoughts of ending his life",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Thoughts of self-harm",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000149,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1565
+     ],
+     "speak": [],
+     "note": [
+      5568
+     ],
+     "second_opinion": [
+      220
+     ]
+    }
+   },
+   {
+    "id": "deep-cut",
+    "title": "A deep cut that will not stop bleeding",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Heavy bleeding",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000712,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1766
+     ],
+     "speak": [],
+     "note": [
+      5651
+     ],
+     "second_opinion": [
+      253
+     ]
+    }
+   },
+   {
+    "id": "asthma-boy-en",
+    "title": "A boy with asthma who is struggling to breathe",
+    "lang": "en",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Difficulty breathing",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 8.3e-05,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Thank you. I am calling the nurse now. Please stay here, the nurse is coming."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [],
+     "speak": [],
+     "note": [
+      6091
+     ],
+     "second_opinion": [
+      201
+     ]
+    }
+   },
+   {
+    "id": "newborn-fever",
+    "title": "A three-week-old baby with fever",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Child cannot drink or vomits everything",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000496,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1600
+     ],
+     "speak": [],
+     "note": [
+      6498
+     ],
+     "second_opinion": [
+      194
+     ]
+    }
+   },
+   {
+    "id": "chest-pain-en",
+    "title": "A man with chest pain, in English",
+    "lang": "en",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": "emergency",
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [
+     "Interview model",
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": "Strong chest pain with sweating",
+    "alarm_by": "interview",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000491,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Thank you. I am calling the nurse now. Please stay here, the nurse is coming."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1593
+     ],
+     "speak": [],
+     "note": [
+      14998
+     ],
+     "second_opinion": [
+      199
+     ]
+    }
+   },
+   {
+    "id": "stiff-neck",
+    "title": "A man with a bad headache, fever and a stiff neck",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Stiff neck with fever or headache",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.000766,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1657
+     ],
+     "speak": [],
+     "note": [
+      6083
+     ],
+     "second_opinion": [
+      224
+     ]
+    }
+   },
+   {
+    "id": "bloody-diarrhoea",
+    "title": "A child with blood in the stool",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001616,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ari kugona kunwa kana kuyamwa here?",
+     "Mwana ari kupisa muviri here?",
+     "Mwana ari kurutsa here?",
+     "Zviri kuwedzera here?",
+     "Pane ropa ramuri kuona here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1192,
+      1038,
+      1352,
+      1224,
+      1299,
+      1193
+     ],
+     "speak": [],
+     "note": [
+      8155
+     ],
+     "second_opinion": [
+      238
+     ]
+    }
+   },
+   {
+    "id": "pregnant-fever",
+    "title": "A pregnant woman with a high fever",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001426,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kunetseka kufema here?",
+     "Muri kurutsa here?",
+     "Pane ropa ramuri kuona here?",
+     "Zviri kuwedzera here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1334,
+      1071,
+      1180,
+      1224,
+      1390,
+      1122
+     ],
+     "speak": [],
+     "note": [
+      13142
+     ],
+     "second_opinion": [
+      193
+     ]
+    }
+   },
+   {
+    "id": "scald",
+    "title": "A child scalded with hot water",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "routine"
+    },
+    "raised_by": [
+     "Danger-sign rules",
+     "Note model"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001336,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ane makore mangani?",
+     "Zvakatanga rini?",
+     "Zviri kuwedzera here?",
+     "Mwana ari kugona kunwa kana kuyamwa here?",
+     "Mwana ari kunetseka kufema here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      837,
+      908,
+      838,
+      1098,
+      1116,
+      1327
+     ],
+     "speak": [],
+     "note": [
+      8573
+     ],
+     "second_opinion": [
+      193
+     ]
+    }
+   },
+   {
+    "id": "diabetic-foot-en",
+    "title": "A diabetic with an infected foot wound",
+    "lang": "en",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.000995,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "When did it start?",
+     "Is it getting worse?",
+     "Do you have a fever?",
+     "Are you taking any medicines these days?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1288,
+      1094,
+      1180,
+      1228,
+      1193,
+      1133
+     ],
+     "speak": [],
+     "note": [
+      7596
+     ],
+     "second_opinion": [
+      193
+     ]
+    }
+   },
+   {
+    "id": "abdominal-pain",
+    "title": "Severe abdominal pain since the night",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001948,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Muri kurutsa here?",
+     "Mune pamuviri here?",
+     "Zviri kuwedzera here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1291,
+      1171,
+      1191,
+      1251,
+      1137,
+      1120
+     ],
+     "speak": [],
+     "note": [
+      6113
+     ],
+     "second_opinion": [
+      212
+     ]
+    }
+   },
+   {
+    "id": "coughing-blood",
+    "title": "Three weeks of cough, now with blood",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001895,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1285,
+      1202,
+      1411,
+      1176,
+      976,
+      1066
+     ],
+     "speak": [],
+     "note": [
+      8325
+     ],
+     "second_opinion": [
+      206
+     ]
+    }
+   },
+   {
+    "id": "broken-arm-en",
+    "title": "A fall from a ladder",
+    "lang": "en",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.002043,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "Is the pain very bad?",
+     "Is it getting worse?",
+     "Have you seen any blood?",
+     "Is your neck stiff?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1045,
+      878,
+      957,
+      1068,
+      993,
+      1311
+     ],
+     "speak": [],
+     "note": [
+      5062
+     ],
+     "second_opinion": [
+      197
+     ]
+    }
+   },
+   {
+    "id": "headache-cough",
+    "title": "A woman with a headache and a cough",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001911,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Zviri kuwedzera here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      956,
+      901,
+      908,
+      1016,
+      1071,
+      1094
+     ],
+     "speak": [],
+     "note": [
+      9091
+     ],
+     "second_opinion": [
+      200
+     ]
+    }
+   },
+   {
+    "id": "bp-refill",
+    "title": "A woman collecting her blood pressure tablets",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 4,
+    "cost": 0.000589,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Pane chimwe chiri kukunetsai here?",
+     "Pane mushonga usingawirirani nemi here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1091,
+      927,
+      841,
+      1015
+     ],
+     "speak": [],
+     "note": [
+      3888
+     ],
+     "second_opinion": [
+      188
+     ]
+    }
+   },
+   {
+    "id": "itchy-rash",
+    "title": "A child with an itchy rash",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001987,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ari kupisa muviri here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Pane chimwe chiri kukunetsai here?",
+     "Mwana ari kunetseka kufema here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1080,
+      969,
+      947,
+      950,
+      1040,
+      1151
+     ],
+     "speak": [],
+     "note": [
+      11443
+     ],
+     "second_opinion": [
+      299
+     ]
+    }
+   },
+   {
+    "id": "backache",
+    "title": "Backache after lifting a sack",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001059,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1006,
+      949,
+      965,
+      979,
+      1106,
+      1113
+     ],
+     "speak": [],
+     "note": [
+      6505
+     ],
+     "second_opinion": [
+      525
+     ]
+    }
+   },
+   {
+    "id": "family-planning",
+    "title": "A family planning injection",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 4,
+    "cost": 0.001098,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Pane mishonga yamuri kunwa mazuva ano here?",
+     "Pane mushonga usingawirirani nemi here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      938,
+      975,
+      987,
+      981
+     ],
+     "speak": [],
+     "note": [
+      4572
+     ],
+     "second_opinion": [
+      217
+     ]
+    }
+   },
+   {
+    "id": "cold-en",
+    "title": "A cold, in English",
+    "lang": "en",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001157,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "Do you have a fever?",
+     "Are you struggling to breathe?",
+     "Is it getting worse?",
+     "Are you vomiting?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1179,
+      1077,
+      1288,
+      1167,
+      1326,
+      1345
+     ],
+     "speak": [],
+     "note": [
+      5181
+     ],
+     "second_opinion": [
+      262
+     ]
+    }
+   },
+   {
+    "id": "toothache",
+    "title": "A toothache",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001302,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Pane mishonga yamuri kunwa mazuva ano here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1199,
+      1156,
+      1316,
+      1824,
+      1236,
+      3671
+     ],
+     "speak": [],
+     "note": [
+      4221
+     ],
+     "second_opinion": [
+      194
+     ]
+    }
+   },
+   {
+    "id": "immunisation",
+    "title": "A baby due for immunisation",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 3,
+    "cost": 0.001189,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Pane mishonga iri kunwiwa nemwana mazuva ano here?",
+     "Pane mushonga usingawirirani nemi here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      1189,
+      1223,
+      1221
+     ],
+     "speak": [],
+     "note": [
+      8422
+     ],
+     "second_opinion": [
+      192
+     ]
+    }
+   },
+   {
+    "id": "itchy-eyes-en",
+    "title": "Itchy eyes, in English",
+    "lang": "en",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001419,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "Do you have a fever?",
+     "Is it getting worse?",
+     "Is anything else troubling you?",
+     "Are you taking any medicines these days?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      944,
+      894,
+      1007,
+      1028,
+      1010,
+      1238
+     ],
+     "speak": [],
+     "note": [
+      5771
+     ],
+     "second_opinion": [
+      186
+     ]
+    }
+   },
+   {
+    "id": "cold-with-denials",
+    "title": "A cold, with every danger sign denied",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001322,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Zviri kuwedzera here?",
+     "Muri kurutsa here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      912,
+      885,
+      1113,
+      1007,
+      1017,
+      1121
+     ],
+     "speak": [],
+     "note": [
+      8465
+     ],
+     "second_opinion": [
+      192
+     ]
+    }
+   },
+   {
+    "id": "period-pain",
+    "title": "Period pain",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.001204,
+    "cost_hearing": 0,
+    "audio_seconds": 0,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Zviri kuwedzera here?",
+     "Muri kupisa muviri here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [],
+     "ask": [
+      939,
+      866,
+      980,
+      1049,
+      1095,
+      1215
+     ],
+     "speak": [],
+     "note": [
+      7144
+     ],
+     "second_opinion": [
+      373
+     ]
+    }
+   }
+  ]
+ },
+ "spoken": {
+  "ran_at": "2026-11-26 12:21",
+  "mode": "spoken",
+  "seconds": 470,
+  "models": {
+   "hear": "languages-lab-stt-large-1.3",
+   "ask": "deepseek-v4-flash",
+   "speak": "languages-lab-tts-large-1.3",
+   "note": "deepseek-v4-flash",
+   "second_opinion": "d3-nano"
+  },
+  "caveat": "Made-up patients written by an AI assistant. Expected levels set from the published tools in docs/SOURCES.md by the same assistant, not by a clinician. The rules and these patients were written together, so this shows the pipeline holds together, not how it does on patients it has never seen. Spoken lines are synthetic speech, which is easier to recognise than a real patient. Speech costs are worked out from the catalogue's price list, because the gateway reports none.",
+  "summary": {
+   "patients": 30,
+   "completed": 30,
+   "failed": 0,
+   "expected": {
+    "routine": 11,
+    "urgent": 8,
+    "emergency": 11
+   },
+   "exact": 29,
+   "under_triaged": [],
+   "over_triaged": [
+    "cold-with-denials"
+   ],
+   "emergencies": 11,
+   "emergencies_caught": 11,
+   "emergencies_alarmed_during_talk": 11,
+   "emergencies_alarmed_first_sentence": 10,
+   "routine_kept_routine": 10,
+   "notes_written": 30,
+   "median_ms": {
+    "hear": 1119,
+    "ask": 1375,
+    "speak": null,
+    "note": 11058,
+    "second_opinion": 195
+   },
+   "cost_per_visit": 0.04315,
+   "cost_hearing_share": 0.979,
+   "audio_seconds_per_visit": 11.3,
+   "cost_total": 1.2946,
+   "round_trip_cer": 0.036
+  },
+  "rows": [
+   {
+    "id": "baby-breathing",
+    "title": "A mother whose baby cannot breathe",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Difficulty breathing",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.023694,
+    "cost_hearing": 0.023135,
+    "audio_seconds": 6.2,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      1646
+     ],
+     "ask": [
+      1335
+     ],
+     "speak": [],
+     "note": [
+      5365
+     ],
+     "second_opinion": [
+      196
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "child-cannot-drink",
+    "title": "A child with diarrhoea who has stopped drinking",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Child cannot drink or vomits everything",
+    "alarm_by": "rules",
+    "alarm_on_turn": 3,
+    "patient_turns": 3,
+    "cost": 0.039631,
+    "cost_hearing": 0.039027,
+    "audio_seconds": 10.4,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ane makore mangani?",
+     "Mwana ari kugona kunwa kana kuyamwa here?",
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      1262,
+      694,
+      1783
+     ],
+     "ask": [
+      2100,
+      927
+     ],
+     "speak": [],
+     "note": [
+      23361
+     ],
+     "second_opinion": [
+      200
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0052
+   },
+   {
+    "id": "pregnancy-bleeding",
+    "title": "A pregnant woman who is bleeding",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Danger-sign rules",
+     "Note model"
+    ],
+    "alarm": "Bleeding in pregnancy",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.022261,
+    "cost_hearing": 0.021877,
+    "audio_seconds": 5.8,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      991
+     ],
+     "ask": [
+      1120
+     ],
+     "speak": [],
+     "note": [
+      3277
+     ],
+     "second_opinion": [
+      196
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "child-fits",
+    "title": "A child who had fits in the night",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Danger-sign rules",
+     "Note model"
+    ],
+    "alarm": "Fits or convulsions",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.022142,
+    "cost_hearing": 0.022057,
+    "audio_seconds": 5.9,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      1415
+     ],
+     "ask": [],
+     "speak": [],
+     "note": [
+      16666
+     ],
+     "second_opinion": [
+      177
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "snake-bite",
+    "title": "A man bitten by a snake",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Poisoning or snake bite",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.015945,
+    "cost_hearing": 0.015585,
+    "audio_seconds": 4.2,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      930
+     ],
+     "ask": [],
+     "speak": [],
+     "note": [
+      14798
+     ],
+     "second_opinion": [
+      193
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "grandmother-fainted",
+    "title": "A grandmother who fainted",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 2,
+    "cost": 0.027328,
+    "cost_hearing": 0.026138,
+    "audio_seconds": 7.0,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Ndiani ari kurwara, imi here kana mwana?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      925,
+      640
+     ],
+     "ask": [
+      3289
+     ],
+     "speak": [],
+     "note": [
+      34494
+     ],
+     "second_opinion": [
+      202
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "self-harm",
+    "title": "A man with thoughts of ending his life",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Thoughts of self-harm",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.017865,
+    "cost_hearing": 0.017473,
+    "audio_seconds": 4.7,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      1437
+     ],
+     "ask": [
+      1553
+     ],
+     "speak": [],
+     "note": [
+      17577
+     ],
+     "second_opinion": [
+      243
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0175
+   },
+   {
+    "id": "deep-cut",
+    "title": "A deep cut that will not stop bleeding",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Heavy bleeding",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.022881,
+    "cost_hearing": 0.022237,
+    "audio_seconds": 5.9,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      1524
+     ],
+     "ask": [
+      1182
+     ],
+     "speak": [],
+     "note": [
+      18042
+     ],
+     "second_opinion": [
+      188
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "asthma-boy-en",
+    "title": "A boy with asthma who is struggling to breathe",
+    "lang": "en",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Difficulty breathing",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.029906,
+    "cost_hearing": 0.029517,
+    "audio_seconds": 7.9,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Thank you. I am calling the nurse now. Please stay here, the nurse is coming."
+    ],
+    "ms": {
+     "hear": [
+      1990
+     ],
+     "ask": [],
+     "speak": [],
+     "note": [
+      3748
+     ],
+     "second_opinion": [
+      215
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "newborn-fever",
+    "title": "A three-week-old baby with fever",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Child cannot drink or vomits everything",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.021073,
+    "cost_hearing": 0.020619,
+    "audio_seconds": 5.5,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      857
+     ],
+     "ask": [
+      1185
+     ],
+     "speak": [],
+     "note": [
+      4384
+     ],
+     "second_opinion": [
+      173
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "chest-pain-en",
+    "title": "A man with chest pain, in English",
+    "lang": "en",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": "emergency",
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [
+     "Interview model",
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": "Strong chest pain with sweating",
+    "alarm_by": "interview",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.0254,
+    "cost_hearing": 0.025113,
+    "audio_seconds": 6.7,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Thank you. I am calling the nurse now. Please stay here, the nurse is coming."
+    ],
+    "ms": {
+     "hear": [
+      1480
+     ],
+     "ask": [
+      1100
+     ],
+     "speak": [],
+     "note": [
+      4093
+     ],
+     "second_opinion": [
+      190
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "stiff-neck",
+    "title": "A man with a bad headache, fever and a stiff neck",
+    "lang": "sn",
+    "expect": "emergency",
+    "level": "emergency",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "emergency",
+     "Interview model": null,
+     "Note model": "emergency",
+     "Second opinion": "emergency"
+    },
+    "raised_by": [],
+    "alarm": "Stiff neck with fever or headache",
+    "alarm_by": "rules",
+    "alarm_on_turn": 1,
+    "patient_turns": 1,
+    "cost": 0.024745,
+    "cost_hearing": 0.024304,
+    "audio_seconds": 6.5,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Ndatenda. Ndiri kudaidza mukoti iye zvino. Ndapota garai pano, mukoti ari kuuya."
+    ],
+    "ms": {
+     "hear": [
+      910
+     ],
+     "ask": [],
+     "speak": [],
+     "note": [
+      28209
+     ],
+     "second_opinion": [
+      208
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "bloody-diarrhoea",
+    "title": "A child with blood in the stool",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.048804,
+    "cost_hearing": 0.048123,
+    "audio_seconds": 12.8,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Zviri kuwedzera here?",
+     "Mwana ari kunetseka kufema here?",
+     "Mwana ari kupisa muviri here?",
+     "Mwana ari kugona kunwa kana kuyamwa here?",
+     "Mwana ari kurutsa here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1816,
+      697,
+      784,
+      626,
+      1180,
+      733
+     ],
+     "ask": [
+      4453,
+      1367,
+      3553,
+      4247
+     ],
+     "speak": [],
+     "note": [
+      14191
+     ],
+     "second_opinion": [
+      189
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0111
+   },
+   {
+    "id": "pregnant-fever",
+    "title": "A pregnant woman with a high fever",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.065886,
+    "cost_hearing": 0.063851,
+    "audio_seconds": 17.1,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Zviri kuwedzera here?",
+     "Muri kunetseka kufema here?",
+     "Muri kurutsa here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1613,
+      780,
+      877,
+      1106,
+      1220,
+      1137
+     ],
+     "ask": [
+      1549,
+      1449,
+      4268,
+      6628
+     ],
+     "speak": [],
+     "note": [
+      36752
+     ],
+     "second_opinion": [
+      186
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.4
+   },
+   {
+    "id": "scald",
+    "title": "A child scalded with hot water",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.05817,
+    "cost_hearing": 0.056842,
+    "audio_seconds": 15.2,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ane makore mangani?",
+     "Zvakatanga rini?",
+     "Mwana ari kupisa muviri here?",
+     "Mwana ari kugona kunwa kana kuyamwa here?",
+     "Mwana ari kurutsa here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      874,
+      1068,
+      647,
+      665,
+      924,
+      782
+     ],
+     "ask": [
+      1717,
+      4736,
+      1001,
+      1479,
+      5855,
+      4734
+     ],
+     "speak": [],
+     "note": [
+      20961
+     ],
+     "second_opinion": [
+      197
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0033
+   },
+   {
+    "id": "diabetic-foot-en",
+    "title": "A diabetic with an infected foot wound",
+    "lang": "en",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.056879,
+    "cost_hearing": 0.055493,
+    "audio_seconds": 14.8,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "When did it start?",
+     "Is it getting worse?",
+     "Do you have a fever?",
+     "Are you taking any medicines these days?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [
+      1409,
+      632,
+      1099,
+      705,
+      1531,
+      1071
+     ],
+     "ask": [
+      1161,
+      5441,
+      914,
+      4596,
+      1481,
+      1067
+     ],
+     "speak": [],
+     "note": [
+      22054
+     ],
+     "second_opinion": [
+      188
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.1326
+   },
+   {
+    "id": "abdominal-pain",
+    "title": "Severe abdominal pain since the night",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [
+     "Note model",
+     "Second opinion"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.056633,
+    "cost_hearing": 0.055942,
+    "audio_seconds": 14.9,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Muri kurutsa here?",
+     "Mune pamuviri here?",
+     "Pane ropa ramuri kuona here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1639,
+      713,
+      1019,
+      712,
+      1118,
+      1271
+     ],
+     "ask": [
+      3366,
+      2450,
+      942,
+      995,
+      7278,
+      1413
+     ],
+     "speak": [],
+     "note": [
+      13626
+     ],
+     "second_opinion": [
+      255
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "coughing-blood",
+    "title": "Three weeks of cough, now with blood",
+    "lang": "sn",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "urgent"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.056532,
+    "cost_hearing": 0.055404,
+    "audio_seconds": 14.8,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1590,
+      1194,
+      1162,
+      1127,
+      631,
+      718
+     ],
+     "ask": [
+      1090,
+      6128,
+      1103,
+      5602,
+      1104,
+      6973
+     ],
+     "speak": [],
+     "note": [
+      10908
+     ],
+     "second_opinion": [
+      187
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0547
+   },
+   {
+    "id": "broken-arm-en",
+    "title": "A fall from a ladder",
+    "lang": "en",
+    "expect": "urgent",
+    "level": "urgent",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "urgent",
+     "Second opinion": "routine"
+    },
+    "raised_by": [
+     "Note model"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.05683,
+    "cost_hearing": 0.055673,
+    "audio_seconds": 14.9,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "How old are you?",
+     "Is the pain very bad?",
+     "Is it getting worse?",
+     "Have you seen any blood?",
+     "Are you struggling to breathe?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [
+      1301,
+      1093,
+      1302,
+      1281,
+      689,
+      722
+     ],
+     "ask": [
+      1301,
+      6551,
+      1024,
+      1375
+     ],
+     "speak": [],
+     "note": [
+      9032
+     ],
+     "second_opinion": [
+      190
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0833
+   },
+   {
+    "id": "headache-cough",
+    "title": "A woman with a headache and a cough",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.05597,
+    "cost_hearing": 0.054774,
+    "audio_seconds": 14.6,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Zviri kuwedzera here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1370,
+      774,
+      1153,
+      637,
+      934,
+      1319
+     ],
+     "ask": [
+      878,
+      1092,
+      5882,
+      1337
+     ],
+     "speak": [],
+     "note": [
+      6942
+     ],
+     "second_opinion": [
+      221
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "bp-refill",
+    "title": "A woman collecting her blood pressure tablets",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 5,
+    "cost": 0.045731,
+    "cost_hearing": 0.044582,
+    "audio_seconds": 11.9,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Pane mishonga yamuri kunwa mazuva ano here?",
+     "Pane mushonga usingawirirani nemi here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1450,
+      1225,
+      1142,
+      1096,
+      1135
+     ],
+     "ask": [
+      1083,
+      1145,
+      6867,
+      1027
+     ],
+     "speak": [],
+     "note": [
+      18269
+     ],
+     "second_opinion": [
+      186
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0521
+   },
+   {
+    "id": "itchy-rash",
+    "title": "A child with an itchy rash",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.059116,
+    "cost_hearing": 0.057111,
+    "audio_seconds": 15.2,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ari kupisa muviri here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Pane chimwe chiri kukunetsai here?",
+     "Mwana ari kunetseka kufema here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1655,
+      633,
+      931,
+      783,
+      725,
+      825
+     ],
+     "ask": [
+      996,
+      8227,
+      1040,
+      5669,
+      1638,
+      1447
+     ],
+     "speak": [],
+     "note": [
+      11208
+     ],
+     "second_opinion": [
+      194
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "backache",
+    "title": "Backache after lifting a sack",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.062652,
+    "cost_hearing": 0.062234,
+    "audio_seconds": 16.6,
+    "note_ok": true,
+    "error": "The chat model did not answer in time, so the helper asked its fixed questions.",
+    "questions": [
+     "Mune makore mangani?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Muri kupisa muviri here?",
+     "Muri kunetseka kufema here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1575,
+      1251,
+      1213,
+      1020,
+      782,
+      1460
+     ],
+     "ask": [
+      912,
+      1166,
+      1302,
+      7872,
+      1406
+     ],
+     "speak": [],
+     "note": [
+      8637
+     ],
+     "second_opinion": [
+      353
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0159
+   },
+   {
+    "id": "family-planning",
+    "title": "A family planning injection",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 5,
+    "cost": 0.047664,
+    "cost_hearing": 0.04611,
+    "audio_seconds": 12.3,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Pane mishonga yamuri kunwa mazuva ano here?",
+     "Pane mushonga usingawirirani nemi here?",
+     "Mune pamuviri here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1350,
+      1433,
+      1406,
+      633,
+      1702
+     ],
+     "ask": [
+      1245,
+      8810,
+      1234,
+      7309,
+      1941
+     ],
+     "speak": [],
+     "note": [
+      6326
+     ],
+     "second_opinion": [
+      203
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "cold-en",
+    "title": "A cold, in English",
+    "lang": "en",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.063183,
+    "cost_hearing": 0.061874,
+    "audio_seconds": 16.5,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "Do you have a fever?",
+     "Are you struggling to breathe?",
+     "Is it getting worse?",
+     "Are you vomiting?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [
+      1308,
+      1121,
+      1216,
+      1066,
+      758,
+      726
+     ],
+     "ask": [
+      1148,
+      1046,
+      5972,
+      1223,
+      1729,
+      1623
+     ],
+     "speak": [],
+     "note": [
+      7110
+     ],
+     "second_opinion": [
+      268
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.1518
+   },
+   {
+    "id": "toothache",
+    "title": "A toothache",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.058698,
+    "cost_hearing": 0.057111,
+    "audio_seconds": 15.2,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kupisa muviri here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Pane mishonga yamuri kunwa mazuva ano here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1370,
+      1158,
+      1479,
+      1247,
+      1172,
+      817
+     ],
+     "ask": [
+      1160,
+      1130,
+      7510,
+      2041,
+      1273,
+      1510
+     ],
+     "speak": [],
+     "note": [
+      7343
+     ],
+     "second_opinion": [
+      192
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0
+   },
+   {
+    "id": "immunisation",
+    "title": "A baby due for immunisation",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 4,
+    "cost": 0.042328,
+    "cost_hearing": 0.04167,
+    "audio_seconds": 11.1,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mwana ane makore mangani?",
+     "Pane mishonga iri kunwiwa nemwana mazuva ano here?",
+     "Pane mushonga usingawirirani nemi here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1340,
+      1261,
+      702,
+      1047
+     ],
+     "ask": [
+      1115,
+      1188,
+      4881,
+      1200
+     ],
+     "speak": [],
+     "note": [
+      8393
+     ],
+     "second_opinion": [
+      196
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0042
+   },
+   {
+    "id": "itchy-eyes-en",
+    "title": "Itchy eyes, in English",
+    "lang": "en",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.053055,
+    "cost_hearing": 0.05208,
+    "audio_seconds": 13.9,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "How old are you?",
+     "Do you have a fever?",
+     "Is the pain very bad?",
+     "Is it getting worse?",
+     "Are you struggling to breathe?",
+     "Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you."
+    ],
+    "ms": {
+     "hear": [
+      1291,
+      1029,
+      1134,
+      605,
+      649,
+      745
+     ],
+     "ask": [
+      1044,
+      1111,
+      1179,
+      1188,
+      1528,
+      1621
+     ],
+     "speak": [],
+     "note": [
+      22287
+     ],
+     "second_opinion": [
+      194
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.1229
+   },
+   {
+    "id": "cold-with-denials",
+    "title": "A cold, with every danger sign denied",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "urgent",
+    "under": false,
+    "over": true,
+    "checks": {
+     "Danger-sign rules": "urgent",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [
+     "Danger-sign rules"
+    ],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.058598,
+    "cost_hearing": 0.05729,
+    "audio_seconds": 15.3,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Muri kunetseka kufema here?",
+     "Muri kupisa muviri here?",
+     "Zviri kuwedzera here?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1353,
+      1155,
+      1119,
+      1116,
+      1223,
+      1108
+     ],
+     "ask": [
+      1136,
+      1072,
+      1249,
+      1560,
+      1771,
+      1492
+     ],
+     "speak": [],
+     "note": [
+      10148
+     ],
+     "second_opinion": [
+      192
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0042
+   },
+   {
+    "id": "period-pain",
+    "title": "Period pain",
+    "lang": "sn",
+    "expect": "routine",
+    "level": "routine",
+    "under": false,
+    "over": false,
+    "checks": {
+     "Danger-sign rules": "routine",
+     "Interview model": null,
+     "Note model": "routine",
+     "Second opinion": "routine"
+    },
+    "raised_by": [],
+    "alarm": null,
+    "alarm_by": null,
+    "alarm_on_turn": null,
+    "patient_turns": 6,
+    "cost": 0.054981,
+    "cost_hearing": 0.053695,
+    "audio_seconds": 14.3,
+    "note_ok": true,
+    "error": null,
+    "questions": [
+     "Mune makore mangani?",
+     "Zvakatanga rini?",
+     "Kurwadza kwacho kwakanyanya here?",
+     "Zviri kuwedzera here?",
+     "Muri kupisa muviri here?",
+     "Ndatenda. Ndapa mukoti zvamandiudza. Ndapota garai muchimirira, mukoti achakudaidzai."
+    ],
+    "ms": {
+     "hear": [
+      1352,
+      1250,
+      1116,
+      726,
+      1201,
+      1141
+     ],
+     "ask": [
+      1026,
+      1280,
+      1411,
+      1136,
+      1198,
+      1711
+     ],
+     "speak": [],
+     "note": [
+      9506
+     ],
+     "second_opinion": [
+      235
+     ]
+    },
+    "lines_not_heard": 0,
+    "round_trip_cer": 0.0208
+   }
+  ]
+ }
+}

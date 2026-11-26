@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src file: 'self'; font-src file: 'self'">
+<title>Mukoti · Patient experience</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<style>
+@font-face { font-family: Figtree; src: url('../../../web/fonts/figtree-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: Figtree; src: url('../../../web/fonts/figtree-600.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: Figtree; src: url('../../../web/fonts/figtree-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+:root, [data-theme="light"] {
+  color-scheme: light;
+  --ink: #1F2430; --accent: #2563EB; --tint: #E8F0FE; --danger: #CF2A30; --paper: #FFFFFF; --quiet: #5B6474;
+  --page: #F4F5F7; --band: #EDF2FA; --line: #E5E7EB; --edge: #7C879B;
+  --fill: #2563EB; --action-edge: #1D4ED8; --blue-ink: #1D4ED8; --on: #FFFFFF;
+  --done: #1F6B43; --done-ground: #E3F4EA; --waiting: #D9650A;
+  --blue-shadow: 0 6px 14px -6px rgba(37, 99, 235, .55);
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 22px -12px rgba(16, 24, 40, .18);
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #F3F5F9; --accent: #5B8DEF; --tint: #1B2A4A; --danger: #FF8A8F; --paper: #141A24; --quiet: #C3CAD6;
+  --page: #0B0F17; --band: #141A24; --line: #263042; --edge: #73819A;
+  --fill: #2F66E8; --action-edge: #5B8DEF; --blue-ink: #9DBBFB;
+  --done: #BFE6CE; --done-ground: #17301F; --waiting: #D9650A;
+  --blue-shadow: none;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .26), 0 8px 22px -12px rgba(0, 0, 0, .62);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; font-synthesis: none; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 400 1rem/1.4 Figtree, sans-serif; }
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+button, summary { font: inherit; cursor: pointer; }
+button { color: inherit; }
+svg, img { display: block; }
+:focus-visible { outline: 3px solid var(--blue-ink); outline-offset: 3px; }
+[hidden] { display: none !important; }
+.sr-only, .definitions { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.art { flex: none; }
+.icon { width: 24px; height: 24px; flex: none; }
+.check { width: 16px; height: 16px; visibility: hidden; }
+[aria-pressed="true"] .check { visibility: visible; }
+.container { max-width: 1296px; margin-inline: auto; padding-inline: 24px; }
+.masthead { background: var(--band); border-bottom: 1px solid var(--line); }
+.masthead .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding-block: 18px; }
+.wordmark { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.wordmark img { width: 44px; height: 44px; flex: none; }
+h1 { font-size: 1.65rem; line-height: 1.1; letter-spacing: -.025em; }
+.toolbar, .choices, .rail-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.choice, .pill, .icon-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; border-radius: 999px; background: var(--paper); border: 1px solid var(--edge);
+  font-weight: 600; padding: 8px 16px; line-height: 1.2; text-align: center;
+}
+.choice { font-size: .875rem; }
+.choice[aria-pressed="true"] { color: var(--blue-ink); background: var(--tint); border-color: var(--blue-ink); }
+.choice:hover, .pill:hover, .icon-button:hover { border-color: var(--blue-ink); }
+.choice:active, .pill:active, .icon-button:active { transform: scale(.98); }
+.primary { background: var(--fill); color: var(--on); border-color: var(--action-edge); box-shadow: var(--blue-shadow); }
+.pill { width: 100%; min-height: 48px; }
+.journey { margin-block: 28px 56px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 16px; margin-block-end: 16px; }
+h2 { font-size: 1.5rem; line-height: 1.15; letter-spacing: -.025em; }
+.rail-controls { gap: 10px; }
+.icon-button { padding: 8px; width: 44px; height: 44px; }
+.icon-button:disabled { color: var(--quiet); background: var(--page); border-color: var(--edge); cursor: default; transform: none; }
+.current-preview { min-width: 8.5ch; color: var(--quiet); font-weight: 600; text-align: center; }
+.rail {
+  display: flex; gap: 20px; overflow-x: auto; padding: 0 0 16px;
+  scroll-snap-type: x mandatory; scrollbar-width: thin;
+}
+.rail > figure { flex: 0 0 min(390px, 100%); min-width: 0; scroll-snap-align: start; }
+.rail > figure > figcaption { margin: 0 0 8px 4px; font-size: .875rem; font-weight: 600; color: var(--quiet); }
+.phone {
+  width: 100%; height: 800px; display: flex; flex-direction: column; overflow: hidden;
+  color: var(--ink); background: var(--page); border: 1px solid var(--line); border-radius: 26px; box-shadow: var(--shadow);
+}
+.phone-head { padding: 14px 20px; background: var(--band); border-bottom: 1px solid var(--line); }
+.phone-head .wordmark { font-size: 1.25rem; font-weight: 700; }
+.phone-head img { width: 34px; height: 34px; }
+.phone-scroll { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; }
+.phone-main { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.picture-card, .heard, .ticket {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow);
+}
+.picture-card {
+  flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; gap: 4px; padding: 8px 12px 18px;
+}
+.hero-art { width: min(240px, 100%); height: auto; aspect-ratio: 1; }
+.picture-card h3, .dock h3 { font-size: 1.3rem; line-height: 1.18; text-wrap: balance; }
+.gloss { font-size: .875rem; color: var(--quiet); margin-top: 5px; line-height: 1.3; text-wrap: pretty; }
+.phone[data-language="en"] .gloss { display: none; }
+.welcome-actions { display: grid; gap: 10px; }
+.welcome-actions .choices { display: grid; grid-template-columns: 1fr 1fr; }
+.welcome-actions .choice { font-size: 1rem; }
+.disclosure { display: grid; grid-template-columns: 32px 1fr; gap: 8px; align-items: start; color: var(--quiet); font-size: .875rem; }
+.disclosure p { padding-block-start: 4px; }
+.disclosure summary { color: var(--blue-ink); font-weight: 600; min-height: 44px; padding-block: 10px; }
+.disclosure details { grid-column: 2; }
+.welcome-actions .disclosure:has(details[open]) { padding-block-end: 4px; }
+.welcome-actions .disclosure { row-gap: 0; }
+.progress {
+  display: grid; grid-template-columns: repeat(6, 1fr); align-items: center; list-style: none;
+  margin: 1px 0 0; padding: 0;
+}
+.progress li { position: relative; display: grid; place-items: center; }
+.progress li + li::before {
+  content: ""; position: absolute; height: 2px; background: var(--edge);
+  width: calc(100% - 30px); top: calc(50% - 1px); right: calc(50% + 15px);
+  transform-origin: left;
+}
+.progress li.is-current::before { background: var(--blue-ink); }
+.progress-mark {
+  width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%;
+  border: 1.5px solid var(--edge); color: var(--quiet);
+}
+.progress-done { background: var(--done-ground); color: var(--done); border-color: var(--done); }
+.progress-done .check { visibility: visible; }
+.progress-current { color: var(--blue-ink); border: 2px solid var(--blue-ink); background: var(--tint); }
+.progress-current::before { content: ""; width: 8px; height: 8px; background: currentColor; border-radius: 50%; }
+.progress-future { width: 11px; height: 11px; }
+.dock {
+  flex: none; border-top: 1px solid var(--line); background: var(--paper);
+  text-align: center; padding: 14px 16px 17px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.dock.dock--speaking { flex-direction: row; text-align: start; gap: 12px; }
+.dock.dock--speaking h3 { font-size: 1rem; text-wrap: wrap; }
+.round-icon {
+  display: grid; place-items: center; border-radius: 50%; color: var(--blue-ink);
+  background: var(--tint); width: 46px; height: 46px; flex: none;
+}
+.mic {
+  position: relative; display: grid; place-items: center; width: 72px; height: 72px;
+  border: 1px solid var(--action-edge); border-radius: 50%; background: var(--fill);
+  color: var(--on); box-shadow: var(--blue-shadow); margin: 4px;
+}
+.mic .icon { width: 34px; height: 34px; }
+.mic::before {
+  content: ""; position: absolute; inset: -5px; border-radius: inherit; border: 2px solid var(--accent);
+  animation: invite 3.2s ease-in-out infinite;
+}
+.mic:active { transform: scale(.97); }
+.heard { padding: 12px 14px; text-align: start; }
+.heard figcaption { display: flex; align-items: center; gap: 8px; color: var(--blue-ink); font-size: .875rem; font-weight: 600; }
+.heard blockquote { margin-top: 6px; font-size: 1.15rem; }
+.finish-body { flex: 1; justify-content: center; }
+.ticket { overflow: hidden; display: flex; flex-direction: column; text-align: center; align-items: stretch; }
+.ticket-stub { padding: 14px 12px; }
+.ticket-stub p { color: var(--quiet); font-weight: 600; }
+.ticket-number { display: block; color: var(--ink); font-size: 4.8rem; font-weight: 700; line-height: .96; font-variant-numeric: tabular-nums; }
+.ticket-body {
+  padding: 12px 12px 18px; border-top: 1px dashed var(--edge);
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.ticket-body .art { width: min(184px, 100%); height: auto; aspect-ratio: 1; }
+.ticket-body h3 { font-size: 1.125rem; line-height: 1.25; max-width: 25ch; text-wrap: pretty; }
+.ticket-body .gloss { max-width: 31ch; }
+.tag { display: inline-flex; gap: 6px; align-items: center; padding: 4px 10px; border-radius: 999px; font-size: .875rem; font-weight: 600; }
+.tag.done { background: var(--done-ground); color: var(--done); }
+.tag.done .check { visibility: visible; }
+.tag.waiting { background: var(--page); color: var(--quiet); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--waiting); }
+.arriving .hero-art, .arriving .ticket-body .art { animation: arrive 380ms cubic-bezier(.2,.65,.3,1) both; }
+.arriving .is-current::before { animation: progress-in 300ms ease-out both; }
+@keyframes arrive { from { opacity: .55; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes progress-in { from { transform: scaleX(.15); } to { transform: scaleX(1); } }
+@keyframes invite { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+.motion-paused { --art-motion: paused; }
+.motion-paused .mic::before, .motion-paused .arriving :is(.art, .is-current)::before,
+.motion-paused .arriving .art { animation: none; }
+.library { margin-block-end: 48px; }
+.library .section-head p { color: var(--quiet); }
+.library-group { display: grid; gap: 12px; margin-block-end: 32px; }
+.library-group > h3 { font-size: 1.125rem; }
+.specimen { border: 1px solid var(--line); border-radius: 22px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); }
+.specimen > figcaption { padding: 10px 16px; font-weight: 600; border-bottom: 1px solid var(--line); }
+.swatches { display: grid; grid-template-columns: 1fr 2fr 1fr 2fr; }
+.large-pair { display: contents; }
+.swatch { display: grid; justify-items: center; align-content: center; min-width: 0; background: var(--page); color: var(--ink); padding-block: 6px; }
+.swatch[data-theme="light"] { --page: #F4F5F7; }
+.swatch[data-theme="dark"] { --page: #0B0F17; }
+.light-small { grid-column: 1; grid-row: 1; }
+.light-large { grid-column: 2; grid-row: 1; }
+.dark-small { grid-column: 3; grid-row: 1; }
+.dark-large { grid-column: 4; grid-row: 1; }
+@media (max-width: 790px) {
+  .swatches { grid-template-columns: 1fr 1fr; }
+  .dark-small { grid-column: 2; }
+  .large-pair { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(240px, 1fr)); overflow-x: auto; scrollbar-width: thin; }
+  .light-large { grid-column: 1; }
+  .dark-large { grid-column: 2; }
+}
+@media (max-width: 560px) {
+  .container { padding-inline: 12px; }
+  .masthead .container { padding-block: 12px; gap: 10px; }
+  .toolbar, .toolbar .choices { row-gap: 6px; }
+  .choice { padding-inline: 10px; }
+  .journey { margin-block-start: 20px; }
+  .rail { margin-inline: -12px; }
+  .phone { border-radius: 22px; }
+}
+@media (max-height: 720px) and (max-width: 560px) {
+  .phone { height: max(530px, 100svh); }
+  .phone-head { padding: 9px 14px; }
+  .phone-main { padding: 10px; gap: 8px; }
+  .picture-card { padding: 3px 10px 12px; }
+  .hero-art { width: min(168px, 100%); }
+  .finish-body .art { width: min(132px, 100%); }
+  .ticket-stub, .ticket-body { padding: 8px 10px 11px; }
+  .ticket-number { font-size: 3.6rem; }
+  .dock { padding: 9px 10px 11px; }
+  .welcome-actions { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mic::before, .arriving .art, .arriving .is-current::before { animation: none; }
+}
+</style>
+<!-- Illustration styles mirror the standalone SVG files. -->
+<style>
+.age-motion {
+      animation: age-loop 3.5s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes age-loop {
+      0%, 18%, 100% { transform: translate(0, 0); }
+      58%, 78% { transform: translate(6px, -5px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .age-motion { animation: none; }
+    }
+.allergy-motion {
+      animation: allergy-loop 3.2s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 99px 161px;
+    }
+    @keyframes allergy-loop {
+      0%, 100% { transform: scale(1); }
+      47%, 69% { transform: scale(1.14); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .allergy-motion { animation: none; }
+    }
+.bleeding-motion {
+      animation: bleeding-loop 3.4s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes bleeding-loop {
+      0%, 15%, 100% { transform: translateY(0); }
+      60%, 80% { transform: translateY(12px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bleeding-motion { animation: none; }
+    }
+.breathing-motion {
+      animation: breathing-loop 3.3s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 153px 104px;
+    }
+    @keyframes breathing-loop {
+      0%, 100% { transform: translateX(0) scaleX(1); }
+      45%, 62% { transform: translateX(5px) scaleX(1.13); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .breathing-motion { animation: none; }
+    }
+.chronic-motion {
+      animation: chronic-loop 3.8s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 160px 154px;
+    }
+    @keyframes chronic-loop {
+      0%, 15%, 100% { transform: rotate(-22deg); }
+      52%, 75% { transform: rotate(21deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chronic-motion { animation: none; }
+    }
+.drinking-motion {
+      animation: drinking-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 148px 108px;
+    }
+    @keyframes drinking-loop {
+      0%, 15%, 100% { transform: rotate(0); }
+      55%, 75% { transform: rotate(13deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .drinking-motion { animation: none; }
+    }
+.fever-motion {
+      animation: fever-loop 3.4s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 181px 164px;
+    }
+    @keyframes fever-loop {
+      0%, 100% { transform: scaleY(.75); }
+      56%, 78% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fever-motion { animation: none; }
+    }
+.fits-motion {
+      animation: fits-loop 3.1s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes fits-loop {
+      0%, 100% { transform: translateY(0); }
+      42%, 65% { transform: translateY(-5px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fits-motion { animation: none; }
+    }
+.listening-motion {
+      animation: listening-loop 3.2s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 120px 0;
+    }
+    @keyframes listening-loop {
+      0%, 100% { transform: scaleX(1); }
+      49%, 66% { transform: scaleX(1.16); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .listening-motion { animation: none; }
+    }
+.medicines-motion {
+      animation: medicines-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes medicines-loop {
+      0%, 13%, 100% { transform: translate(0, 0); }
+      56%, 75% { transform: translate(10px, -11px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .medicines-motion { animation: none; }
+    }
+.neck-motion {
+      animation: neck-loop 3.4s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 117px 113px;
+    }
+    @keyframes neck-loop {
+      0%, 16%, 100% { transform: rotate(0); }
+      51%, 74% { transform: rotate(8deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .neck-motion { animation: none; }
+    }
+.not_doctor-motion {
+      animation: not_doctor-loop 3.4s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes not_doctor-loop {
+      0%, 100% { transform: scaleY(.7); }
+      51%, 70% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .not_doctor-motion { animation: none; }
+    }
+.nurse_coming-motion {
+      animation: nurse_coming-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes nurse_coming-loop {
+      0%, 15%, 100% { transform: translateX(0); }
+      62%, 78% { transform: translateX(-9px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nurse_coming-motion { animation: none; }
+    }
+.onset-motion {
+      animation: onset-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 124px 128px;
+    }
+    @keyframes onset-loop {
+      0%, 18%, 100% { transform: rotate(0); }
+      55%, 80% { transform: rotate(-54deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .onset-motion { animation: none; }
+    }
+.other-motion {
+      animation: other-loop 3.4s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes other-loop {
+      0%, 100% { transform: translateY(0); }
+      48%, 67% { transform: translateY(-6px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .other-motion { animation: none; }
+    }
+.pregnancy-motion {
+      animation: pregnancy-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes pregnancy-loop {
+      0%, 100% { transform: translate(0, 0); }
+      48%, 70% { transform: translate(3px, -4px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pregnancy-motion { animation: none; }
+    }
+.recording-motion {
+      animation: recording-loop 3.5s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 120px 110px;
+    }
+    @keyframes recording-loop {
+      0%, 100% { transform: scaleY(.7); }
+      51%, 72% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .recording-motion { animation: none; }
+    }
+.repeat-motion {
+      animation: repeat-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes repeat-loop {
+      0%, 100% { transform: translateX(0); }
+      49%, 70% { transform: translateX(-7px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .repeat-motion { animation: none; }
+    }
+.severity-motion {
+      animation: severity-loop 3.2s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 120px 78px;
+    }
+    @keyframes severity-loop {
+      0%, 100% { transform: scale(1); }
+      45%, 65% { transform: scale(1.12); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .severity-motion { animation: none; }
+    }
+.thinking-motion {
+      animation: thinking-loop 3.3s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes thinking-loop {
+      0%, 100% { transform: translateX(0); }
+      51%, 69% { transform: translateX(49px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .thinking-motion { animation: none; }
+    }
+.vomiting-motion {
+      animation: vomiting-loop 3.3s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes vomiting-loop {
+      0%, 12%, 100% { transform: translateY(0); }
+      55%, 78% { transform: translateY(11px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .vomiting-motion { animation: none; }
+    }
+.wait-motion {
+      animation: wait-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes wait-loop {
+      0%, 12%, 100% { transform: translateY(-6px); }
+      54%, 79% { transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wait-motion { animation: none; }
+    }
+.welcome-motion {
+      animation: welcome-loop 3.3s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 78px 172px;
+    }
+    @keyframes welcome-loop {
+      0%, 13%, 100% { transform: rotate(0); }
+      35%, 56% { transform: rotate(12deg); }
+      73%, 86% { transform: rotate(3deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-motion { animation: none; }
+    }
+.where-motion {
+      animation: where-loop 3.3s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 104px 139px;
+    }
+    @keyframes where-loop {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.17); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .where-motion { animation: none; }
+    }
+.who-motion {
+      animation: who-loop 3.6s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+
+    }
+    @keyframes who-loop {
+      0%, 12%, 100% { transform: translateX(0); }
+      48%, 63% { transform: translateX(88px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .who-motion { animation: none; }
+    }
+.worse-motion {
+      animation: worse-loop 3.4s ease-in-out infinite; animation-play-state: var(--art-motion, running);
+      transform-origin: 136px 88px;
+    }
+    @keyframes worse-loop {
+      0%, 18%, 100% { transform: scale(1); }
+      58%, 78% { transform: scale(1.16); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .worse-motion { animation: none; }
+    }
+</style>
+</head>
+<body>
+<!-- Inline symbols let each preview inherit its theme, including when opened offline. -->
+<svg class="definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="art-age" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <g fill="var(--paper, #FFFFFF)">
+      <circle cx="52" cy="131" r="14"/>
+      <path d="M27 190v-18q0-18 25-18t25 18v18z"/>
+      <circle cx="112" cy="104" r="18"/>
+      <path d="M84 190v-37q0-22 28-22t28 22v37z"/>
+      <circle cx="178" cy="66" r="23"/>
+      <path d="M147 190v-63q0-29 31-29t31 29v63z"/>
+    </g>
+    <path d="M24 190h188"/>
+    <path class="age-motion" d="M44 88q39-7 70-39m-23 4 23-4-5 22" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-allergy" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m33 146 47-14 46-21 28-23q8-6 14 0 5 6-1 13l-16 16 38-11q13-4 16 6 3 8-7 12l-27 13 32-7q10-2 12 7 1 8-8 11l-33 12 20-2q9-1 11 7 1 8-8 11l-48 14q-31 8-52-2l-49 18z" fill="var(--paper, #FFFFFF)"/>
+    <g class="allergy-motion" stroke="var(--accent, #2563EB)" fill="var(--accent, #2563EB)">
+      <circle cx="79" cy="155" r="3"/><circle cx="100" cy="151" r="4"/>
+      <circle cx="115" cy="169" r="3"/><circle cx="92" cy="174" r="3"/>
+    </g>
+    <path d="M65 100a14 14 0 0 1 0-20l24-24a14 14 0 0 1 20 20l-24 24a14 14 0 0 1-20 0z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+    <path d="m77 68 20 20" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-bleeding" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m31 109 36-12 24-28q7-8 16-2 8 6 2 15l-13 17 56-26q11-4 15 5 3 8-5 12l-34 17 47-15q11-3 14 6 3 8-7 12l-44 16 39-7q10-1 11 7 1 8-8 11l-41 10 29-1q9 0 9 8t-9 9l-50 6q-24 3-46-10l-41 13z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m109 119-11 14m24-9-8 12" stroke="var(--danger, #CF2A30)"/>
+    <path class="bleeding-motion" d="M112 164q-14 19-14 25a14 14 0 0 0 28 0q0-6-14-25z" fill="var(--danger, #CF2A30)" stroke="var(--danger, #CF2A30)"/>
+  </g>
+  </symbol>
+  <symbol id="art-breathing" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M44 197l9-52q4-18 23-32l13-10 26 13-5 13q19 17 28 68z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M77 87a31 31 0 1 1 58-8l11 15-13 6v13q0 10-11 11l-20-3" fill="var(--paper, #FFFFFF)"/>
+    <path d="M132 103h-10m0-22h1m-62 76 18 16q9 6 17-2l17-22q5-7 0-12-6-5-12 0l-14 15-12-9" />
+    <g class="breathing-motion" stroke="var(--accent, #2563EB)">
+      <path d="M153 104h15m12 0h16m-38 14 12 4m11 4 20 7m-44-42 13-4"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-chronic" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="29" y="53" width="122" height="112" rx="14" fill="var(--paper, #FFFFFF)"/>
+    <path d="M29 82h122M57 41v23m66-23v23"/>
+    <path d="M53 104h11m18 0h11m18 0h11m-69 22h11m18 0h11m-40 22h11" stroke="var(--quiet, #5B6474)"/>
+    <circle cx="160" cy="151" r="42" fill="var(--paper, #FFFFFF)"/>
+    <path d="M133 154a27 27 0 0 1 54 0M160 191v11q0 9 9 9h21" stroke="var(--quiet, #5B6474)"/>
+    <path class="chronic-motion" d="m160 154 12-15" stroke="var(--accent, #2563EB)"/>
+    <circle cx="160" cy="154" r="4" stroke="var(--accent, #2563EB)" fill="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-drinking" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 192v-22q0-21 23-34l17-8 26 8 6 12 22 3 17-39 18 8-13 49q-3 13-17 13h-37v10z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M79 116a33 33 0 1 1 56-25l11 10-10 8v10q0 12-13 12h-13" fill="var(--paper, #FFFFFF)"/>
+    <path d="M126 92h1"/>
+    <g class="drinking-motion">
+      <path d="m148 108 52-9-2 38-37 7z" fill="var(--tint, #E8F0FE)"/>
+      <path d="m151 108 46-8" stroke="var(--accent, #2563EB)"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-fever" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="87" cy="111" r="32" fill="var(--paper, #FFFFFF)"/>
+    <path d="M37 194v-10a26 26 0 0 1 26-26h48a26 26 0 0 1 26 26v10z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M66 65q-7-9 0-18m21 15q-7-9 0-18m21 21q-7-9 0-18" stroke="var(--accent, #2563EB)"/>
+    <path d="M169 65a12 12 0 0 1 24 0v83a23 23 0 1 1-24 0z" fill="var(--paper, #FFFFFF)"/>
+    <path class="fever-motion" d="M181 164V83" stroke="var(--accent, #2563EB)"/>
+    <circle cx="181" cy="168" r="8" fill="var(--accent, #2563EB)" stroke="var(--accent, #2563EB)"/>
+    <path d="M194 85h12m-12 18h8m-8 18h12" stroke="var(--quiet, #5B6474)"/>
+  </g>
+  </symbol>
+  <symbol id="art-fits" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 180h194" stroke="var(--quiet, #5B6474)"/>
+    <circle cx="59" cy="146" r="24" fill="var(--paper, #FFFFFF)"/>
+    <path d="M90 177l1-21q1-12 14-12h30l20-24q8-10 18-2l27 22q9 7 3 15-5 8-14 3l-22-15-16 22q-7 12-23 12z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m102 153 14-16-17-14q-7-5-3-13 5-8 13-2l26 17q8 6 3 13l-13 20" fill="var(--paper, #FFFFFF)"/>
+    <g class="fits-motion" stroke="var(--accent, #2563EB)">
+      <path d="M60 103q0-12 10-18m18 12q1-13 11-21m55 23q7-10 18-10m14 8q11 0 18 9"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-listening" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="92" y="37" width="56" height="107" rx="28" fill="var(--tint, #E8F0FE)"/>
+    <path d="M75 115v3a45 45 0 0 0 90 0v-3m-45 48v33m-27 0h54"/>
+    <path d="M109 69h22m-22 20h22" stroke="var(--accent, #2563EB)"/>
+    <g class="listening-motion" stroke="var(--accent, #2563EB)">
+      <path d="M62 77q-15 19 0 38m-17-48q-23 29 0 58m133-48q15 19 0 38m17-48q23 29 0 58"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-medicines" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="45" y="49" width="62" height="24" rx="5" fill="var(--tint, #E8F0FE)"/>
+    <path d="M53 73v11l-9 11q-6 7-6 16v63q0 14 14 14h48q14 0 14-14v-63q0-9-6-16l-9-11V73" fill="var(--paper, #FFFFFF)"/>
+    <path d="M39 119h74v43H39" fill="var(--tint, #E8F0FE)"/>
+    <path d="M76 130v21m-10-10h20" stroke="var(--accent, #2563EB)"/>
+    <path d="m114 184 31-20 31 1 26-18q9-5 14 1 5 8-2 14l-36 27-33 5-16 10" fill="var(--paper, #FFFFFF)"/>
+    <g class="medicines-motion">
+      <path d="M143 143a12 12 0 0 1 0-17l18-18a12 12 0 0 1 17 17l-18 18a12 12 0 0 1-17 0z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+      <path d="m152 117 17 17" stroke="var(--accent, #2563EB)"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-neck" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M45 196v-15q0-25 27-37l29-11 7-24h32l-4 28 29 12q25 10 28 47z" fill="var(--paper, #FFFFFF)"/>
+    <g class="neck-motion">
+      <path d="M96 110a34 34 0 1 1 56-35l13 16-13 7-3 15q-2 8-12 8h-12" fill="var(--paper, #FFFFFF)"/>
+      <path d="M144 79h1"/>
+    </g>
+    <path d="m87 109-13 13m16 1-7 12m49 17-22-25q-6-7-13-2-6 5-2 13l18 31" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-not_doctor" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="25" y="57" width="106" height="91" rx="11" fill="var(--paper, #FFFFFF)"/>
+    <path d="M78 148v26m-23 0h46"/>
+    <path class="not_doctor-motion" d="M51 97v12m14-21v30m13-40v50m13-39v28m14-18v10" stroke="var(--accent, #2563EB)"/>
+    <circle cx="180" cy="90" r="21" fill="var(--paper, #FFFFFF)"/>
+    <path d="M148 174v-25q0-22 22-22h21q22 0 22 22v25z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M181 139v20m-10-10h20" stroke="var(--quiet, #5B6474)"/>
+    <path d="M147 60l-13 124" stroke="var(--quiet, #5B6474)"/>
+  </g>
+  </symbol>
+  <symbol id="art-nurse_coming" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M142 175V48h64v127" stroke="var(--quiet, #5B6474)"/>
+    <path d="M25 199h190" stroke="var(--quiet, #5B6474)"/>
+    <circle cx="51" cy="106" r="15" fill="var(--paper, #FFFFFF)"/>
+    <path d="M35 173v-36q0-10 11-10h14q9 0 13 10l8 16h16q8 0 8 8v31H90l-6-19z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M27 142v34h55m-55 0v21m55-21v21" stroke="var(--quiet, #5B6474)"/>
+    <path d="M91 110h24m-22-8-8 8 8 8" stroke="var(--accent, #2563EB)"/>
+    <g class="nurse_coming-motion">
+      <circle cx="160" cy="87" r="20" fill="var(--paper, #FFFFFF)"/>
+      <path d="M135 156l-16 39m48-39 12 38" stroke="var(--ink, #1F2430)"/>
+      <path d="M132 157v-23q0-19 19-19h18q19 0 19 19v23z" fill="var(--paper, #FFFFFF)"/>
+      <path d="M166 126v17m-8-8h16" stroke="var(--accent, #2563EB)"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-onset" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="124" cy="128" r="70" fill="var(--paper, #FFFFFF)"/>
+    <path d="M124 73v9m0 92v9m-55-55h9m92 0h9" stroke="var(--quiet, #5B6474)"/>
+    <path d="M124 128l29 17"/>
+    <path class="onset-motion" d="M124 128V93" stroke="var(--accent, #2563EB)"/>
+    <circle cx="124" cy="128" r="5" fill="var(--accent, #2563EB)" stroke="var(--accent, #2563EB)"/>
+    <path d="M34 83a100 100 0 0 1 65-52M35 57l-3 27 27-5" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-other" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="67" cy="110" r="25" fill="var(--paper, #FFFFFF)"/>
+    <path d="M31 201v-35q0-22 22-24h28q15 0 24 14l13 19 21-8 12-15q4-5 10-2 7 4 3 11l-8 16-37 18q-8 4-14-2l-11-12v20z" fill="var(--paper, #FFFFFF)"/>
+    <g class="other-motion" stroke="var(--accent, #2563EB)">
+      <path d="M138 46h54a17 17 0 0 1 17 17v24a17 17 0 0 1-17 17h-37l-21 14v-15a17 17 0 0 1-13-17V63a17 17 0 0 1 17-17z" fill="var(--paper, #FFFFFF)"/>
+      <path d="M147 75h1m17 0h1m17 0h1"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-pregnancy" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="101" cy="53" r="24" fill="var(--paper, #FFFFFF)"/>
+    <path d="M71 199v-75q0-35 32-35 22 0 31 30 9 9 23 13 22 7 22 30 0 32-33 32h-19v5z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m87 127 17 30 25 8q9 4 6 11-3 7-13 5l-32-7-14-20"/>
+    <path class="pregnancy-motion" d="M158 108q21 5 32 24m-25-40q25 8 40 31" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-recording" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="44" y="34" width="152" height="172" rx="23" fill="var(--paper, #FFFFFF)"/>
+    <circle cx="69" cy="60" r="6" fill="var(--danger, #CF2A30)" stroke="var(--danger, #CF2A30)"/>
+    <path d="M65 153h110" stroke="var(--quiet, #5B6474)"/>
+    <g class="recording-motion" stroke="var(--accent, #2563EB)">
+      <path d="M71 104v12m16-22v32m16-46v60m17-49v38m17-31v24m16-42v60m16-38v16"/>
+    </g>
+    <path d="m110 169 23 12-23 12z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-repeat" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 58h74a16 16 0 0 1 16 16v30a16 16 0 0 1-16 16H78l-23 16v-16h-7a16 16 0 0 1-16-16V74a16 16 0 0 1 16-16z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M151 111h41a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16h-2v15l-23-15h-16a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M58 88h8l7-13 9 24 8-15 7 4h13m38 58h7l7-13 9 24 8-15 7 4" stroke="var(--accent, #2563EB)"/>
+    <path class="repeat-motion" d="M102 174H73q-15 0-15-15v-5m-13 14 13-14 13 14" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-severity" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="106" r="43" fill="var(--paper, #FFFFFF)"/>
+    <path d="M59 207v-12q0-29 26-40m96 52v-12q0-29-26-40"/>
+    <path d="m86 154-27-29q-6-7 0-14 7-6 14 0l16 16m65 27 27-29q6-7 0-14-7-6-14 0l-16 16" fill="var(--paper, #FFFFFF)"/>
+    <path d="m98 98 12 7-12 5m44-12-12 7 12 5m-31 22q9-10 18 0"/>
+    <g class="severity-motion" stroke="var(--accent, #2563EB)">
+      <path d="m116 26-9 16 15 3-8 13m-51 0-15 5 9 11-16 8m136-24 15 5-9 11 16 8"/>
+    </g>
+  </g>
+  </symbol>
+  <symbol id="art-thinking" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 65h144q16 0 16 16v63q0 16-16 16h-67l-43 27v-27H48q-16 0-16-16V81q0-16 16-16z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M69 113h7l8-17 11 34 10-24 8 7h7" stroke="var(--accent, #2563EB)"/>
+    <path d="M136 113h35" stroke="var(--quiet, #5B6474)" stroke-dasharray="1 11"/>
+    <circle class="thinking-motion" cx="130" cy="113" r="5" stroke="var(--accent, #2563EB)" fill="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-vomiting" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M28 180q0-24 13-44 17-26 47-28l27 10q6 22 32 38 8 5 5 13-3 8-14 6l-36-23-5 28z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M90 111a32 32 0 1 1 57 7l-2 12-14-3-7 8q-6 6-13 0l-8-7" fill="var(--paper, #FFFFFF)"/>
+    <path d="m139 110-6 1m-7 15-6-5"/>
+    <path d="M127 180h88q-7 24-28 24h-32q-21 0-28-24z" fill="var(--tint, #E8F0FE)"/>
+    <path class="vomiting-motion" d="m142 137 9 6m4-5 12 15m4 3 5 8" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-wait" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M66 125v50h73m-73 0v26m73-26v26" stroke="var(--quiet, #5B6474)"/>
+    <g class="wait-motion">
+      <circle cx="107" cy="85" r="24" fill="var(--paper, #FFFFFF)"/>
+      <path d="M84 160v-29q0-15 15-15h17q15 0 15 15v18h30q14 0 14 14v31h-20l-7-24h-51q-13 0-13-10z" fill="var(--paper, #FFFFFF)"/>
+      <path d="m109 131 12 18h20"/>
+    </g>
+    <path d="M44 201h154" stroke="var(--quiet, #5B6474)"/>
+  </g>
+  </symbol>
+  <symbol id="art-welcome" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M119 199V49h80v150" fill="var(--paper, #FFFFFF)"/>
+    <path d="M144 49v150l-25 12V49z" fill="var(--tint, #E8F0FE)"/>
+    <path d="M132 128h1" stroke="var(--accent, #2563EB)"/>
+    <path d="M161 75h23m-11-11v22" stroke="var(--accent, #2563EB)"/>
+    <path d="M153 139q0-7 7-7h20q7 0 7 7v15q0 7-7 7h-12l-10 7v-7q-5-1-5-7z" stroke="var(--accent, #2563EB)" fill="var(--paper, #FFFFFF)"/>
+    <path d="M162 147h2m6-4v8m7-4h2" stroke="var(--accent, #2563EB)"/>
+    <circle cx="60" cy="113" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M29 201v-24q0-27 24-32h17q23 4 23 32v24z" fill="var(--paper, #FFFFFF)"/>
+    <path class="welcome-motion" d="m69 167 18-22 6-23q2-7 9-6 6 1 5 8l-3 30-18 27" fill="var(--paper, #FFFFFF)"/>
+    <path d="M24 211h192" stroke="var(--quiet, #5B6474)"/>
+  </g>
+  </symbol>
+  <symbol id="art-where" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="114" cy="54" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M83 198l-2-51-19 25q-8 9-17 3-8-5-3-15l23-46q9-20 30-23h38q21 0 29 18l12 39q4 12-6 17-6 3-13 0l-10-6-1 39z" fill="var(--paper, #FFFFFF)"/>
+    <circle class="where-motion" cx="104" cy="139" r="16" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+    <path d="M164 163l-53-22" stroke="var(--ink, #1F2430)"/>
+  </g>
+  </symbol>
+  <symbol id="art-who" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="79" cy="79" r="26" fill="var(--paper, #FFFFFF)"/>
+    <path d="M31 186v-33a30 30 0 0 1 30-30h30a30 30 0 0 1 30 30v33z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M55 163v23m42-23v23"/>
+    <circle cx="167" cy="109" r="19" fill="var(--paper, #FFFFFF)"/>
+    <path d="M137 186v-18a23 23 0 0 1 23-23h14a23 23 0 0 1 23 23v18z" fill="var(--paper, #FFFFFF)"/>
+    <path class="who-motion" d="M66 212h25" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="art-worse" viewBox="0 0 240 240">
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="65" cy="84" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M30 189v-45a31 31 0 0 1 31-31h12q29 0 33 31l4 45z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m49 144 9 17q4 7 12 4l17-8" stroke="var(--ink, #1F2430)"/>
+    <path d="m122 175 22-12-12-10 22-14m9-19 23-26 13 2 10-22m-19 7 19-7 4 19" stroke="var(--accent, #2563EB)"/>
+    <path class="worse-motion" d="m132 113 14-23-17-3 17-29" stroke="var(--accent, #2563EB)"/>
+  </g>
+  </symbol>
+  <symbol id="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></symbol>
+  <symbol id="arrow-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></symbol>
+  <symbol id="arrow-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m10 6 6 6-6 6"/></symbol>
+  <symbol id="speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9zm13 0a5 5 0 0 1 0 6m3-8a8 8 0 0 1 0 10"/></symbol>
+  <symbol id="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1m-7 8v3m-3 0h6"/></symbol>
+  <symbol id="voice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11v2m4-5v8m4-11v14m4-10v6m4-4v2"/></symbol>
+</svg>
+
+<header class="masthead">
+  <div class="container">
+    <div class="wordmark"><img src="logo.svg" width="44" height="44" alt=""><h1>Mukoti</h1></div>
+    <div class="toolbar">
+      <div class="choices" role="group" aria-label="Appearance">
+        <button class="choice" data-mode="light" aria-pressed="true">Light</button>
+        <button class="choice" data-mode="dark" aria-pressed="false">Dark</button>
+        <button class="choice" data-mode="match" aria-pressed="false">Match phone</button>
+      </div>
+      <button class="choice" id="motion" aria-pressed="false">Pause motion</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="journey" aria-labelledby="journey-title">
+    <div class="section-head">
+      <h2 id="journey-title">Patient journey</h2>
+      <div class="rail-controls" role="group" aria-label="Browse patient states">
+        <button class="icon-button" id="previous" aria-label="Previous state" disabled><svg class="icon" aria-hidden="true"><use href="#arrow-back"></use></svg></button>
+        <span class="current-preview" id="current-preview" aria-live="polite">Welcome</span>
+        <button class="icon-button" id="forward" aria-label="Next state"><svg class="icon" aria-hidden="true"><use href="#arrow-next"></use></svg></button>
+      </div>
+    </div>
+    <div class="rail" tabindex="0" aria-label="Six patient screens">
+      <figure data-name="Welcome">
+        <figcaption>Welcome</figcaption>
+        <article class="phone" data-language="sn" lang="sn">
+          <div class="phone-head"></div>
+          <div class="phone-scroll">
+            <div class="phone-main">
+              <div class="picture-card">
+                <svg class="art hero-art" width="240" height="240" aria-hidden="true"><use href="#art-welcome"></use></svg>
+                <div><h3 data-copy="welcome">Mauya kukiriniki</h3><p class="gloss" lang="en">Welcome to the clinic</p></div>
+              </div>
+              <div class="welcome-actions">
+                <div class="choices" role="group" aria-label="Mutauro / Language">
+                  <button class="choice" data-language-choice="sn" lang="sn" aria-pressed="true">ChiShona</button>
+                  <button class="choice" data-language-choice="en" lang="en" aria-pressed="false">English</button>
+                </div>
+                <div class="disclosure">
+                  <svg class="art" width="32" height="32" aria-hidden="true"><use href="#art-recording"></use></svg>
+                  <p data-copy="consent">Izwi renyu rinorekodhwa kuti mukoti azorinzwa, rozodzimwa mushure mezuva rimwe chete.</p>
+                  <details>
+                    <summary data-copy="more">Zvimwe</summary>
+                    <p data-copy="notdoctor">Mubatsiri uyu ikombiyuta, haasi chiremba. Haakupei mushonga kana zano rekurapwa. Kana zvakaoma, udzai mukoti iye zvino.</p>
+                  </details>
+                </div>
+                <button class="pill primary" data-go="1" data-copy="start">Ndinobvuma, tanga kutaura</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </figure>
+      <figure data-name="Question">
+        <figcaption>Question</figcaption>
+        <article class="phone" data-language="sn" lang="sn">
+          <div class="phone-head"></div>
+          <div class="phone-scroll">
+            <div class="phone-main">
+              <ol class="progress" aria-label="Mubvunzo 2 pa 6"></ol>
+              <div class="picture-card">
+                <svg class="art hero-art" width="240" height="240" aria-hidden="true"><use href="#art-who"></use></svg>
+                <div><h3 data-copy="who">Ndiani ari kurwara, imi here kana mwana?</h3><p class="gloss" lang="en">Who is unwell, you or a child?</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="dock dock--speaking">
+            <span class="round-icon"><svg class="icon" aria-hidden="true"><use href="#speaker"></use></svg></span>
+            <div><h3 data-copy="speaking">Mubatsiri ari kutaura, teererai</h3><p class="gloss" lang="en">The helper is speaking, listen</p></div>
+          </div>
+        </article>
+      </figure>
+      <figure data-name="Listening">
+        <figcaption>Listening</figcaption>
+        <article class="phone" data-language="sn" lang="sn">
+          <div class="phone-head"></div>
+          <div class="phone-scroll">
+            <div class="phone-main">
+              <ol class="progress" aria-label="Mubvunzo 2 pa 6"></ol>
+              <div class="picture-card">
+                <svg class="art hero-art" width="240" height="240" aria-hidden="true"><use href="#art-listening"></use></svg>
+                <div><h3 data-copy="listen">Taurai iye zvino, ndiri kuteerera</h3><p class="gloss" lang="en">Speak now, I am listening</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="dock">
+            <button class="mic" data-go="3" data-copy-label="mic" aria-label="Maikorofoni"><svg class="icon" aria-hidden="true"><use href="#mic"></use></svg></button>
+          </div>
+        </article>
+      </figure>
+      <figure data-name="Thinking">
+        <figcaption>Thinking</figcaption>
+        <article class="phone" data-language="sn" lang="sn">
+          <div class="phone-head"></div>
+          <div class="phone-scroll">
+            <div class="phone-main">
+              <ol class="progress" aria-label="Mubvunzo 2 pa 6"></ol>
+              <div class="picture-card">
+                <svg class="art hero-art" width="240" height="240" aria-hidden="true"><use href="#art-thinking"></use></svg>
+                <div><h3 data-copy="thinking">Ndiri kufunga…</h3><p class="gloss" lang="en">Thinking…</p></div>
+              </div>
+              <figure class="heard">
+                <figcaption><svg class="icon" aria-hidden="true"><use href="#voice"></use></svg><span data-copy="you">Imi</span></figcaption>
+                <blockquote data-copy="heard">ndini ndiri kurwara</blockquote>
+                <p class="gloss" lang="en">It is me who is sick.</p>
+              </figure>
+            </div>
+          </div>
+        </article>
+      </figure>
+      <figure data-name="Take a seat">
+        <figcaption>Take a seat</figcaption>
+        <article class="phone" data-language="sn" lang="sn">
+          <div class="phone-head"></div>
+          <div class="phone-scroll">
+            <div class="phone-main finish-body">
+              <div class="ticket">
+                <div class="ticket-stub">
+                  <p data-copy="yourNumber">Nhamba yenyu</p>
+                  <strong class="ticket-number">7</strong>
+                </div>
+                <div class="ticket-body">
+                  <span class="tag done"><svg class="icon check" aria-hidden="true"><use href="#check"></use></svg><span data-copy="done">Zvapera</span></span>
+                  <svg class="art" width="184" height="184" aria-hidden="true"><use href="#art-wait"></use></svg>
+                  <h3 data-copy="doneText">Ndatenda. Garai muchimirira, mukoti achakudaidzai.</h3>
+                  <p class="gloss" lang="en">Thank you. Please take a seat, the nurse will call you.</p>
+                </div>
+              </div>
+              <button class="pill" data-go="0" data-copy="next">Murwere anotevera</button>
+            </div>
+          </div>
+        </article>
+      </figure>
+      <figure data-name="Nurse coming">
+        <figcaption>Nurse coming</figcaption>
+        <article class="phone" data-language="sn" lang="sn">
+          <div class="phone-head"></div>
+          <div class="phone-scroll">
+            <div class="phone-main finish-body">
+              <div class="ticket">
+                <div class="ticket-stub">
+                  <p data-copy="yourNumber">Nhamba yenyu</p>
+                  <strong class="ticket-number">7</strong>
+                </div>
+                <div class="ticket-body">
+                  <span class="tag waiting"><span class="dot" aria-hidden="true"></span><span data-copy="alarmTag">Mukoti ari kuuya</span></span>
+                  <svg class="art" width="184" height="184" aria-hidden="true"><use href="#art-nurse_coming"></use></svg>
+                  <h3 data-copy="alarmText">Ndatenda. Mukoti adaidzwa iye zvino. Ndapota garai pano.</h3>
+                  <p class="gloss" lang="en">Thank you. The nurse has been called. Please stay here.</p>
+                </div>
+              </div>
+              <button class="pill" data-go="0" data-copy="next">Murwere anotevera</button>
+            </div>
+          </div>
+        </article>
+      </figure>
+    </div>
+  </section>
+
+  <section class="library" aria-labelledby="library-title">
+    <div class="section-head">
+      <h2 id="library-title">Pictograms</h2>
+      <p>96 px and 240 px in light and dark</p>
+    </div>
+    <div class="library-group" id="questions"><h3>Questions</h3></div>
+    <div class="library-group" id="states"><h3>Conversation states</h3></div>
+  </section>
+</main>
+
+<template id="phone-head">
+  <div class="wordmark"><img src="logo.svg" width="34" height="34" alt=""><span>Mukoti</span></div>
+</template>
+<template id="specimen">
+  <figure class="specimen">
+    <figcaption></figcaption>
+    <div class="swatches">
+      <div class="swatch light-small" data-theme="light"><svg class="art" width="96" height="96" aria-hidden="true"><use></use></svg></div>
+      <div class="swatch dark-small" data-theme="dark"><svg class="art" width="96" height="96" aria-hidden="true"><use></use></svg></div>
+      <div class="large-pair" aria-label="Large light and dark illustrations">
+        <div class="swatch light-large" data-theme="light"><svg class="art" width="240" height="240" aria-hidden="true"><use></use></svg></div>
+        <div class="swatch dark-large" data-theme="dark"><svg class="art" width="240" height="240" aria-hidden="true"><use></use></svg></div>
+      </div>
+    </div>
+  </figure>
+</template>
+
+<script>
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+const copy = {
+  sn: {
+    welcome: 'Mauya kukiriniki',
+    consent: 'Izwi renyu rinorekodhwa kuti mukoti azorinzwa, rozodzimwa mushure mezuva rimwe chete.',
+    more: 'Zvimwe',
+    notdoctor: 'Mubatsiri uyu ikombiyuta, haasi chiremba. Haakupei mushonga kana zano rekurapwa. Kana zvakaoma, udzai mukoti iye zvino.',
+    start: 'Ndinobvuma, tanga kutaura', who: 'Ndiani ari kurwara, imi here kana mwana?',
+    speaking: 'Mubatsiri ari kutaura, teererai', listen: 'Taurai iye zvino, ndiri kuteerera',
+    mic: 'Maikorofoni', you: 'Imi', heard: 'ndini ndiri kurwara', thinking: 'Ndiri kufunga…',
+    yourNumber: 'Nhamba yenyu', done: 'Zvapera', alarmTag: 'Mukoti ari kuuya',
+    doneText: 'Ndatenda. Garai muchimirira, mukoti achakudaidzai.',
+    alarmText: 'Ndatenda. Mukoti adaidzwa iye zvino. Ndapota garai pano.',
+    next: 'Murwere anotevera', progress: 'Mubvunzo 2 pa 6'
+  },
+  en: {
+    welcome: 'Welcome to the clinic',
+    consent: 'Your voice is recorded so the nurse can listen to it. It is deleted after one day.',
+    more: 'More options',
+    notdoctor: 'This helper is a computer, not a doctor. It does not give medicine or medical advice. If it is serious, tell the nurse now.',
+    start: 'I agree, start talking', who: 'Who is unwell, you or a child?',
+    speaking: 'The helper is speaking, listen', listen: 'Speak now, I am listening',
+    mic: 'Microphone', you: 'You', heard: 'It is me who is sick.', thinking: 'Thinking…',
+    yourNumber: 'Your number', done: 'Finished', alarmTag: 'The nurse is coming',
+    doneText: 'Thank you. Please take a seat, the nurse will call you.',
+    alarmText: 'Thank you. The nurse has been called. Please stay here.',
+    next: 'Next patient', progress: 'Question 2 of 6'
+  }
+};
+
+const pictures = {
+  questions: {
+    who: 'Who is unwell, you or a child?', age: 'How old are you?', onset: 'When did it start?',
+    worse: 'Is it getting worse?', where: 'Where is the pain?', severity: 'Is the pain very bad?',
+    fever: 'Do you have a fever?', breathing: 'Are you struggling to breathe?',
+    drinking: 'Is the child able to drink or breastfeed?', vomiting: 'Are you vomiting?',
+    fits: 'Have there been any fits?', bleeding: 'Have you seen any blood?', neck: 'Is your neck stiff?',
+    pregnancy: 'Are you pregnant?', chronic: 'Do you have a long-term illness, such as diabetes or high blood pressure?',
+    medicines: 'Are you taking any medicines these days?', allergy: 'Is there any medicine that does not agree with you?',
+    other: 'Is anything else troubling you?'
+  },
+  states: {
+    welcome: 'What brings you here today?', listening: 'Speak now, I am listening', thinking: 'Thinking…',
+    repeat: 'Please say that again, I did not hear you well.', nurse_coming: 'The nurse is coming to you now',
+    wait: 'Please take a seat, the nurse will call you', recording: 'Your voice is recorded so the nurse can listen to it',
+    not_doctor: 'This helper is a computer, not a doctor'
+  }
+};
+
+const icon = name => `<svg class="icon ${name}" aria-hidden="true"><use href="#${name}"></use></svg>`;
+const choices = $$('.choice');
+for (const choice of choices) choice.insertAdjacentHTML('afterbegin', icon('check'));
+
+for (const header of $$('.phone-head')) header.append($('#phone-head').content.cloneNode(true));
+for (const track of $$('.progress')) {
+  track.innerHTML = [
+    `<li aria-label="1"><span class="progress-mark progress-done">${icon('check')}</span></li>`,
+    '<li class="is-current" aria-current="step" aria-label="2"><span class="progress-mark progress-current"></span></li>',
+    ...[3, 4, 5, 6].map(step => `<li aria-label="${step}"><span class="progress-mark progress-future"></span></li>`)
+  ].join('');
+}
+for (const [group, items] of Object.entries(pictures)) {
+  const list = document.getElementById(group);
+  for (const [name, caption] of Object.entries(items)) {
+    const card = $('#specimen').content.cloneNode(true);
+    card.querySelector('figcaption').textContent = caption;
+    card.querySelectorAll('use').forEach(use => use.setAttribute('href', '#art-' + name));
+    list.append(card);
+  }
+}
+
+for (const button of $$('[data-language-choice]')) button.addEventListener('click', () => {
+  const language = button.dataset.languageChoice;
+  const words = copy[language];
+  for (const phone of $$('.phone')) {
+    phone.lang = language;
+    phone.dataset.language = language;
+  }
+  for (const label of $$('[data-copy]')) label.textContent = words[label.dataset.copy];
+  for (const label of $$('[data-copy-label]')) label.setAttribute('aria-label', words[label.dataset.copyLabel]);
+  for (const track of $$('.progress')) track.setAttribute('aria-label', words.progress);
+  for (const choice of $$('[data-language-choice]')) choice.setAttribute('aria-pressed', choice === button);
+});
+
+const matchesDark = matchMedia('(prefers-color-scheme: dark)');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let mode = 'light';
+function setTheme() {
+  document.documentElement.dataset.theme = mode === 'match' ? (matchesDark.matches ? 'dark' : 'light') : mode;
+}
+for (const button of $$('[data-mode]')) button.addEventListener('click', () => {
+  mode = button.dataset.mode;
+  setTheme();
+  for (const choice of $$('[data-mode]')) choice.setAttribute('aria-pressed', choice === button);
+});
+matchesDark.addEventListener('change', setTheme);
+
+const motion = $('#motion');
+motion.addEventListener('click', () => {
+  const paused = document.documentElement.classList.toggle('motion-paused');
+  motion.setAttribute('aria-pressed', paused);
+});
+
+const rail = $('.rail');
+const frames = [...rail.children];
+const previous = $('#previous');
+const forward = $('#forward');
+let active = 0;
+let scrollTarget = null;
+
+function select(index) {
+  frames[active].classList.remove('arriving');
+  active = index;
+  frames[active].classList.add('arriving');
+  $('#current-preview').textContent = frames[active].dataset.name;
+  previous.disabled = active === 0;
+  forward.disabled = active === frames.length - 1;
+}
+
+function go(index, fromPhone = false) {
+  if (!frames[index]) return;
+  select(index);
+  const left = frames[index].offsetLeft - frames[0].offsetLeft;
+  const end = Math.min(left, rail.scrollWidth - rail.clientWidth);
+  const still = reducedMotion.matches || document.documentElement.classList.contains('motion-paused');
+  if (Math.abs(rail.scrollLeft - end) > 1) {
+    scrollTarget = end;
+    rail.scrollTo({ left: end, behavior: still ? 'instant' : 'smooth' });
+  }
+  if (fromPhone) {
+    const phone = frames[index].querySelector('.phone');
+    phone.setAttribute('tabindex', '-1');
+    phone.focus({ preventScroll: true });
+    const top = phone.getBoundingClientRect().top;
+    if (top < 0 || top + phone.offsetHeight > innerHeight) {
+      window.scrollTo({ top: scrollY + top, behavior: still ? 'instant' : 'smooth' });
+    }
+  }
+}
+
+rail.addEventListener('scroll', () => {
+  if (scrollTarget !== null) {
+    if (Math.abs(rail.scrollLeft - scrollTarget) < 2) scrollTarget = null;
+    return;
+  }
+  const nearest = frames.findIndex(frame => frame.offsetLeft - frames[0].offsetLeft >= rail.scrollLeft - 2);
+  if (nearest >= 0 && nearest !== active) select(nearest);
+}, { passive: true });
+rail.addEventListener('pointerdown', () => { scrollTarget = null; }, { passive: true });
+rail.addEventListener('wheel', () => { scrollTarget = null; }, { passive: true });
+rail.addEventListener('keydown', event => {
+  if (event.target !== rail || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  go(active + (event.key === 'ArrowRight' ? 1 : -1));
+});
+previous.addEventListener('click', () => go(active - 1));
+forward.addEventListener('click', () => go(active + 1));
+for (const button of $$('[data-go]')) button.addEventListener('click', () => go(Number(button.dataset.go), true));
+</script>
+</body>
+</html>

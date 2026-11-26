@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .bleeding-motion {
+      animation: bleeding-loop 3.4s ease-in-out infinite;
+
+    }
+    @keyframes bleeding-loop {
+      0%, 15%, 100% { transform: translateY(0); }
+      60%, 80% { transform: translateY(12px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bleeding-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m31 109 36-12 24-28q7-8 16-2 8 6 2 15l-13 17 56-26q11-4 15 5 3 8-5 12l-34 17 47-15q11-3 14 6 3 8-7 12l-44 16 39-7q10-1 11 7 1 8-8 11l-41 10 29-1q9 0 9 8t-9 9l-50 6q-24 3-46-10l-41 13z" fill="var(--paper, #FFFFFF)"/>
+    <path d="m109 119-11 14m24-9-8 12" stroke="var(--danger, #CF2A30)"/>
+    <path class="bleeding-motion" d="M112 164q-14 19-14 25a14 14 0 0 0 28 0q0-6-14-25z" fill="var(--danger, #CF2A30)" stroke="var(--danger, #CF2A30)"/>
+  </g>
+</svg>

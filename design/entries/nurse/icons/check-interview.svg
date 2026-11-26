@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <rect x="8.8" y="4" width="6.4" height="10" rx="3.2" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="1.8"/>
+  <path d="M5.8 11.4C5.8 14.8 8.6 17.2 12 17.2C15.4 17.2 18.2 14.8 18.2 11.4" stroke="var(--ink, #1F2430)" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M12 17.2V20.2M9.2 20.2H14.8" stroke="var(--ink, #1F2430)" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M19.8 7.5C20.5 8.5 20.5 10.1 19.8 11.1" stroke="var(--accent, #2563EB)" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

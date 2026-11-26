@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .pregnancy-belly { transform-origin: 136px 144px; animation: pregnancy-breathe 3.4s ease-in-out infinite; }
+    .pregnancy-core { transform-origin: 136px 144px; animation: pregnancy-beat 3.4s ease-in-out infinite; }
+    @keyframes pregnancy-breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes pregnancy-beat {
+      0%, 100% { transform: scale(0.92); opacity: 0.75; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pregnancy-belly, .pregnancy-core { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle cx="106" cy="56" r="22" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <path d="M74 198V116c0-20 14-34 32-34 15 0 25 10 28 24 22 4 38 22 38 44 0 18-10 34-26 42v6z" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+  <circle class="pregnancy-belly" cx="136" cy="146" r="24" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)" stroke-width="5"/>
+  <circle class="pregnancy-core" cx="136" cy="146" r="10" fill="var(--accent, #2563EB)"/>
+  <path d="M98 124c12 18 26 28 46 28" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+</svg>

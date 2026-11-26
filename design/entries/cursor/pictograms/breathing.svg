@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.breathing-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.breathing-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.breathing-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.breathing-fill{fill:var(--accent,#2563EB)}.breathing-tint{fill:var(--tint,#E8F0FE)}.breathing-hot{fill:var(--danger,#CF2A30)}.breathing-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.breathing-air{transform-box:fill-box;transform-origin:50% 55%;transform:scale(.68);opacity:.9;animation:breathing-gasp 3.2s ease-in-out infinite}
+@keyframes breathing-gasp{0%,22%{transform:scale(.5)}40%{transform:scale(.8)}56%,100%{transform:scale(.5)}}
+
+@media (prefers-reduced-motion:reduce){.breathing-move{animation:none}}
+</style>
+
+<circle class="breathing-body" cx="120" cy="40" r="16"/>
+<path class="breathing-line" d="M120 56V86M120 86L92 108M120 86L148 108"/>
+<ellipse class="breathing-body" cx="84" cy="140" rx="36" ry="52"/>
+<ellipse class="breathing-body" cx="156" cy="140" rx="36" ry="52"/>
+<ellipse class="breathing-fill breathing-air breathing-move" cx="84" cy="146" rx="22" ry="32"/>
+<ellipse class="breathing-fill breathing-air breathing-move" cx="156" cy="146" rx="22" ry="32"/>
+
+</svg>

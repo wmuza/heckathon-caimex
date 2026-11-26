@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.nurse_coming-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.nurse_coming-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.nurse_coming-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.nurse_coming-fill{fill:var(--accent,#2563EB)}.nurse_coming-tint{fill:var(--tint,#E8F0FE)}.nurse_coming-hot{fill:var(--danger,#CF2A30)}.nurse_coming-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.nurse_coming-far{opacity:0;animation:nurse_coming-far 3.6s ease-in-out infinite}
+.nurse_coming-near{opacity:1;animation:nurse_coming-near 3.6s ease-in-out infinite}
+@keyframes nurse_coming-far{0%,32%{opacity:1}48%,100%{opacity:0}}
+@keyframes nurse_coming-near{0%,32%{opacity:0}48%,100%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){.nurse_coming-move{animation:none}}
+</style>
+
+<path class="nurse_coming-line" d="M156 108V168H214V206M156 168V206"/>
+<path class="nurse_coming-body" d="M170 168V117C170 99 202 99 202 117V168Z"/><circle class="nurse_coming-body" cx="186" cy="92" r="14"/><path class="nurse_coming-line" d="M186 150H214"/><g class="nurse_coming-far nurse_coming-move"><path class="nurse_coming-body" d="M42 186V104C42 86 82 86 82 104V186Z"/><circle class="nurse_coming-body" cx="62" cy="78" r="16"/><circle class="nurse_coming-fill" cx="62" cy="128" r="7"/></g><g class="nurse_coming-near nurse_coming-move"><path class="nurse_coming-body" d="M66 186V104C66 86 106 86 106 104V186Z"/><circle class="nurse_coming-body" cx="86" cy="78" r="16"/><circle class="nurse_coming-fill" cx="86" cy="128" r="7"/></g>
+</svg>

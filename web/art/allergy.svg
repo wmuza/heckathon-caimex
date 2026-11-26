@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .allergy-motion {
+      animation: allergy-loop 3.2s ease-in-out infinite;
+      transform-origin: 99px 161px;
+    }
+    @keyframes allergy-loop {
+      0%, 100% { transform: scale(1); }
+      47%, 69% { transform: scale(1.14); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .allergy-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m33 146 47-14 46-21 28-23q8-6 14 0 5 6-1 13l-16 16 38-11q13-4 16 6 3 8-7 12l-27 13 32-7q10-2 12 7 1 8-8 11l-33 12 20-2q9-1 11 7 1 8-8 11l-48 14q-31 8-52-2l-49 18z" fill="var(--paper, #FFFFFF)"/>
+    <g class="allergy-motion" stroke="var(--accent, #2563EB)" fill="var(--accent, #2563EB)">
+      <circle cx="79" cy="155" r="3"/><circle cx="100" cy="151" r="4"/>
+      <circle cx="115" cy="169" r="3"/><circle cx="92" cy="174" r="3"/>
+    </g>
+    <path d="M65 100a14 14 0 0 1 0-20l24-24a14 14 0 0 1 20 20l-24 24a14 14 0 0 1-20 0z" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+    <path d="m77 68 20 20" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .severity-mark { animation: severity-step 3.6s ease-in-out infinite; }
+    .severity-small { transform-origin: 149px 162px; }
+    .severity-medium { animation-delay: -2.4s; transform-origin: 171px 120px; }
+    .severity-large { animation-delay: -1.2s; transform-origin: 198px 65px; }
+    @keyframes severity-step {
+      0%, 100% { transform: scale(1); stroke: var(--accent, #2563EB); }
+      20%, 78% { transform: scale(.84); stroke: var(--quiet, #5B6474); }
+      92% { transform: scale(1); stroke: var(--accent, #2563EB); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .severity-mark { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="79" cy="106" r="43" fill="var(--paper, #FFFFFF)"/>
+    <path d="M25 197v-13q0-25 24-31m84 44v-13q0-25-24-31"/>
+    <path d="m57 98 12 7-12 5m44-12-12 7 12 5m-31 22q9-10 18 0"/>
+    <g stroke="var(--accent, #2563EB)">
+      <path class="severity-mark severity-small" d="m153 151-10 10 11 3-10 10"/>
+      <path class="severity-mark severity-medium" d="m178 102-16 16 17 5-16 16"/>
+      <path class="severity-mark severity-large" d="m207 39-23 23 25 7-23 23"/>
+    </g>
+  </g>
+</svg>

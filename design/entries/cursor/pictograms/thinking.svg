@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.thinking-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.thinking-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.thinking-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.thinking-fill{fill:var(--accent,#2563EB)}.thinking-tint{fill:var(--tint,#E8F0FE)}.thinking-hot{fill:var(--danger,#CF2A30)}.thinking-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.thinking-d1{animation:thinking-1 2.4s ease-in-out infinite}
+.thinking-d2{animation:thinking-2 2.4s ease-in-out infinite}
+.thinking-d3{animation:thinking-3 2.4s ease-in-out infinite}
+@keyframes thinking-1{0%,28%{opacity:1}40%,100%{opacity:.25}}
+@keyframes thinking-2{0%,28%{opacity:.25}40%,64%{opacity:1}76%,100%{opacity:.25}}
+@keyframes thinking-3{0%,64%{opacity:.25}76%,100%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){.thinking-move{animation:none}}
+</style>
+<circle class="thinking-fill thinking-move thinking-d1" cx="92" cy="36" r="8"/><circle class="thinking-fill thinking-move thinking-d2" cx="120" cy="36" r="8"/><circle class="thinking-fill thinking-move thinking-d3" cx="148" cy="36" r="8"/><path class="thinking-body" d="M84 210V144C84 119 156 119 156 144V210Z"/><circle class="thinking-body" cx="120" cy="104" r="28"/>
+</svg>

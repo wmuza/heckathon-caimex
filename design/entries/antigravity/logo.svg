@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="mukoti-tile" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#4F86F7"/>
+      <stop offset="0.55" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#mukoti-tile)"/>
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 20v24M13 32h24" stroke-width="6.5"/>
+    <path d="M41.5 23.5a12 12 0 0 1 0 17" stroke-width="5"/>
+    <path d="M47.5 17.5a20.5 20.5 0 0 1 0 29" stroke-width="5"/>
+  </g>
+</svg>

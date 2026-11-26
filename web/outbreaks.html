@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: forecast</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="art.js"></script>
+<style>
+  :root { --col: 1180px; }
+  .band-in { flex-wrap: wrap; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 16px; align-items: start; margin-top: 16px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .by { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .by .live { width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  .src { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: var(--neutral-tint); color: var(--neutral-ink); }
+  .src.ai { background: var(--selected); color: var(--blue-ink); }
+
+  /* Today, before the doors open */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 12px; margin-top: 14px; }
+  .tile { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; background: var(--panel-sunk); border-radius: 18px; padding: 12px 14px; }
+  .tile .art { width: 64px; height: 64px; }
+  .tile .n { font-size: 2.25rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tile .n small { font-size: 0.875rem; font-weight: 600; color: var(--ink-2); }
+  .tile .nm { font-weight: 600; font-size: 0.9375rem; line-height: 1.25; }
+  .tile .rg { color: var(--ink-2); font-size: 0.8125rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .up { display: inline-flex; align-items: center; gap: 4px; color: var(--warn-ink); font-weight: 700; font-size: 0.8125rem; }
+  .up i { width: 8px; height: 8px; border-radius: 50%; background: var(--warn-dot); }
+  .say { margin-top: 14px; display: grid; gap: 6px; }
+  .say p { max-width: 75ch; }
+  .say ul { padding-left: 20px; display: grid; gap: 2px; }
+  .natl { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 14px; padding: 12px 14px; border-radius: 16px; background: var(--panel-sunk); }
+  .natl .art { width: 44px; height: 44px; flex: none; }
+  .natl .tag { white-space: normal; }
+  .natl > span { min-width: 0 !important; flex: 1 1 180px; }
+
+  /* The map: level by fill, texture and a mark, never colour alone */
+  .map { width: 100%; height: auto; display: block; }
+  .map .ward { stroke: var(--panel); stroke-width: 3; cursor: pointer; }
+  .map .ward.usual { fill: var(--neutral-tint); } .map .ward.watch { fill: var(--selected); }
+  .map .ward.likely { fill: url(#hatch); } .map .ward.confirmed { fill: var(--red-fill); }
+  .map .ward:hover, .map .ward:focus-visible, .map .ward[aria-pressed="true"] { stroke: var(--ink); stroke-width: 3.5; outline: none; }
+  .map text { font: 600 15px 'Figtree', sans-serif; fill: var(--ink); text-anchor: middle; pointer-events: none; }
+  .map text.n { font-weight: 700; font-size: 22px; font-variant-numeric: tabular-nums; }
+  .map .confirmed-t { fill: var(--ink-on); }
+  .map .halo { paint-order: stroke; stroke: var(--panel); stroke-width: 5px; stroke-linejoin: round; }
+  .map .mk { pointer-events: none; }
+  .map .old { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 5 4; pointer-events: none; }
+  .legend { display: flex; gap: 8px 16px; flex-wrap: wrap; margin-top: 12px; }
+  .legend span { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; font-size: 0.875rem; }
+  .sw { width: 20px; height: 20px; border-radius: 6px; flex: none; box-shadow: inset 0 0 0 1px var(--hairline); }
+  .sw.usual { background: var(--neutral-tint); } .sw.watch { background: var(--selected); }
+  .sw.likely { background: repeating-linear-gradient(45deg, var(--red-fill) 0 3px, var(--red-tint) 3px 8px); }
+  .sw.confirmed { background: var(--red-fill); } .sw.old { background: none; box-shadow: none; border: 2.5px dashed var(--ink); }
+  .tm { margin-top: 14px; padding: 12px 14px; border-radius: 16px; background: var(--panel-sunk); }
+  .tm input[type=range] { width: 100%; accent-color: var(--blue-fill); min-height: 32px; }
+  .tm .row-gap { justify-content: space-between; }
+
+  /* One signal */
+  .sig { padding: 18px 0; border-bottom: 1px solid var(--divider); }
+  .sig:first-of-type { padding-top: 6px; } .sig:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .sig .hd { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; }
+  .sig .art { width: 64px; height: 64px; border-radius: 16px; background: var(--panel-sunk); padding: 5px; }
+  .sig h3 { font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
+  .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; margin-top: 12px; }
+  .num1 { background: var(--panel-sunk); border-radius: 14px; padding: 10px 12px; }
+  .num1 b { display: block; font-size: 1.5rem; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .num1 span { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .chart { width: 100%; height: auto; display: block; margin-top: 12px; overflow: visible; }
+  .chart .bar { fill: var(--neutral-dot); } .chart .bar.hot { fill: var(--red-fill); }
+  .chart .usual { fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-dasharray: 4 4; }
+  .chart .band { fill: var(--blue-halo); } .chart .fc { fill: none; stroke: var(--blue-fill); stroke-width: 2.5; }
+  .chart .today { stroke: var(--ink-2); stroke-width: 1.5; }
+  .chart text { font: 600 11px 'Figtree', sans-serif; fill: var(--ink-2); }
+  .chart .hit { fill: transparent; }
+  .ck-key { display: flex; gap: 6px 14px; flex-wrap: wrap; margin-top: 6px; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .ck-key i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+  .facts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .facts .tag { white-space: normal; }
+  .tag.confirmed { background: var(--red-fill); color: var(--ink-on); } .tag.confirmed .dot { background: var(--ink-on); }
+  .tag.likely { background: var(--warn-tint); color: var(--warn-ink); } .tag.likely .dot { background: var(--warn-dot); }
+  .tag.watch { background: var(--selected); color: var(--blue-ink); } .tag.watch .dot { background: var(--blue-fill); }
+  .stock { margin-top: 12px; padding: 12px 14px; border-radius: 16px; background: var(--panel-sunk); }
+  .stock .cmp { display: flex; gap: 10px 22px; flex-wrap: wrap; align-items: baseline; margin-top: 4px; }
+  .stock .cmp b { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stock input[type=range] { width: 100%; accent-color: var(--blue-fill); min-height: 32px; }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .out { margin-top: 10px; padding: 12px 14px; border-radius: 16px; background: var(--selected); }
+  .out pre { white-space: pre-wrap; font: inherit; margin: 6px 0 0; }
+  .calm { text-align: center; padding: 24px 12px; }
+
+  /* How it works: four steps, and how well */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 10px; margin-top: 12px; }
+  .flow div { background: var(--panel-sunk); border-radius: 16px; padding: 12px 14px; }
+  .flow b { display: block; font-size: 0.9375rem; }
+  .flow span { color: var(--ink-2); font-size: 0.875rem; }
+  .score { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 10px; margin-top: 12px; }
+  .score div { border: 1px solid var(--hairline); border-radius: 16px; padding: 12px 14px; }
+  .score b { display: block; font-size: 1.75rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .score span { color: var(--ink-2); font-size: 0.875rem; }
+  #tbl .r { padding-right: 18px; }
+  .out pre, .say p { overflow-wrap: anywhere; }
+  @media (max-width: 480px) { .tile { grid-template-columns: 48px 1fr; } .tile .art { width: 48px; height: 48px; } .stock .cmp b { font-size: 1.25rem; } }
+  @media (max-width: 480px) { .sig .hd { grid-template-columns: 48px 1fr; } .sig .art { width: 48px; height: 48px; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Forecast</h1>
+      <p class="sub">What to expect today, and where an illness is rising</p>
+    </div>
+    <nav class="nav" aria-label="Screens">
+      <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks" aria-current="page">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="panel" aria-labelledby="todayT">
+    <div class="row-gap" style="justify-content:space-between">
+      <div><h2 class="title" id="todayT">Today, before the doors open</h2><p class="quiet small" id="todaySub"></p></div>
+      <button class="btn sm" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg><span>Hear the briefing</span></button>
+    </div>
+    <div class="tiles" id="tiles"></div>
+    <div id="natl"></div>
+    <div class="say" id="say"></div>
+  </section>
+
+  <div class="layout">
+    <section class="panel" aria-labelledby="mapT">
+      <h2 class="title" id="mapT">The clinic's wards</h2>
+      <p class="quiet small" id="mapSub"></p>
+      <div id="map" style="margin-top:10px"></div>
+      <div class="legend" id="legend"></div>
+      <div class="tm">
+        <div class="row-gap"><label class="strong" for="tm">Go back in time</label><span class="strong num" id="tmLab"></span></div>
+        <input type="range" id="tm" min="0" max="21" value="21" step="1">
+        <p class="quiet small" id="tmNote"></p>
+      </div>
+      <p class="notice quiet small" id="demoNote" hidden style="margin-top:12px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.500v.500"/></svg>
+        <span>The wards, their shapes and the cases before today are made up for the demonstration.</span></p>
+    </section>
+
+    <section class="panel" aria-labelledby="sigT">
+      <h2 class="title" id="sigT">What is rising</h2>
+      <div id="sigs"></div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:16px" aria-labelledby="howT">
+    <h2 class="title" id="howT">How this is worked out, and how well</h2>
+    <div class="flow" id="flow"></div>
+    <div class="score" id="score"></div>
+    <p class="quiet small" id="scoreNote" style="margin-top:10px"></p>
+  </section>
+
+  <section class="panel" style="margin-top:16px" aria-labelledby="tblT">
+    <h2 class="title" id="tblT">Every ward, as a table</h2>
+    <div class="scroll-x" style="margin-top:8px"><table class="t" id="tbl"></table></div>
+  </section>
+</div>
+
+<footer class="foot noprint">
+  <div class="seg" role="group" aria-label="Appearance">
+    <button data-theme-choice="light">Light</button>
+    <button data-theme-choice="dark">Dark</button>
+    <button data-theme-choice="match">Match phone</button>
+  </div>
+</footer>
+
+<div id="pinSheet" class="sheet-back" hidden>
+  <form class="sheet stack" id="pinForm">
+    <h2 class="title">Staff PIN</h2>
+    <input class="field" id="pin" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN">
+    <p class="small" id="pinMsg" style="color:var(--red-ink)" role="alert"></p>
+    <button class="btn primary block">Open</button>
+  </form>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const LEVEL = { confirmed: 'Confirmed by the doctor', likely: 'Unusual rise', watch: 'Watch', usual: 'As usual' };
+const SHORT = { confirmed: 'Confirmed', likely: 'Rising', watch: 'Watch', usual: 'As usual' };
+const DO = {
+  confirmed: 'Report to the district health office today, and check the stock of what these patients need.',
+  likely: 'Ask the doctor to examine the next patients from this ward with these symptoms, to confirm it or rule it out.',
+  watch: 'Nothing to do yet. Look again tomorrow.',
+};
+const MARK = {
+  confirmed: '<g class="mk" fill="none" stroke="var(--ink-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -11l11 19h-22z" fill="var(--ink-on)"/><path d="M0 -3v5M0 5v.5" stroke="var(--red-fill)"/></g>',
+  likely: '<g class="mk" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -11l11 19h-22z"/><path d="M0 -3v5M0 5v.5"/></g>',
+  watch: '<g class="mk" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M-11 0q11-11 22 0q-11 11-22 0z"/><circle r="3" fill="var(--ink)"/></g>',
+  usual: '',
+};
+const pictures = {}, said = {}, units = {};
+let d = null, picked = null, back = 0;
+
+const JX = [[0, 8, -6, 0], [0, -14, 12, 0], [0, 10, -12, 0], [0, -6, 8, 0]], JY = [[0, 0, 0, 0], [10, -8, 12, -6], [-8, 12, -10, 8], [0, 0, 0, 0]];
+const P = (r, c) => [30 + c * 180 + JX[r][c], 20 + r * 130 + JY[r][c]];
+function mapSvg() {
+  const frame = back ? d.replay.find(f => f.ago === back) : null;
+  const cells = d.areas.map((a, i) => {
+    const r = Math.floor(i / 3), c = i % 3, pts = [P(r, c), P(r, c + 1), P(r + 1, c + 1), P(r + 1, c)];
+    const cx = pts.reduce((s, p) => s + p[0], 0) / 4, cy = pts.reduce((s, p) => s + p[1], 0) / 4;
+    const lv = frame ? frame.levels[a.name] : a.level, weekly = frame ? frame.weekly[a.name] : null;
+    const t = lv === 'confirmed' ? 'confirmed-t' : lv === 'likely' ? 'halo' : '';
+    const path = `M${pts.map(p => p.join(' ')).join('L')}Z`;
+    return `<path class="ward ${lv}" d="${path}" tabindex="0" role="button" data-a="${esc(a.name)}" aria-pressed="${a.name === picked}" aria-label="${esc(a.name)}: ${LEVEL[lv]}"/>
+      ${weekly ? `<path class="old" d="${path}" transform="translate(${cx} ${cy}) scale(0.9) translate(${-cx} ${-cy})"/>` : ''}
+      ${lv !== 'usual' ? `<g transform="translate(${cx - (a.clinic ? 72 : 52)} ${cy - 30})">${MARK[lv]}</g>` : ''}
+      <text class="${t}" x="${cx}" y="${cy - 22}">${esc(a.name)}${a.clinic ? ' · clinic' : ''}</text>
+      ${frame ? '' : `<text class="n ${t}" x="${cx}" y="${cy + 8}">${a.this_week}</text>`}
+      <text class="${t}" x="${cx}" y="${cy + (frame ? 8 : 30)}">${SHORT[lv]}</text>`;
+  }).join('');
+  return `<svg class="map" viewBox="0 0 600 430" role="group" aria-label="Map of the clinic's wards">
+    <defs><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="9" height="9" fill="var(--red-tint)"/><rect width="3" height="9" fill="var(--red-fill)" opacity="0.55"/></pattern></defs>${cells}</svg>`;
+}
+
+/* Four weeks seen, the usual, and the coming week with its range. One axis, cases a day. */
+function chart(s) {
+  const W = 560, H = 150, L = 26, B = 22, n = 35, bw = (W - L) / n;
+  const top = Math.max(...s.days, ...s.ahead.map(x => x * 2.2), 3);
+  const y = v => (H - B) - v / top * (H - B - 8), x = i => L + i * bw;
+  const wk = Math.max(0.01, s.next7.mean), k = Math.sqrt(1 / 7);       // the weekly range spread over single days
+  const lo = s.ahead.map(v => Math.max(0, v - (s.next7.mean - s.next7.lo) * k * (v / (wk / 7) || 1) / 2.2));
+  const hi = s.ahead.map(v => v + (s.next7.hi - s.next7.mean) * k * (v / (wk / 7) || 1) / 2.2);
+  const bars = s.days.map((v, i) => `<rect class="bar ${i >= 21 && s.level !== 'watch' ? 'hot' : ''}" x="${x(i) + 1}" y="${y(v)}" width="${bw - 2}" height="${(H - B) - y(v)}" rx="2"><title>${28 - i} days ago: ${v}</title></rect>`).join('');
+  const usual = [...s.usual_days, ...s.ahead_usual].map((v, i) => `${i ? 'L' : 'M'}${x(i) + bw / 2} ${y(v)}`).join('');
+  const band = `M${s.ahead.map((_, j) => `${x(28 + j) + bw / 2} ${y(hi[j])}`).join('L')}L${s.ahead.map((_, j) => `${x(34 - j) + bw / 2} ${y(lo[6 - j])}`).join('L')}Z`;
+  const fc = s.ahead.map((v, j) => `${j ? 'L' : 'M'}${x(28 + j) + bw / 2} ${y(v)}`).join('');
+  const ticks = [0, Math.ceil(top / 2), Math.floor(top)].map(v => `<text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text><line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--divider)"/>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Cases a day in ${esc(s.area)}: ${s.seen} in the last seven days where about ${s.usual} is usual; ${s.next7.lo} to ${s.next7.hi} expected in the next seven.">
+    ${ticks}${bars}<path class="band" d="${band}"/><path class="usual" d="${usual}"/><path class="fc" d="${fc}"/>
+    <line class="today" x1="${x(28)}" x2="${x(28)}" y1="6" y2="${H - B}"/>
+    <text x="${x(0)}" y="${H - 6}">4 weeks ago</text><text x="${x(21)}" y="${H - 6}">last 7 days</text><text x="${x(28) + 4}" y="${H - 6}">next 7 days</text><text x="${x(28) + 4}" y="14">today</text></svg>
+    <div class="ck-key"><span><i style="background:var(--neutral-dot)"></i>seen each day</span><span><i style="background:none;border-top:2px dashed var(--ink-2);height:0;vertical-align:3px"></i>the usual</span><span><i style="background:var(--blue-fill);height:3px;vertical-align:3px"></i>forecast</span><span><i style="background:var(--blue-halo)"></i>likely range</span></div>`;
+}
+
+function stockHtml(s) {
+  const k = s.stock; if (!k) return '';
+  const u = units[s.area + s.syndrome] ?? k.units_per_case;
+  const usual = k.per_day > 0 ? Math.floor(k.left / k.per_day) : null, use = k.per_day + k.extra_cases_a_day * u;
+  const now = use > 0 ? Math.floor(k.left / use) : null;
+  return `<div class="stock"><span class="eyebrow">What this does to the shelf · ${esc(k.name)}</span>
+    <div class="cmp"><span><b>${usual ?? '–'}</b> days left at the usual use</span><span><b>${now ?? '–'}</b> days left if this rise goes as forecast</span></div>
+    <label class="small quiet" for="u${esc(s.area + s.syndrome)}">Assume each extra patient needs <span class="strong" style="color:var(--ink)">${u} ${esc(k.unit)}</span> · ${k.extra_cases_a_day} extra patients a day forecast</label>
+    <input type="range" min="0" max="${Math.max(10, k.units_per_case * 3)}" step="1" value="${u}" data-units="${esc(s.area + s.syndrome)}" id="u${esc(s.area + s.syndrome)}">
+    <p class="quiet small">A planning figure you can move, not a treatment rule. ${k.left.toLocaleString()} ${esc(k.unit)} on the shelf, ${k.per_day} going out a day.</p></div>`;
+}
+
+function sigHtml(s) {
+  const id = s.area + '|' + s.syndrome, o = said[id];
+  const flag = s.flagged_days_ago == null ? '' : `<span class="tag">Flagged ${s.flagged_days_ago ? s.flagged_days_ago + ' days ago' : 'today'}</span>`;
+  return `<article class="sig">
+    <div class="hd"><span class="art" aria-hidden="true">${pictures[s.picture] || ''}</span>
+      <div><span class="tag ${s.level}"><span class="dot"></span>${LEVEL[s.level]}</span><h3 style="margin-top:6px">${esc(s.name)} in ${esc(s.area)}</h3></div></div>
+    <div class="nums">
+      <div class="num1"><b>${s.seen}</b><span>in the last 7 days · about ${Math.round(s.usual)} is usual</span></div>
+      <div class="num1"><b>${s.next7.lo} to ${s.next7.hi}</b><span>likely in the next 7 days · ${s.next7.mean} is the middle</span></div>
+    </div>
+    ${chart(s)}
+    <div class="facts">
+      ${s.age ? `<span class="tag blue">Mostly aged ${esc(s.age.band)}: ${s.age.count} of ${s.age.of}</span>` : '<span class="tag">All ages</span>'}
+      <span class="tag">${s.diagnosed} diagnosed by the doctor</span>${flag}
+    </div>
+    ${stockHtml(s)}
+    <p class="strong" style="margin-top:12px">${DO[s.level]}</p>
+    <div class="acts"><button class="btn sm" data-why="${esc(id)}">Why? Ask CAIMEx</button>${s.level === 'watch' ? '' : `<button class="btn sm" data-draft="${esc(id)}">Draft the alert with CAIMEx</button>`}</div>
+    ${o ? `<div class="out"><span class="src ai">${esc(o.by)}</span><pre>${esc(o.text)}</pre></div>` : ''}
+  </article>`;
+}
+
+function render() {
+  const b = d.brief || {};
+  $('todaySub').textContent = `${d.weekday}. Expected arrivals by symptom, from this clinic's own last twelve weeks.`;
+  $('tiles').innerHTML = d.today.map(t => `<div class="tile"><span class="art" aria-hidden="true">${pictures[t.picture] || ''}</span>
+    <div><div class="n">${t.expected} <small>expected</small></div><div class="nm">${esc(t.name)}</div>
+      <div class="rg">likely ${t.lo} to ${t.hi} · usual ${Math.round(t.usual)}</div>${t.above ? '<span class="up"><i></i>more than usual</span>' : ''}</div></div>`).join('');
+  $('natl').innerHTML = d.national.map(w => `<div class="natl"><span class="art" aria-hidden="true">${pictures[w.picture] || ''}</span>
+    <span style="flex:1;min-width:200px"><span class="tag ${w.level}"><span class="dot"></span>National warning for ${esc(d.province)}</span><br>
+    <span class="strong">${esc(w.name)}: risk ${w.score} out of 100.</span> <span class="quiet">${esc(w.drivers[0].label)}: ${esc(w.drivers[0].value)}.</span></span>
+    <a class="btn sm" href="/national">See the map</a></div>`).join('');
+  $('say').innerHTML = b.status === 'ready' ? `<div class="by"><span class="src ai">Written by CAIMEx · ${esc(b.model)}</span><span>from the numbers above. Any sentence with a number we did not compute is left out${b.dropped ? ', and one was' : ''}.</span></div>
+      ${[b.today, b.wards, b.national].filter(Boolean).map(x => `<p>${esc(x)}</p>`).join('')}
+      ${b.do_first && b.do_first.length ? `<p class="strong">Do first</p><ul>${b.do_first.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}`
+    : `<div class="by">${b.status === 'working' ? '<span class="live"></span>CAIMEx is putting these numbers into words.' : 'CAIMEx did not answer. The numbers above do not depend on it.'}</div>`;
+
+  $('map').innerHTML = mapSvg();
+  $('map').querySelectorAll('.ward').forEach(w => {
+    w.onclick = () => { picked = picked === w.dataset.a ? null : w.dataset.a; render(); };
+    w.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); w.onclick(); } };
+  });
+  $('mapSub').textContent = back ? `As it stood ${back} day${back === 1 ? '' : 's'} ago, using only what was known that day.` : 'Today. The number is how many came with these symptoms in the last seven days. Press a ward.';
+  $('legend').innerHTML = ['confirmed', 'likely', 'watch', 'usual'].map(l => `<span><i class="sw ${l}"></i>${LEVEL[l]}</span>`).join('') + (back ? '<span><i class="sw old"></i>A simple weekly count would flag it</span>' : '');
+  $('tmLab').textContent = back ? `${back} day${back === 1 ? '' : 's'} ago` : 'Today';
+  $('tmNote').textContent = back ? 'Past days show a rise as "Rising" only: whether the doctor had confirmed it by then is not replayed.' : 'Slide left to see what this page would have shown on each of the last 21 days.';
+  $('demoNote').hidden = !d.demo_history;
+
+  const shown = picked ? d.signals.filter(s => s.area === picked) : d.signals;
+  $('sigT').textContent = picked ? `What is rising in ${picked}` : 'What is rising';
+  $('sigs').innerHTML = shown.length ? shown.map(sigHtml).join('') : `<div class="calm"><p class="strong">Nothing is above the usual${picked ? ' in ' + esc(picked) : ''}.</p></div>`;
+  $('sigs').querySelectorAll('[data-units]').forEach(r => r.oninput = () => { units[r.dataset.units] = +r.value; render(); const again = document.querySelector(`[data-units="${r.dataset.units}"]`); if (again) again.focus(); });
+  $('sigs').querySelectorAll('[data-why],[data-draft]').forEach(btn => btn.onclick = () => ask(btn.dataset.why || btn.dataset.draft, btn.dataset.why ? 'why' : 'draft'));
+
+  $('flow').innerHTML = [
+    ['1. The evidence', 'Each visit adds to a tally with no name: the day, the ward, the age band and the symptom group. CAIMEx sorts each visit into its symptom group.'],
+    ['2. The numbers', 'Plain arithmetic in our own code works out the usual, flags an unusual rise and forecasts the next seven days with a range. No AI computes a number.'],
+    ['3. The words', 'A CAIMEx chat model puts those numbers into a briefing, explains a warning and drafts the alert. Its numbers are checked against ours.'],
+    ['4. The voice', 'The CAIMEx voice reads the briefing aloud, in wording fixed in advance, so what is said matches the screen.'],
+  ].map(([h, t]) => `<div><b>${h}</b><span>${t}</span></div>`).join('');
+  const e = d.evaluation;
+  if (e) {
+    const a = e.detection_test.this_detector, w = e.detection_test.weekly_count, f = e.forecast_test.mean_error_cases_a_week;
+    $('score').innerHTML = [
+      [`${a.caught_within_14_days} of ${a.outbreaks}`, `planted outbreaks flagged within 14 days. A simple weekly count: ${w.caught_within_14_days}.`],
+      [`${a.false_alarms_per_ward_year}`, `false alarms a ward a year. A simple weekly count: ${w.false_alarms_per_ward_year}.`],
+      [`${a.median_days_to_flag} days`, `from the start of an outbreak to the flag, in the middle case. A simple weekly count: ${w.median_days_to_flag}.`],
+      [`${f.this_forecast}`, `cases a week the forecast is out by, on average. "Same as last week" is out by ${f.same_as_last_week}.`],
+      [`${Math.round(e.forecast_test.share_of_weeks_inside_the_80_range * 100)}%`, `of weeks fell inside the likely range. During outbreaks: ${Math.round(e.forecast_test.inside_the_range_during_outbreaks * 100)}%.`],
+    ].map(([n, t]) => `<div><b>${n}</b><span>${t}</span></div>`).join('');
+    $('scoreNote').textContent = `Scored on ${e.clinics.test} simulated clinics the settings had not seen (${e.ran_at}). Simulated, because no real patient data may be used: this shows the arithmetic behaves, not that it has predicted a real outbreak. It is no faster than a weekly count; it raises fewer false alarms and gives a range.`;
+  }
+  $('tbl').innerHTML = '<thead><tr><th>Ward</th><th>Level</th><th class="r">Last 7 days</th><th>What is rising</th><th class="r">Next 7 days</th></tr></thead><tbody>' + d.areas.map(a => {
+    const s = d.signals.filter(x => x.area === a.name);
+    return `<tr><td class="strong">${esc(a.name)}</td><td>${LEVEL[a.level]}</td><td class="r num">${a.this_week}</td>
+      <td>${s.length ? s.map(x => `${esc(x.name)} (${x.seen}, usual ${Math.round(x.usual)})`).join('; ') : esc(a.why || '')}</td>
+      <td class="r num">${s.length ? s.map(x => `${x.next7.lo} to ${x.next7.hi}`).join('; ') : ''}</td></tr>`; }).join('') + '</tbody>';
+}
+
+async function ask(id, kind) {
+  const [area, syndrome] = id.split('|');
+  said[id] = { by: 'CAIMEx', text: kind === 'why' ? 'CAIMEx is reading the numbers…' : 'CAIMEx is drafting…' }; render();
+  try {
+    const r = await fetch('/api/predict/' + kind, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ area, syndrome }) });
+    const j = await r.json();
+    if (!r.ok) said[id] = { by: 'CAIMEx', text: j.detail || 'CAIMEx did not answer. Try again.' };
+    else if (kind === 'why') said[id] = { by: `Explained by CAIMEx · ${j.model}`, text: j.answer || 'CAIMEx gave a number we had not computed, so its answer is not shown. Try again.' };
+    else said[id] = { by: `Drafted by CAIMEx · ${j.model} · not sent`, text: `Text message for community health workers (${j.sms.length} of 160 characters):\n${j.sms || '(left out: it held a number we had not computed)'}\n\nNote for the district health office:\n${j.note || '(left out: it held a number we had not computed)'}\n\nNothing is sent from this page. A person checks and sends it.` };
+  } catch (e) { said[id] = { by: 'CAIMEx', text: 'CAIMEx could not be reached.' }; }
+  render();
+}
+$('tm').oninput = e => { back = 21 - +e.target.value; render(); };
+$('hear').onclick = () => { const s = $('hear').querySelector('span'); s.textContent = 'Loading the voice…'; const a = new Audio('/api/predict/briefing.mp3'); a.onplaying = () => { s.textContent = 'Playing'; }; a.onended = a.onerror = () => { s.textContent = 'Hear the briefing'; }; a.play().catch(() => { s.textContent = 'Hear the briefing'; }); };
+
+async function poll() {
+  try {
+    const r = await fetch('/api/outbreaks');
+    if (r.status === 401) { $('pinSheet').hidden = false; return; }
+    const j = await r.json(), sig = JSON.stringify({ ...j, now: 0 });
+    if (j.brief && j.brief.status === 'working') setTimeout(poll, 3000);
+    if (sig === poll.sig) return;
+    if (document.activeElement && document.activeElement.type === 'range' && d) return;      // not under a moving slider
+    poll.sig = sig; d = j; render();
+  } catch (e) {}
+}
+$('pinForm').onsubmit = async e => {
+  e.preventDefault();
+  const fd = new FormData(); fd.append('pin', $('pin').value);
+  const r = await fetch('/api/nurse/login', { method: 'POST', body: fd });
+  if (r.ok) { $('pinSheet').hidden = true; poll(); } else { $('pinMsg').textContent = 'That PIN is not right.'; }
+};
+Promise.all(['vomiting', 'fever', 'breathing', 'neck'].map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(() => { poll(); setInterval(poll, 20000); });
+</script>
+<script src="help.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .wait-motion {
+      animation: wait-loop 3.6s ease-in-out infinite;
+
+    }
+    @keyframes wait-loop {
+      0%, 12%, 100% { transform: translateY(-6px); }
+      54%, 79% { transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wait-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M66 125v50h73m-73 0v26m73-26v26" stroke="var(--quiet, #5B6474)"/>
+    <g class="wait-motion">
+      <circle cx="107" cy="85" r="24" fill="var(--paper, #FFFFFF)"/>
+      <path d="M84 160v-29q0-15 15-15h17q15 0 15 15v18h30q14 0 14 14v31h-20l-7-24h-51q-13 0-13-10z" fill="var(--paper, #FFFFFF)"/>
+      <path d="m109 131 12 18h20"/>
+    </g>
+    <path d="M44 201h154" stroke="var(--quiet, #5B6474)"/>
+  </g>
+</svg>

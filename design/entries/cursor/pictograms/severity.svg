@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.severity-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.severity-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.severity-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.severity-fill{fill:var(--accent,#2563EB)}.severity-tint{fill:var(--tint,#E8F0FE)}.severity-hot{fill:var(--danger,#CF2A30)}.severity-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.severity-ray{opacity:1}
+.severity-move{animation:severity-pulse 2.8s ease-in-out infinite}
+@keyframes severity-pulse{0%,18%{opacity:1}48%{opacity:.3}78%,100%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){.severity-move{animation:none}}
+</style>
+<path class="severity-line" d="M28 206H212"/><path class="severity-body" d="M88 200V89C88 70 152 70 152 89V200Z"/><circle class="severity-body" cx="120" cy="58" r="22"/><path class="severity-line" d="M96 116L120 148M144 116L120 148"/><path class="severity-ray severity-move" d="M120.0 130.0L120.0 104.0"/><path class="severity-ray severity-move" d="M134.1 135.9L152.5 117.5"/><path class="severity-ray severity-move" d="M140.0 150.0L166.0 150.0"/><path class="severity-ray severity-move" d="M134.1 164.1L152.5 182.5"/><path class="severity-ray severity-move" d="M120.0 170.0L120.0 196.0"/><path class="severity-ray severity-move" d="M105.9 164.1L87.5 182.5"/><path class="severity-ray severity-move" d="M100.0 150.0L74.0 150.0"/><path class="severity-ray severity-move" d="M105.9 135.9L87.5 117.5"/>
+</svg>

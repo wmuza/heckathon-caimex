@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .onset-hand { transform-origin: 120px 132px; animation: onset-sweep 3.2s ease-in-out infinite; }
+    .onset-arc { stroke-dasharray: 160; animation: onset-draw 3.2s ease-in-out infinite; }
+    @keyframes onset-sweep {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-110deg); }
+    }
+    @keyframes onset-draw {
+      0%, 100% { stroke-dashoffset: 160; opacity: 0.3; }
+      50% { stroke-dashoffset: 0; opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .onset-hand, .onset-arc { animation: none !important; transform: rotate(-55deg); stroke-dashoffset: 0; opacity: 1; }
+    }
+  </style>
+  <path d="M52 72a76 76 0 0 1 136 0" fill="none" stroke="var(--tint, #E8F0FE)" stroke-width="10" stroke-linecap="round"/>
+  <path class="onset-arc" d="M62 66a68 68 0 0 1 116 0" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M62 52v15h15" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="120" cy="132" r="64" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <circle cx="120" cy="132" r="46" fill="var(--tint, #E8F0FE)"/>
+  <g stroke="var(--quiet, #5B6474)" stroke-width="6" stroke-linecap="round">
+    <path d="M120 78v8M120 178v8M66 132h8M166 132h8"/>
+  </g>
+  <path class="onset-hand" d="M120 132V96" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M120 132l24 14" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="120" cy="132" r="7" fill="var(--ink, #1F2430)"/>
+</svg>

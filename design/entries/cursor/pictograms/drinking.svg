@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.drinking-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.drinking-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.drinking-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.drinking-fill{fill:var(--accent,#2563EB)}.drinking-tint{fill:var(--tint,#E8F0FE)}.drinking-hot{fill:var(--danger,#CF2A30)}.drinking-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.drinking-cup{transform-box:fill-box;transform-origin:88% 86%;transform:rotate(18deg);animation:drinking-tip 3s ease-in-out infinite}
+@keyframes drinking-tip{0%,22%{transform:rotate(24deg)}58%,78%{transform:rotate(2deg)}100%{transform:rotate(24deg)}}
+
+@media (prefers-reduced-motion:reduce){.drinking-move{animation:none}}
+</style>
+<path class="drinking-line" d="M28 206H212"/><path class="drinking-body" d="M158 202V143C158 125 194 125 194 143V202Z"/><circle class="drinking-body" cx="176" cy="118" r="14"/>
+<g class="drinking-cup drinking-move">
+  <path class="drinking-body" d="M36 96h58v6c0 26-58 26-58 0z"/>
+  <path class="drinking-line" d="M94 102h12c8 0 8 22 0 30"/>
+</g>
+<circle class="drinking-fill" cx="118" cy="118" r="5"/>
+
+</svg>

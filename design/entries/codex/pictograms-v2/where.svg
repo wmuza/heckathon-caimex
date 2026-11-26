@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .where-ring { animation: where-show 4s ease-in-out infinite; }
+    .where-chest { animation-delay: -3s; }
+    .where-belly { animation-delay: -2s; }
+    .where-knee { animation-delay: -1s; }
+    @keyframes where-show {
+      0%, 16%, 100% { opacity: 1; }
+      23%, 94% { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .where-ring { animation: none; }
+    }
+  </style>
+  <g fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="45" r="23"/>
+    <path d="M104 79h32q18 0 25 20l18 43q4 10-5 14-8 4-13-4l-11-29v79q0 11-14 11t-14-11l-2-48-2 48q0 11-14 11t-14-11v-79l-11 29q-5 8-13 4-9-4-5-14l18-43q7-20 25-20z"/>
+    <g fill="none" stroke="var(--accent, #2563EB)">
+      <circle class="where-ring" cx="120" cy="45" r="12"/>
+      <circle class="where-ring where-chest" cx="120" cy="99" r="12"/>
+      <circle class="where-ring where-belly" cx="120" cy="131" r="12"/>
+      <circle class="where-ring where-knee" cx="135" cy="178" r="8"/>
+    </g>
+  </g>
+</svg>

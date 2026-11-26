@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.pregnancy-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.pregnancy-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.pregnancy-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.pregnancy-fill{fill:var(--accent,#2563EB)}.pregnancy-tint{fill:var(--tint,#E8F0FE)}.pregnancy-hot{fill:var(--danger,#CF2A30)}.pregnancy-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.pregnancy-belly{transform-box:fill-box;transform-origin:50% 50%;animation:pregnancy-grow 3s ease-in-out infinite}
+@keyframes pregnancy-grow{0%,100%{transform:scale(.92)}50%{transform:scale(1)}}
+
+@media (prefers-reduced-motion:reduce){.pregnancy-move{animation:none}}
+</style>
+<path class="pregnancy-line" d="M28 206H212"/><path class="pregnancy-body" d="M86 200V93C86 74 154 74 154 93V200Z"/><circle class="pregnancy-body" cx="120" cy="62" r="22"/>
+<circle class="pregnancy-ray" cx="120" cy="158" r="30"/>
+<circle class="pregnancy-tint pregnancy-belly pregnancy-move" cx="120" cy="158" r="24"/>
+
+</svg>

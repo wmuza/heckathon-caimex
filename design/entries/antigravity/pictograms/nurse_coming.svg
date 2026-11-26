@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .nurse_coming-figure { animation: nurse_coming-step 3.2s ease-in-out infinite; }
+    .nurse_coming-ring { transform-origin: 120px 124px; animation: nurse_coming-halo 3.2s ease-in-out infinite; }
+    @keyframes nurse_coming-step {
+      0%, 100% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+    }
+    @keyframes nurse_coming-halo {
+      0%, 100% { transform: scale(0.94); opacity: 0.7; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nurse_coming-figure, .nurse_coming-ring { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle class="nurse_coming-ring" cx="120" cy="124" r="76" fill="var(--tint, #E8F0FE)"/>
+  <path d="M42 192h156" stroke="var(--quiet, #5B6474)" stroke-width="6" stroke-linecap="round"/>
+  <g class="nurse_coming-figure" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M96 54h48l-6-18h-36z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M120 40v10M115 45h10" stroke="var(--accent, #2563EB)" stroke-width="5"/>
+    <circle cx="120" cy="78" r="22" fill="var(--paper, #FFFFFF)"/>
+    <path d="M84 192v-48c0-20 16-34 36-34s36 14 36 34v48z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M120 132v20M110 142h20" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

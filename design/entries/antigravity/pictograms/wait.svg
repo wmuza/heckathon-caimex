@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .wait-person { animation: wait-rest 3.6s ease-in-out infinite; }
+    .wait-arc { transform-origin: 158px 72px; animation: wait-tick 3.6s ease-in-out infinite; }
+    @keyframes wait-rest {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes wait-tick {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(90deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wait-person, .wait-arc { animation: none !important; transform: none; }
+    }
+  </style>
+  <circle cx="158" cy="72" r="24" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)" stroke-width="6"/>
+  <path class="wait-arc" d="M158 72V58" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M158 72h12" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+  <g stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M56 106v86M56 154h72v38" fill="none"/>
+    <rect x="64" y="144" width="60" height="12" rx="6" fill="var(--tint, #E8F0FE)"/>
+  </g>
+  <g class="wait-person" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="94" cy="76" r="20" fill="var(--paper, #FFFFFF)"/>
+    <path d="M74 144v-24c0-13 9-22 21-22 11 0 20 8 22 20l4 26h26v46" fill="var(--paper, #FFFFFF)"/>
+  </g>
+</svg>

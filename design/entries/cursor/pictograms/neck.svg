@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.neck-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.neck-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.neck-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.neck-fill{fill:var(--accent,#2563EB)}.neck-tint{fill:var(--tint,#E8F0FE)}.neck-hot{fill:var(--danger,#CF2A30)}.neck-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.neck-head{transform-box:fill-box;transform-origin:50% 100%;animation:neck-try 3.2s ease-in-out infinite}
+@keyframes neck-try{0%,18%{transform:rotate(0deg)}46%,72%{transform:rotate(16deg)}100%{transform:rotate(0deg)}}
+
+@media (prefers-reduced-motion:reduce){.neck-move{animation:none}}
+</style>
+
+<path class="neck-line" d="M48 196c18-28 126-28 144 0"/>
+<path class="neck-line" d="M104 118V162M136 118V162"/>
+<path class="neck-ray" d="M92 136H112M128 136H148"/>
+<g class="neck-head neck-move">
+  <circle class="neck-body" cx="120" cy="78" r="40"/>
+</g>
+
+</svg>

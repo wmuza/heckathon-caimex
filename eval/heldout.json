@@ -1,0 +1,490 @@
+{
+ "about": "Sixty opening statements written by a separate AI agent that was told not to read any file and never saw Mukoti's rules or prompts. Used once, on 2026-11-25, as a held-out check. Not written or reviewed by a clinician or a native speaker; the author marked the items it was unsure of. Once the rules are changed because of these sentences, this set is no longer held out.",
+ "items": [
+  {
+   "id": "h01",
+   "lang": "sn",
+   "text": "Ndine chipfuva chandibata kubva svondo rapfuura, ndiri kukosora zvine makararwa machena. Ndiri kufema zvakanaka, kungoti chikosoro chiri kundinetsa usiku.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have a chesty cough that got hold of me last week, I am coughing up white phlegm. I am breathing well, it is only that the cough troubles me at night.",
+   "unsure": true
+  },
+  {
+   "id": "h02",
+   "lang": "sn",
+   "text": "Mwana ane mwedzi misere, kubva nezuro ari kuramba zamu zvachose. Ukamuisa pazamu anongotendeuka, kana mvura haasi kuda, uye haachina simba rekuchema.",
+   "expect": "emergency",
+   "sign": "child under five cannot drink or breastfeed or vomits everything",
+   "english": "The baby is eight months old, since yesterday she is refusing the breast completely. If you put her to the breast she just turns away, she does not even want water, and she no longer has the strength to cry."
+  },
+  {
+   "id": "h03",
+   "lang": "sn",
+   "text": "Ndambodonha ndiri mumutsetse kubhanga, ndanzwa dzungu ndokubva ndangoona vanhu vava kundimutsa. Ndava kunzwa zviri nani, kungoti ndakati rukutu.",
+   "expect": "urgent",
+   "sign": "fainted earlier but awake and talking now",
+   "english": "I went down for a bit while I was in the queue at the bank, I felt dizzy and the next thing I saw was people waking me up. I feel better now, I am just drained."
+  },
+  {
+   "id": "h04",
+   "lang": "en",
+   "text": "Morning sister, I've just come for my blood pressure tablets, they finished on Friday. I'm feeling fine, no headaches, nothing.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h05",
+   "lang": "sn",
+   "text": "Sisi ndibatsireiwo, mwana ari kugwinha! Atanga tiri mukombi, muviri wese waoma, maziso atendeuka kwasara machena chete.",
+   "expect": "emergency",
+   "sign": "fits or convulsions",
+   "english": "Sister please help me, the child is jerking! It started while we were in the kombi, his whole body has gone stiff, his eyes have rolled back so only the whites are left.",
+   "unsure": true
+  },
+  {
+   "id": "h06",
+   "lang": "en",
+   "text": "I'm about five months pregnant and I started spotting this morning, just a little on the pad. I don't have pain but my mother said I must come straight away.",
+   "expect": "emergency",
+   "sign": "bleeding in pregnancy",
+   "english": ""
+  },
+  {
+   "id": "h07",
+   "lang": "sn",
+   "text": "Sisi, musana uri kundiuraya, ndave nevhiki ndichitadza kukotama. Ndinorima mumunda zuva rese, zvimwe ndizvo zvakonzera.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "Sister, my back is killing me, for a week now I have not been able to bend down. I work in the field all day, maybe that is what caused it."
+  },
+  {
+   "id": "h08",
+   "lang": "sn",
+   "text": "Ndadonha nebhasikoro ndichienda kubasa, zvino ruoko urwu handichagoni kurusimudza. Rwazvimba uye pano apa rwaita sekunge rwakombama.",
+   "expect": "urgent",
+   "sign": "burn, broken bone or other injury",
+   "english": "I fell off my bicycle on the way to work, and now I cannot lift this arm. It has swollen and right here it looks as if it is bent."
+  },
+  {
+   "id": "h09",
+   "lang": "sn",
+   "text": "Kubva pandakarasikirwa nebasa handisi kurara, pfungwa dzinongoti zviri nani ndisisipo. Nezuro ndakatotenga tambo, asi ndakazotya.",
+   "expect": "emergency",
+   "sign": "thoughts of self-harm",
+   "english": "Since I lost my job I am not sleeping, my mind just keeps saying it would be better if I were no longer here. Yesterday I even bought a rope, but then I got scared."
+  },
+  {
+   "id": "h10",
+   "lang": "sn",
+   "text": "Ndauya kuzonyoresa nhumbu, ndine mwedzi mina. Hapana chiri kundinetsa, hapana ropa, hapana kurwadziwa, mwana ari kutamba zvakanaka mudumbu.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have come to register my pregnancy, I am four months. Nothing is troubling me, there is no blood, no pain, the baby is moving well in the tummy."
+  },
+  {
+   "id": "h11",
+   "lang": "en",
+   "text": "It's my mum, she has asthma but the pump is not helping today. She can't even finish a sentence, she's gasping and leaning forward like this, please help us.",
+   "expect": "emergency",
+   "sign": "severe difficulty breathing",
+   "english": ""
+  },
+  {
+   "id": "h12",
+   "lang": "sn",
+   "text": "Mabvi angu ari kurwadza mwanangu, kunyanya kana kuchitonhora mangwanani. Ndachembera, ndipewo zvekuzora kana mapiritsi.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "My knees are sore, my child, especially when it is cold in the morning. I have grown old, please give me something to rub on or some tablets."
+  },
+  {
+   "id": "h13",
+   "lang": "sn",
+   "text": "Mwana wangu adya mushonga wemakonzo wataisa kuseri kwewadhiropu, tawana pakiti yacho yakavhurika. Ane makore mana, handizivi kuti adya wakawanda sei.",
+   "expect": "emergency",
+   "sign": "poisoning or snake bite",
+   "english": "My child has eaten the rat poison we put behind the wardrobe, we found the packet open. He is four years old, I do not know how much he ate."
+  },
+  {
+   "id": "h14",
+   "lang": "sn",
+   "text": "Ndava nemasvondo matatu ndichikosora, zvino mazuva ano ndikakosora panobuda tumaropa. Usiku ndinodikitira zvekuti magumbeze anonyorova, uye ndaonda.",
+   "expect": "urgent",
+   "sign": "blood in stool, urine, vomit or cough without heavy bleeding",
+   "english": "I have been coughing for three weeks, and these days when I cough a little blood comes out. At night I sweat so much the blankets get wet, and I have lost weight."
+  },
+  {
+   "id": "h15",
+   "lang": "en",
+   "text": "My son had a nosebleed yesterday at school but it stopped on its own after a few minutes. He's fine today, I just wanted to ask if it's something to worry about.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h16",
+   "lang": "sn",
+   "text": "Sisi, ndauya nambuya vangu, kubva mangwanani havasi kumuka. Tavadaidza, tavazunza, vanongogomera chete vasingavhuri maziso.",
+   "expect": "emergency",
+   "sign": "cannot be woken or barely responsive",
+   "english": "Sister, I have come with my grandmother, she has not been waking up since morning. We have called her, we have shaken her, she only groans without opening her eyes."
+  },
+  {
+   "id": "h17",
+   "lang": "sn",
+   "text": "Ndauya kuzotora mapiritsi epfari emwana, ave kuda kupera. Kubva paakatanga kuanwa gore rapfuura haasati ambogwinha zvakare, ari kuenda kuchikoro zvakanaka.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have come to collect the child's tablets for fits, they are about to run out. Since he started taking them last year he has not had a fit again, he is going to school fine."
+  },
+  {
+   "id": "h18",
+   "lang": "en",
+   "text": "My uncle's nose has been bleeding since four in the morning and it's not stopping, we've soaked a whole towel. He takes those tablets for thinning the blood and now he says he's feeling weak.",
+   "expect": "emergency",
+   "sign": "heavy bleeding that will not stop",
+   "english": ""
+  },
+  {
+   "id": "h19",
+   "lang": "sn",
+   "text": "Mwana uyu ane mazuva mapfumbamwe chete, ari kupisa muviri kubva usiku. Ari kuyamwa zvake asi ari kungochema-chema, haasi kurara.",
+   "expect": "urgent",
+   "sign": "young baby unwell without emergency signs",
+   "english": "This baby is only nine days old, her body has been hot since last night. She is breastfeeding all right but she just keeps crying, she is not sleeping."
+  },
+  {
+   "id": "h20",
+   "lang": "sn",
+   "text": "Ini nemukomana wangu tauya kuzoongororwa ropa, tinoda kuziva status yedu tisati taroorana. Hapana ari kurwara.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "My boyfriend and I have come to have our blood tested, we want to know our status before we get married. Neither of us is sick."
+  },
+  {
+   "id": "h21",
+   "lang": "sn",
+   "text": "Ndakarega kuenda kumwedzi kwava nemwedzi mitatu, uye test yandakaita yakaratidza kuti ndine pamuviri. Zvino kubva nezuro manheru ndava kuona ropa, nechiuno chiri kurwadza.",
+   "expect": "emergency",
+   "sign": "bleeding in pregnancy",
+   "english": "I stopped having my period three months ago, and the test I did showed that I am pregnant. Now since yesterday evening I have been seeing blood, and my lower back is aching."
+  },
+  {
+   "id": "h22",
+   "lang": "en",
+   "text": "I've come to have my dressing changed, the cut on my leg from last week. It's healing nicely, no bleeding, no pus.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h23",
+   "lang": "sn",
+   "text": "Mukoma wangu ari kutadza kufema, ari kufemera pamusoro kunge munhu ari kudzipwa. Haachagoni kupedza sentence imwe chete, uye ziya riri kungoerera.",
+   "expect": "emergency",
+   "sign": "severe difficulty breathing",
+   "english": "My brother is failing to breathe, he is panting at the top of his chest like someone being strangled. He can no longer finish a single sentence, and the sweat is just pouring off him."
+  },
+  {
+   "id": "h24",
+   "lang": "sn",
+   "text": "Ndiri pamaARV asi handisi kunwa mushonga kwava nemwedzi miviri, ndanga ndiri kumusha mapiritsi akapera. Ndiri kunzwa zvakanaka hangu, ndinoda kutanga patsva.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I am on ARVs but I have not been taking the medicine for two months now, I was at my rural home and the tablets ran out. I feel fine, I want to start again."
+  },
+  {
+   "id": "h25",
+   "lang": "en",
+   "text": "My son passed out at school during assembly, the teacher phoned me. He woke up after a minute and he's talking normally now, just a bit of a headache.",
+   "expect": "urgent",
+   "sign": "fainted earlier but awake and talking now",
+   "english": ""
+  },
+  {
+   "id": "h26",
+   "lang": "en",
+   "text": "My daughter is three, since last night she's vomiting everything, even a sip of water comes straight back up. Nothing is staying down and now she's just lying there.",
+   "expect": "emergency",
+   "sign": "child under five cannot drink or breastfeed or vomits everything",
+   "english": ""
+  },
+  {
+   "id": "h27",
+   "lang": "sn",
+   "text": "Ndinorwadziwa nemudumbu pese pandinoenda kumwedzi. Ropa racho rinouya zvakajairika, mazuva mana richipera, ndinongoda mapiritsi ekurwadziwa.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I get stomach pains every time I have my period. The blood comes normally, four days and it is over, I just want tablets for the pain."
+  },
+  {
+   "id": "h28",
+   "lang": "sn",
+   "text": "Ini ndaneta neupenyu huno, sisi. Mazuva ano ndinongogara ndichifunga kuti dai ndangozviuraya zvipere.",
+   "expect": "emergency",
+   "sign": "thoughts of self-harm",
+   "english": "I am tired of this life, sister. These days I just keep thinking that I should kill myself and have it over with."
+  },
+  {
+   "id": "h29",
+   "lang": "sn",
+   "text": "Mwana azvipisa nemvura inopisa yanga iri pachitofu, yamudirikira paruoko. Paita mabundu ane mvura uye ganda riri kusvuuka, ari kuchema nekurwadziwa.",
+   "expect": "urgent",
+   "sign": "burn, broken bone or other injury",
+   "english": "The child has scalded himself with hot water that was on the stove, it spilled onto his arm. It has formed bumps with water in them and the skin is peeling, he is crying with pain.",
+   "unsure": true
+  },
+  {
+   "id": "h30",
+   "lang": "en",
+   "text": "Hi, I'd like to have a blood test for sugar, my employer wants the results for the medical. I'm not sick or anything.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h31",
+   "lang": "sn",
+   "text": "Muzukuru uyu awira pasi kaviri husiku hwapfuura, muviri wese uchidedera, furo richibuda mumuromo. Handizivi kana iri tsviyo, haasati ambozviita, uye kubva ipapo haasi kunyatsotaura.",
+   "expect": "emergency",
+   "sign": "fits or convulsions",
+   "english": "This grandchild of mine fell down twice last night, his whole body shaking, foam coming out of his mouth. I do not know if it is epilepsy, he has never done it before, and since then he is not speaking properly."
+  },
+  {
+   "id": "h32",
+   "lang": "sn",
+   "text": "Ziso rangu rekuruboshwe riri kuvava nekubuda misodzi kubva nezuro, rakati piriviri. Ndinofunga iguruva rekubasa, ndinoshanda kuchigayo.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "My left eye has been itching and watering since yesterday, it has gone red. I think it is the dust at work, I work at the grinding mill.",
+   "unsure": true
+  },
+  {
+   "id": "h33",
+   "lang": "en",
+   "text": "Sister, the baby drank paraffin, it was in a Mazoe bottle and she thought it was juice. She's coughing a lot and you can smell it on her breath.",
+   "expect": "emergency",
+   "sign": "poisoning or snake bite",
+   "english": ""
+  },
+  {
+   "id": "h34",
+   "lang": "sn",
+   "text": "Mwana ane dzihwa nekukosora zvishoma kubva nezuro. Ari kunwa zvakanaka, ari kuyamwa, uye ari kutamba zvake, asi ndati regai ndimuunze aonekwe.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "The child has had a cold and a slight cough since yesterday. She is drinking well, she is breastfeeding, and she is playing as usual, but I thought let me bring her to be seen."
+  },
+  {
+   "id": "h35",
+   "lang": "sn",
+   "text": "Mukomana uyu achekwa negirazi paruoko tichiri kumba. Tasunga nejira asi ropa riri kungoerera, jira rese ratonyorova, uye ava kuti ari kunzwa dzungu.",
+   "expect": "emergency",
+   "sign": "heavy bleeding that will not stop",
+   "english": "This boy was cut on the arm by glass while we were at home. We tied it with a cloth but the blood just keeps flowing, the whole cloth is already soaked, and now he says he is feeling dizzy."
+  },
+  {
+   "id": "h36",
+   "lang": "en",
+   "text": "Since yesterday when I pass urine there's blood in it, it's reddish, and it burns. Otherwise I'm okay, I even went to work this morning.",
+   "expect": "urgent",
+   "sign": "blood in stool, urine, vomit or cough without heavy bleeding",
+   "english": ""
+  },
+  {
+   "id": "h37",
+   "lang": "en",
+   "text": "This toothache is killing me, I didn't sleep at all last night. Can I see someone for the tooth or at least get something for the pain?",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h38",
+   "lang": "sn",
+   "text": "Mwana wangu akangorembera mumaoko kubva pakati pehusiku, haachadaviri kana ndikamudaidza. Maziso akangoti tuzu akatarisa kumusoro, kana kuchema haachachemi.",
+   "expect": "emergency",
+   "sign": "cannot be woken or barely responsive",
+   "english": "My child has just been hanging limp in my arms since the middle of the night, he no longer responds when I call him. His eyes just stare blankly upwards, he does not even cry any more.",
+   "unsure": true
+  },
+  {
+   "id": "h39",
+   "lang": "sn",
+   "text": "Ndauya kuzobaiwa jekiseni rekuronga mhuri, reDepo, date rangu rasvika nhasi. Handina dambudziko, ndinongoda kubaiwa ndichienda kubasa.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have come for my family planning injection, the Depo, my date is today. I have no problem, I just want the injection and then I am off to work."
+  },
+  {
+   "id": "h40",
+   "lang": "sn",
+   "text": "Mukadzi wangu ane nhumbu yemwedzi misere. Angoerekana ava kubuda ropa tichiri kumba, nyangwe risiri rakawanda, saka ndamumhanyisa kuno.",
+   "expect": "emergency",
+   "sign": "bleeding in pregnancy",
+   "english": "My wife is eight months pregnant. She suddenly started bleeding while we were at home, even though it is not a lot, so I rushed her here."
+  },
+  {
+   "id": "h41",
+   "lang": "en",
+   "text": "My baby is three weeks old and her eyes and skin have been looking yellow for about two days. She's feeding fine and she wakes up for her feeds, but my mother-in-law said I should bring her.",
+   "expect": "urgent",
+   "sign": "young baby unwell without emergency signs",
+   "english": ""
+  },
+  {
+   "id": "h42",
+   "lang": "sn",
+   "text": "Ndine asima, ndauya kuzotora pombi itsva nekuti yangu yapera. Mazuva ano ndiri kufema zvakanaka, chipfuva hachisi kumbondibata.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have asthma, I have come to get a new pump because mine is finished. These days I am breathing well, my chest is not tightening up on me at all."
+  },
+  {
+   "id": "h43",
+   "lang": "en",
+   "text": "My husband had a fit at home about twenty minutes ago and now he's had another one in the car park. He bit his tongue and he's still shaking, he doesn't know where he is.",
+   "expect": "emergency",
+   "sign": "fits or convulsions",
+   "english": ""
+  },
+  {
+   "id": "h44",
+   "lang": "sn",
+   "text": "Ndauya nemwana kuzobaiwa majekiseni emavhiki matanhatu nekuyerwa uremu. Hapana chiri kumunetsa, ari kuyamwa zvakanaka uye ari kukura.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have brought the baby for the six-week injections and to be weighed. Nothing is troubling him, he is breastfeeding well and he is growing."
+  },
+  {
+   "id": "h45",
+   "lang": "sn",
+   "text": "Mwana uyu ane makore maviri, zvese zvaanodya kana kunwa ari kurutsa. Kunyange mvura yeshuga nemunyu yandamupa yadzoka yese, hapana chiri kugara mudumbu.",
+   "expect": "emergency",
+   "sign": "child under five cannot drink or breastfeed or vomits everything",
+   "english": "This child is two years old, everything he eats or drinks he vomits. Even the sugar and salt water I gave him all came back, nothing is staying in his stomach."
+  },
+  {
+   "id": "h46",
+   "lang": "sn",
+   "text": "Ndauya kuzotora mapiritsi angu eBP, apera nezuro. Hapana chimwe chiri kundinetsa, kungoti mundiyerewo blood pressure yacho ndisati ndaenda.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have come to collect my BP tablets, they finished yesterday. Nothing else is troubling me, only please measure the blood pressure for me before I go."
+  },
+  {
+   "id": "h47",
+   "lang": "en",
+   "text": "I don't know how to say this, but I've been thinking of ending it all. I kept my mother's tablets aside and last night I nearly took all of them.",
+   "expect": "emergency",
+   "sign": "thoughts of self-harm",
+   "english": ""
+  },
+  {
+   "id": "h48",
+   "lang": "sn",
+   "text": "Mai vangu vambofenda vari kuchechi mangwanani ano, vakaita seminiti vasingazivi zviri kuitika. Vamuka zvavo, iye zvino vari kutaura zvakanaka, asi tati ngavaonekwe.",
+   "expect": "urgent",
+   "sign": "fainted earlier but awake and talking now",
+   "english": "My mother fainted for a while at church this morning, for about a minute she did not know what was going on. She came round, right now she is talking fine, but we said she should be seen."
+  },
+  {
+   "id": "h49",
+   "lang": "sn",
+   "text": "Ndauya kuzobviswa POP paruoko rwandakatyoka mwedzi wapfuura, ndiro date randakapihwa. Hapachisina kurwadza, minwe iri kufamba zvakanaka.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I have come to have the plaster removed from the arm I broke last month, this is the date I was given. It no longer hurts, the fingers are moving well."
+  },
+  {
+   "id": "h50",
+   "lang": "sn",
+   "text": "Baba ava varumwa nenyoka mumunda mangwanani ano, pagumbo apa. Gumbo riri kuzvimba richikwira, uye vava kurutsa vachiti vari kuona rima.",
+   "expect": "emergency",
+   "sign": "poisoning or snake bite",
+   "english": "This man was bitten by a snake in the field this morning, here on the leg. The leg is swelling and the swelling is moving up, and he has started vomiting and says he is seeing darkness."
+  },
+  {
+   "id": "h51",
+   "lang": "en",
+   "text": "I'm here for my review, I'm on the tablets for fits. I haven't had a fit in over two years, I just need the repeat.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h52",
+   "lang": "sn",
+   "text": "Muroora wedu akasununguka kumba nezuro husiku, asi ropa riri kungobuda zvakawandisa, machira ese azara. Ava kungoti ari kunzwa kutonhora uye haachina simba rekumira.",
+   "expect": "emergency",
+   "sign": "heavy bleeding that will not stop",
+   "english": "Our daughter-in-law gave birth at home last night, but the blood just keeps coming out far too much, all the cloths are soaked. Now she keeps saying she feels cold and she no longer has the strength to stand."
+  },
+  {
+   "id": "h53",
+   "lang": "en",
+   "text": "I fell off the ladder at work and my ankle is swollen like this, I can't put weight on it. I think maybe it's broken.",
+   "expect": "urgent",
+   "sign": "burn, broken bone or other injury",
+   "english": ""
+  },
+  {
+   "id": "h54",
+   "lang": "sn",
+   "text": "Ndakarutsa kamwe chete nezuro mushure mekudya nyama yandakatenga pamusika. Nhasi ndiri kudya nekunwa zvakanaka, ndangoda mushonga wemudumbu nekuti muchiri kuruma zvishoma.",
+   "expect": "routine",
+   "sign": "none",
+   "english": "I vomited just once yesterday after eating meat I bought at the market. Today I am eating and drinking fine, I just want medicine for my stomach because it is still griping a little."
+  },
+  {
+   "id": "h55",
+   "lang": "sn",
+   "text": "Mwana uyu kufema kwake kwandityisa, ari kukweva mweya nesimba mbabvu dzichipinda mukati. Miromo yake yatosvipa uye pachipfuva pari kurira muridzo.",
+   "expect": "emergency",
+   "sign": "severe difficulty breathing",
+   "english": "This child's breathing has frightened me, he is pulling in air with effort and his ribs are sucking inwards. His lips have already gone dark and there is a whistling sound in his chest."
+  },
+  {
+   "id": "h56",
+   "lang": "sn",
+   "text": "Ndine manyoka kubva nezuro, asi nhasi ndaona paine ropa pandaenda kuchimbuzi. Mudumbu muri kuruma zvakanyanya, asi ndiri kugona kunwa mvura.",
+   "expect": "urgent",
+   "sign": "blood in stool, urine, vomit or cough without heavy bleeding",
+   "english": "I have had diarrhoea since yesterday, but today I saw there was blood when I went to the toilet. My stomach is griping badly, but I am managing to drink water."
+  },
+  {
+   "id": "h57",
+   "lang": "en",
+   "text": "I have this rash on my arms that's been itching for two weeks now, it gets worse at night. I tried aqueous cream but it's not helping.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h58",
+   "lang": "en",
+   "text": "Sister please, it's my father, he just went quiet in the car on the way here and now he's not answering us. He's breathing, but even when we shake him there's nothing.",
+   "expect": "emergency",
+   "sign": "cannot be woken or barely responsive",
+   "english": ""
+  },
+  {
+   "id": "h59",
+   "lang": "en",
+   "text": "I brought her for the nine months injection, the measles one, and for weighing. She's eating well, drinking well, very playful.",
+   "expect": "routine",
+   "sign": "none",
+   "english": ""
+  },
+  {
+   "id": "h60",
+   "lang": "sn",
+   "text": "Kacheche aka kane vhiki mbiri, paguvhu pako pari kubuda urwa uye pari kunhuwa. Kari kuyamwa zvakanaka, asi ambuya vati kaendeswe kukiriniki.",
+   "expect": "urgent",
+   "sign": "young baby unwell without emergency signs",
+   "english": "This little baby is two weeks old, pus is coming out of his navel and it smells. He is breastfeeding well, but his grandmother said he should be taken to the clinic."
+  }
+ ]
+}

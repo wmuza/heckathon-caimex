@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.welcome-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.welcome-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.welcome-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.welcome-fill{fill:var(--accent,#2563EB)}.welcome-tint{fill:var(--tint,#E8F0FE)}.welcome-hot{fill:var(--danger,#CF2A30)}.welcome-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.welcome-hand{transform-box:fill-box;transform-origin:0% 70%;animation:welcome-wave 3.2s ease-in-out infinite}
+@keyframes welcome-wave{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(8deg)}}
+
+@media (prefers-reduced-motion:reduce){.welcome-move{animation:none}}
+</style>
+
+<path class="welcome-line" d="M34 206V86C34 40 118 40 118 86V206"/>
+<path class="welcome-body" d="M54 200V122C54 104 98 104 98 122V200Z"/><circle class="welcome-body" cx="76" cy="96" r="16"/><path class="welcome-body" d="M156 206V131C156 113 208 113 208 131V206Z"/><circle class="welcome-body" cx="182" cy="104" r="18"/>
+<g class="welcome-hand welcome-move">
+  <path class="welcome-line" d="M98 132L138 116"/>
+  <circle class="welcome-body" cx="150" cy="112" r="12"/>
+</g>
+
+</svg>

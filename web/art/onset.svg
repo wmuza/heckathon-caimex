@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .onset-motion {
+      animation: onset-loop 3.6s ease-in-out infinite;
+      transform-origin: 124px 128px;
+    }
+    @keyframes onset-loop {
+      0%, 18%, 100% { transform: rotate(0); }
+      55%, 80% { transform: rotate(-54deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .onset-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="124" cy="128" r="70" fill="var(--paper, #FFFFFF)"/>
+    <path d="M124 73v9m0 92v9m-55-55h9m92 0h9" stroke="var(--quiet, #5B6474)"/>
+    <path d="M124 128l29 17"/>
+    <path class="onset-motion" d="M124 128V93" stroke="var(--accent, #2563EB)"/>
+    <circle cx="124" cy="128" r="5" fill="var(--accent, #2563EB)" stroke="var(--accent, #2563EB)"/>
+    <path d="M34 83a100 100 0 0 1 65-52M35 57l-3 27 27-5" stroke="var(--accent, #2563EB)"/>
+  </g>
+</svg>

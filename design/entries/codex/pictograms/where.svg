@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .where-motion {
+      animation: where-loop 3.3s ease-in-out infinite;
+      transform-origin: 104px 139px;
+    }
+    @keyframes where-loop {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.17); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .where-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="114" cy="54" r="23" fill="var(--paper, #FFFFFF)"/>
+    <path d="M83 198l-2-51-19 25q-8 9-17 3-8-5-3-15l23-46q9-20 30-23h38q21 0 29 18l12 39q4 12-6 17-6 3-13 0l-10-6-1 39z" fill="var(--paper, #FFFFFF)"/>
+    <circle class="where-motion" cx="104" cy="139" r="16" fill="var(--tint, #E8F0FE)" stroke="var(--accent, #2563EB)"/>
+    <path d="M164 163l-53-22" stroke="var(--ink, #1F2430)"/>
+  </g>
+</svg>

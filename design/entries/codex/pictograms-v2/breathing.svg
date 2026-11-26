@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .breathing-shoulders {
+      animation: breathing-inhale 3.6s ease-in-out infinite;
+      transform-origin: 120px 202px;
+      --breathing-rest: scaleY(.92);
+    }
+    .breathing-lungs {
+      animation: breathing-inhale 3.6s ease-in-out infinite;
+      transform-origin: 120px 137px;
+      --breathing-rest: scale(.86, .83);
+    }
+    @keyframes breathing-inhale {
+      0%, 100% { transform: var(--breathing-rest); }
+      57%, 70% { transform: scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .breathing-shoulders, .breathing-lungs { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <g class="breathing-shoulders">
+      <path d="M44 202l7-42q6-34 44-46l11-4h28l11 4q38 12 44 46l7 42z" fill="var(--paper, #FFFFFF)"/>
+      <g class="breathing-lungs" stroke="var(--accent, #2563EB)" fill="var(--tint, #E8F0FE)">
+        <path d="M109 133q-6-6-15 3-16 15-20 36-2 12 9 12l17-2q11-2 11-13v-30q0-4-2-6z"/>
+        <path d="M131 133q6-6 15 3 16 15 20 36 2 12-9 12l-17-2q-11-2-11-13v-30q0-4 2-6z"/>
+      </g>
+    </g>
+    <circle cx="120" cy="74" r="31" fill="var(--paper, #FFFFFF)"/>
+    <path d="M106 69h1m26 0h1"/>
+    <ellipse cx="120" cy="85" rx="7" ry="9"/>
+  </g>
+</svg>

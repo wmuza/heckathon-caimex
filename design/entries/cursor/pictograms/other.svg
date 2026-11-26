@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.other-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.other-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.other-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.other-fill{fill:var(--accent,#2563EB)}.other-tint{fill:var(--tint,#E8F0FE)}.other-hot{fill:var(--danger,#CF2A30)}.other-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.other-i1,.other-i2,.other-i3{opacity:1}
+.other-i1{animation:other-1 3.6s ease-in-out infinite}
+.other-i2{animation:other-2 3.6s ease-in-out infinite}
+.other-i3{animation:other-3 3.6s ease-in-out infinite}
+@keyframes other-1{0%,22%{opacity:1}34%,100%{opacity:.28}}
+@keyframes other-2{0%,22%{opacity:.28}34%,56%{opacity:1}68%,100%{opacity:.28}}
+@keyframes other-3{0%,56%{opacity:.28}68%,90%{opacity:1}100%{opacity:.28}}
+
+@media (prefers-reduced-motion:reduce){.other-move{animation:none}}
+</style>
+<path class="other-line" d="M28 206H212"/><path class="other-body" d="M44 204V139C44 120 100 120 100 139V204Z"/><circle class="other-body" cx="72" cy="108" r="22"/><path class="other-line" d="M100 140H132"/><circle class="other-body" cx="146" cy="140" r="12"/><path class="other-fill other-move other-i1" d="M176 48c7 10 12 16 12 22a12 12 0 0 1-24 0c0-6 5-12 12-22z"/><path class="other-fill other-move other-i2" d="M188 108l14 16-14 16-14-16z"/><circle class="other-fill other-move other-i3" cx="196" cy="168" r="12"/>
+</svg>

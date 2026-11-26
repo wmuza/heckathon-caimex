@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mukoti: demo</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<style>
+  :root { --col: 1680px; }
+  body { display: flex; flex-direction: column; height: 100dvh; }
+  .band-in { flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+  .stage { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(340px, 30%) 1fr; gap: 14px; padding: 14px 16px 16px; max-width: var(--col); width: 100%; margin: 0 auto; }
+  .side { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .side h2 { font-size: 1rem; font-weight: 700; color: var(--ink-2); padding: 0 4px; }
+  .frame { flex: 1; min-height: 520px; border: 1px solid var(--hairline); border-radius: 22px; overflow: hidden; background: var(--panel); box-shadow: var(--shadow-panel); }
+  iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .tools { display: flex; gap: 8px 14px; align-items: center; flex-wrap: wrap; }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } .frame { min-height: 640px; } }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="5 7 54 51" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path d="M32 21v15m-7.500-7.500h15"/></svg>
+    </div>
+    <div class="grow">
+      <h1>Mukoti</h1>
+      <p class="sub">The patient on the left, the nurse on the right, at the same moment</p>
+    </div>
+    <div class="tools">
+      <span class="quiet small strong" id="sizeLab">Text size</span>
+      <div class="seg" role="group" aria-labelledby="sizeLab">
+        <button data-zoom="1" aria-pressed="true">Normal</button>
+        <button data-zoom="1.2" aria-pressed="false">Large</button>
+        <button data-zoom="1.4" aria-pressed="false">Largest</button>
+      </div>
+      <nav class="nav" aria-label="Screens">
+        <a href="/">Patient</a><a href="/nurse">Queue</a><a href="/vitals">Vitals</a><a href="/doctor">Doctor</a><a href="/pharmacy">Pharmacy</a><a href="/outbreaks">Forecast</a><a href="/national">Zimbabwe</a><a href="/board">Board</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<div class="stage">
+  <div class="side">
+    <h2>What the patient sees and hears</h2>
+    <div class="frame"><iframe id="patient" title="Patient screen" allow="microphone; autoplay"></iframe></div>
+  </div>
+  <div class="side">
+    <h2>What the nurse sees</h2>
+    <div class="frame"><iframe id="nurse" title="Nurse's queue"></iframe></div>
+  </div>
+</div>
+
+<script>
+// Two ordinary screens side by side, so a room can watch a sentence go in on
+// the left and the patient move up the queue on the right. English captions
+// are switched on for the patient screen.
+const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+let zoom = 1;
+try { zoom = parseFloat(localStorage.getItem('mukoti-demo-zoom')) || 1; } catch (e) {}
+function load(first) {
+  const q = 'embed=1&zoom=' + zoom;
+  // Keep a talk that is under way: only reload the patient screen on the first load.
+  if (first) document.getElementById('patient').src = '/?captions=1&' + q;
+  document.getElementById('nurse').src = '/nurse?' + q;
+  document.querySelectorAll('[data-zoom]').forEach(b => b.setAttribute('aria-pressed', String(parseFloat(b.dataset.zoom) === zoom)));
+}
+document.querySelectorAll('[data-zoom]').forEach(b => {
+  b.insertAdjacentHTML('afterbegin', CK);
+  b.onclick = () => {
+    zoom = parseFloat(b.dataset.zoom);
+    try { localStorage.setItem('mukoti-demo-zoom', zoom); } catch (e) {}
+    load(true);
+  };
+});
+load(true);
+</script>
+</body>
+</html>

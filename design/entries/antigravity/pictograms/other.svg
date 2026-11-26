@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .other-d1 { animation: other-dot 2.4s ease-in-out infinite 0s; }
+    .other-d2 { animation: other-dot 2.4s ease-in-out infinite 0.35s; }
+    .other-d3 { animation: other-dot 2.4s ease-in-out infinite 0.7s; }
+    @keyframes other-dot {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .other-d1, .other-d2, .other-d3 { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <g stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="78" cy="108" r="24" fill="var(--paper, #FFFFFF)"/>
+    <path d="M36 196v-26c0-20 18-34 42-34s42 14 42 34v26z" fill="var(--paper, #FFFFFF)"/>
+  </g>
+  <path d="M118 52h66a24 24 0 0 1 24 24v28a24 24 0 0 1-24 24h-40l-22 18v-18h-4a24 24 0 0 1-24-24V76a24 24 0 0 1 24-24z" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+  <circle class="other-d1" cx="128" cy="90" r="6.5" fill="var(--accent, #2563EB)"/>
+  <circle class="other-d2" cx="151" cy="90" r="6.5" fill="var(--accent, #2563EB)"/>
+  <circle class="other-d3" cx="174" cy="90" r="6.5" fill="var(--accent, #2563EB)"/>
+</svg>

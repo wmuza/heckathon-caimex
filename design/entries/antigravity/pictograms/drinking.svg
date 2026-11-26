@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .drinking-cup { transform-origin: 158px 82px; animation: drinking-tilt 3.0s ease-in-out infinite; }
+    .drinking-drop { animation: drinking-fall 3.0s ease-in-out infinite; }
+    @keyframes drinking-tilt {
+      0%, 100% { transform: rotate(0deg); }
+      45%, 65% { transform: rotate(-16deg); }
+    }
+    @keyframes drinking-fall {
+      0%, 100% { transform: translateY(-2px); opacity: 0.85; }
+      50% { transform: translateY(10px); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .drinking-cup, .drinking-drop { animation: none !important; transform: none; opacity: 1; }
+    }
+  </style>
+  <circle cx="84" cy="126" r="54" fill="var(--tint, #E8F0FE)"/>
+  <g stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="80" cy="108" r="24" fill="var(--paper, #FFFFFF)"/>
+    <path d="M40 194v-28c0-18 17-31 40-31s40 13 40 31v28z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M90 116h12" fill="none"/>
+  </g>
+  <g class="drinking-cup">
+    <path d="M138 56h48l-8 48h-32z" fill="var(--paper, #FFFFFF)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M182 68h10a10 10 0 0 1 0 20h-12" fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M142 74h40" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <path class="drinking-drop" d="M126 92c0 0-12 16-12 24a12 12 0 0 0 24 0c0-8-12-24-12-24z" fill="var(--accent, #2563EB)"/>
+</svg>

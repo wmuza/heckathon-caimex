@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .chronic-orbit { transform-origin: 120px 120px; animation: chronic-spin 4.0s linear infinite; }
+    .chronic-pulse { stroke-dasharray: 90; animation: chronic-beat 2.6s ease-in-out infinite; }
+    @keyframes chronic-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes chronic-beat {
+      0%, 100% { stroke-dashoffset: 0; opacity: 0.75; }
+      50% { stroke-dashoffset: 24; opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chronic-orbit, .chronic-pulse { animation: none !important; transform: none; stroke-dashoffset: 0; opacity: 1; }
+    }
+  </style>
+  <g class="chronic-orbit" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M52 104a72 72 0 0 1 124-32"/>
+    <path d="M164 56l14 16-18 6"/>
+    <path d="M188 136a72 72 0 0 1-124 32"/>
+    <path d="M76 184l-14-16 18-6"/>
+  </g>
+  <path d="M120 158s-42-26-42-54a22 22 0 0 1 42-8 22 22 0 0 1 42 8c0 28-42 54-42 54z" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linejoin="round"/>
+  <path class="chronic-pulse" d="M88 118h14l8-14 12 28 10-14h18" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

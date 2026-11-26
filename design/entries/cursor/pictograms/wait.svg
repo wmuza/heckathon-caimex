@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<style>
+.wait-line{fill:none;stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.wait-body{fill:var(--paper,#FFFFFF);stroke:var(--ink,#1F2430);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.wait-ray{fill:none;stroke:var(--accent,#2563EB);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}.wait-fill{fill:var(--accent,#2563EB)}.wait-tint{fill:var(--tint,#E8F0FE)}.wait-hot{fill:var(--danger,#CF2A30)}.wait-quiet{fill:none;stroke:var(--quiet,#5B6474);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.wait-hand{transform-box:fill-box;transform-origin:50% 100%;animation:wait-sweep 3.6s ease-in-out infinite}
+@keyframes wait-sweep{0%,12%{transform:rotate(-48deg)}88%,100%{transform:rotate(48deg)}}
+
+@media (prefers-reduced-motion:reduce){.wait-move{animation:none}}
+</style>
+
+<path class="wait-line" d="M62 100V206M62 158H150M150 158V206"/>
+<path class="wait-body" d="M80 162V113C80 95 128 95 128 113V162Z"/><circle class="wait-body" cx="104" cy="86" r="18"/><path class="wait-line" d="M112 156H168M168 156V204"/><circle class="wait-line" cx="182" cy="64" r="28"/><rect class="wait-fill wait-hand wait-move" x="179" y="40" width="6" height="24" rx="3"/>
+</svg>

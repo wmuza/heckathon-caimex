@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .drinking-cup {
+      animation: drinking-sip 3.6s ease-in-out infinite;
+      transform-origin: 121px 108px;
+    }
+    @keyframes drinking-sip {
+      0%, 14%, 100% { transform: rotate(0); }
+      53%, 74% { transform: rotate(-13deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .drinking-cup { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M42 177q0-28 24-40l14-7 22 8q11 6 15 20h10q15 0 19 13l7 19h-18l-7-12h-15v12H57q-15 0-15-13z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M60 121a32 32 0 1 1 48-38q4 7 5 15l8 7-9 6v10q-2 13-17 13H82" fill="var(--paper, #FFFFFF)"/>
+    <path d="M104 93h1m-37 65 7 12q4 6 11 6h14"/>
+    <g class="drinking-cup">
+      <path d="m121 108 46-7-4 35-30 4z" fill="var(--tint, #E8F0FE)"/>
+      <path d="m121 108 46-7" stroke="var(--accent, #2563EB)"/>
+      <path d="m218 149-37-6-20 7-21 1q-9 0-9-7 0-5 7-6l22-3 7-13q4-7 11-4l15 8 28 3z" fill="var(--paper, #FFFFFF)"/>
+      <path d="m200 127-3 18"/>
+    </g>
+  </g>
+</svg>

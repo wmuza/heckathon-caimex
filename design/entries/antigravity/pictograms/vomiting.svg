@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .vomiting-head { transform-origin: 76px 132px; animation: vomiting-lean 2.8s ease-in-out infinite; }
+    .vomiting-arc { stroke-dasharray: 12 8; animation: vomiting-flow 1.4s linear infinite; }
+    .vomiting-drop { animation: vomiting-drip 2.8s ease-in-out infinite; }
+    @keyframes vomiting-lean {
+      0%, 100% { transform: rotate(0deg); }
+      45%, 65% { transform: rotate(8deg); }
+    }
+    @keyframes vomiting-flow {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -40; }
+    }
+    @keyframes vomiting-drip {
+      0%, 100% { transform: translateY(0); opacity: 0.9; }
+      55% { transform: translateY(10px); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .vomiting-head, .vomiting-arc, .vomiting-drop { animation: none !important; transform: none; stroke-dashoffset: 0; opacity: 1; }
+    }
+  </style>
+  <ellipse cx="148" cy="186" rx="44" ry="12" fill="var(--tint, #E8F0FE)" stroke="var(--ink, #1F2430)" stroke-width="6"/>
+  <g class="vomiting-head" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 194v-44c0-20 14-34 34-34 14 0 26 8 32 22l12 24" fill="var(--paper, #FFFFFF)"/>
+    <circle cx="88" cy="84" r="24" fill="var(--paper, #FFFFFF)"/>
+  </g>
+  <path class="vomiting-arc" d="M110 98q32 6 38 68" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  <path class="vomiting-arc" d="M108 106q22 10 26 62" fill="none" stroke="var(--accent, #2563EB)" stroke-width="6" stroke-linecap="round"/>
+  <circle class="vomiting-drop" cx="152" cy="158" r="6" fill="var(--accent, #2563EB)"/>
+</svg>

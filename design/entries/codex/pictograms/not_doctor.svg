@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <style>
+    .not_doctor-motion {
+      animation: not_doctor-loop 3.4s ease-in-out infinite;
+
+    }
+    @keyframes not_doctor-loop {
+      0%, 100% { transform: scaleY(.7); }
+      51%, 70% { transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .not_doctor-motion { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="var(--ink, #1F2430)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="25" y="57" width="106" height="91" rx="11" fill="var(--paper, #FFFFFF)"/>
+    <path d="M78 148v26m-23 0h46"/>
+    <path class="not_doctor-motion" d="M51 97v12m14-21v30m13-40v50m13-39v28m14-18v10" stroke="var(--accent, #2563EB)"/>
+    <circle cx="180" cy="90" r="21" fill="var(--paper, #FFFFFF)"/>
+    <path d="M148 174v-25q0-22 22-22h21q22 0 22 22v25z" fill="var(--paper, #FFFFFF)"/>
+    <path d="M181 139v20m-10-10h20" stroke="var(--quiet, #5B6474)"/>
+    <path d="M147 60l-13 124" stroke="var(--quiet, #5B6474)"/>
+  </g>
+</svg>

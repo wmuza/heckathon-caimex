@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>Logos</title>
+<style>body{margin:0;padding:24px;background:#F4F5F7;font:600 14px sans-serif;color:#5B6474;display:flex;gap:40px}
+.e{display:flex;flex-direction:column;gap:12px;align-items:flex-start}.r{display:flex;gap:16px;align-items:flex-end}
+.d{background:#0B0F17;padding:12px;border-radius:12px;display:flex;gap:16px;align-items:flex-end}</style>
+<body>
+<script>
+for (const [id, label] of [['current','Current'],['codex','A'],['antigravity','B'],['cursor','C']]) {
+  const src = id === 'current' ? '../web/icon.svg' : `entries/${id}/logo.svg`;
+  const sizes = [128, 64, 32, 16].map(s => `<img src="${src}" width="${s}" height="${s}">`).join('');
+  document.body.insertAdjacentHTML('beforeend', `<div class="e"><span>${label}</span><div class="r">${sizes}</div><div class="d">${sizes}</div></div>`);
+}
+</script>
