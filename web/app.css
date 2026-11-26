@@ -104,7 +104,7 @@ a { color: var(--blue-ink); }
 
 .embed .nav, .embed .site-foot { display: none; }
 /* Inside the demo page the logo stays a picture, so a click cannot replace a screen. */
-.embed a.mark { pointer-events: none; }
+.embed a.mark, .kiosk a.mark { pointer-events: none; }      /* in kiosk mode the logo leads nowhere */
 a.mark { text-decoration: none; }
 
 /* The menu bar (menu.js), the same on every screen. Under it, a page's own band keeps

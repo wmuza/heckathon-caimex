@@ -23,7 +23,7 @@ echo 'CAIMEX_API_KEY=sk-or-...' > .env     # never commit this file
 |---|---|---|
 | Welcome | http://127.0.0.1:8000/welcome | Front page: start a visit or open a staff workspace |
 | Demo | http://127.0.0.1:8000/demo | A room: the patient and the nurse side by side |
-| Patient | http://127.0.0.1:8000 | The patient, on a phone or tablet at the door |
+| Patient | http://127.0.0.1:8000 | The patient, on a phone or tablet at the door. Use `/?kiosk=1` there: no menu, so no way into the staff screens |
 | Nurse's queue | http://127.0.0.1:8000/nurse | The nurse |
 | Engine | http://127.0.0.1:8000/engine | Judges: how CAIMEx is used, with live numbers |
 | Voice check | http://127.0.0.1:8000/check | The team: test the recogniser on real voices |

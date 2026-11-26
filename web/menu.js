@@ -1,9 +1,12 @@
 /* The menu bar at the top of every screen. One list, written once here, so every
    page offers the same way to every other page. Load it as the first thing in
    <body>; it draws itself in place, so the page never jumps.
-   Inside the demo page's frames (?embed=1) there is no menu bar. */
+   Inside the demo page's frames (?embed=1) there is no menu bar, and none in kiosk mode (?kiosk=1):
+   the patient's tablet at the door and the waiting-room screen, where no one should reach the staff screens. */
 (function () {
-  if (new URLSearchParams(location.search).get('embed') === '1') return;
+  var q = new URLSearchParams(location.search);
+  if (q.get('embed') === '1') return;
+  if (q.get('kiosk') === '1') { document.documentElement.classList.add('kiosk'); return; }
 
   var START = { href: '/', label: 'Start a visit' };
   var LINKS = [
