@@ -27,9 +27,13 @@
   .src.ai { background: var(--selected); color: var(--blue-ink); }
 
   /* Today, before the doors open */
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 12px; margin-top: 14px; }
-  .tile { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; background: var(--panel-sunk); border-radius: 18px; padding: 12px 14px; }
-  .tile .art { width: 64px; height: 64px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 16px; margin-top: 16px; }
+  /* Each expected count is a raised card: white, a border and a soft shadow; one above the usual gets an amber edge */
+  .tile { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; background: var(--panel); border: 1px solid var(--hairline);
+    border-radius: 18px; padding: 16px 18px; box-shadow: var(--shadow-float); transition: transform 160ms ease, box-shadow 160ms ease; }
+  .tile:hover { transform: translateY(-2px); }
+  .tile.above { box-shadow: inset 4px 0 0 var(--warn-dot), var(--shadow-float); }
+  .tile .art { width: 64px; height: 64px; border-radius: 16px; background: var(--panel-sunk); padding: 4px; }
   .tile .n { font-size: 2.25rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
   .tile .n small { font-size: 0.875rem; font-weight: 600; color: var(--ink-2); }
   .tile .nm { font-weight: 600; font-size: 0.9375rem; line-height: 1.25; }
@@ -344,7 +348,7 @@ let briefOpen = false;
 function render() {
   const b = d.brief || {};
   $('todaySub').textContent = `${d.weekday}. Expected arrivals by symptom, from this clinic's own last twelve weeks.`;
-  $('tiles').innerHTML = d.today.map(t => `<div class="tile"><span class="art" aria-hidden="true">${pictures[t.picture] || ''}</span>
+  $('tiles').innerHTML = d.today.map(t => `<div class="tile ${t.above ? 'above' : ''}"><span class="art" aria-hidden="true">${pictures[t.picture] || ''}</span>
     <div><div class="n">${t.expected} <small>expected</small></div><div class="nm">${esc(t.name)}</div>
       <div class="rg">likely ${t.lo} to ${t.hi} · usual ${Math.round(t.usual)}</div>${t.above ? '<span class="up"><i></i>more than usual</span>' : ''}</div></div>`).join('');
   $('natl').innerHTML = d.national.map(w => `<div class="natl"><span class="art" aria-hidden="true">${pictures[w.picture] || ''}</span>
