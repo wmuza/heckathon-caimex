@@ -13,6 +13,11 @@
   .band-in { flex-wrap: wrap; }
   .layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  /* Side by side: the stock column and the dispensing column end at the same line. */
+  @media screen and (min-width: 901px) {
+    .layout { align-items: stretch; }
+    .layout > .stack > section:last-child { flex: 1; }
+  }
   h2.title { margin-bottom: 4px; }
 
   /* One medicine: what is on the shelf, how fast it goes, how long it lasts */
@@ -227,7 +232,7 @@ function renderGive() {
   if (!d.tickets.some(t => t.id === ticket)) ticket = (d.tickets.find(t => t.stage === 'pharmacy') || d.tickets[d.tickets.length - 1] || {}).id || null;
   $('noTk').hidden = d.tickets.length > 0;
   $('giveBody').hidden = !ticket;
-  $('tks').innerHTML = d.tickets.map(t => `<button class="tkb" data-id="${t.id}" aria-pressed="${t.id === ticket}">${t.stage === 'pharmacy' ? '<i class="due" title="Has a prescription to dispense"></i>' : ''}${CK}${face(t)}<span><small>Ticket</small> ${t.number}</span></button>`).join('');
+  $('tks').innerHTML = [...d.tickets].reverse().map(t => `<button class="tkb" data-id="${t.id}" aria-pressed="${t.id === ticket}">${t.stage === 'pharmacy' ? '<i class="due" title="Has a prescription to dispense"></i>' : ''}${CK}${face(t)}<span><small>Ticket</small> ${t.number}</span></button>`).join('');
   $('tks').querySelectorAll('.tkb').forEach(b => b.onclick = () => { ticket = b.dataset.id; say(''); renderGive(); });
   const t = d.tickets.find(x => x.id === ticket);
   if (!t) return;

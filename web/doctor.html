@@ -14,6 +14,14 @@
   .band-in { flex-wrap: wrap; }
   .layout { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 16px; align-items: start; }
   @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  /* Side by side: the patient list and the patient are the same height; the list scrolls inside its column. */
+  @media screen and (min-width: 861px) {
+    .layout { align-items: stretch; }
+    .listcol { display: flex; flex-direction: column; min-height: 80vh; }
+    .listcol #list { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 10px 4px 4px; margin: -4px -6px 0 -4px; }
+    .listcol #list:empty { display: none; }
+    .listcol #empty:not([hidden]) { flex: 1; }
+  }
   .list { display: flex; flex-direction: column; gap: 8px; }
   .group { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 10px 2px 0; }
   .group:first-child { margin-top: 0; }
@@ -104,7 +112,7 @@
 
 <div class="wrap">
   <div class="layout">
-    <div>
+    <div class="listcol">
       <div id="list" class="list" aria-label="Patients"></div>
       <div id="empty" class="panel empty" hidden><p class="strong">No one is waiting</p><p class="quiet small">A patient appears here when they finish speaking to the helper.</p></div>
     </div>
@@ -146,9 +154,12 @@ const val = x => `${x.value}${x.unit ? ' ' + x.unit : ''}`;
 
 function renderList() {
   $('empty').hidden = d.visits.length > 0;
-  const groups = [['doctor', 'Waiting for you'], ['nurse', 'With the nurse'], ['pharmacy', 'At the pharmacy'], ['done', 'Finished']];
-  $('list').innerHTML = groups.map(([st, title]) => {
+  // Patients still waiting for care keep the server's order: most urgent first, then longest wait.
+  // Those past the doctor are history: latest first.
+  const groups = [['doctor', 'Waiting for you', false], ['nurse', 'With the nurse', false], ['pharmacy', 'At the pharmacy', true], ['done', 'Finished', true]];
+  $('list').innerHTML = groups.map(([st, title, latest]) => {
     const rows = d.visits.filter(v => v.stage === st);
+    if (latest) rows.sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
     return rows.length ? `<p class="group">${title} (${rows.length})</p>` + rows.map(v => `<button class="row" data-id="${v.id}" aria-current="${v.id === current}">
       ${face(v)}<span><span class="cc">${esc(v.complaint || 'The note is being written')}</span><span class="sub">Ticket ${v.number}</span></span>
       <span class="tag ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span></button>`).join('') : '';

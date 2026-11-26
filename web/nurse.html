@@ -177,6 +177,16 @@
   @keyframes drop { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
   @media (max-width: 1080px) { .checks { grid-template-columns: repeat(2, 1fr); } }
+  /* Side by side: the queue and the note are the same height; the queue scrolls inside its column. */
+  @media screen and (min-width: 861px) {
+    .layout { align-items: stretch; }
+    #listCol { display: flex; flex-direction: column; min-height: 80vh; }
+    #list { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 10px 4px 4px; margin: -4px -6px 0 -4px; }
+    #list:empty { display: none; }
+    #empty:not([hidden]) { flex: 1; }
+    #detailCol { display: flex; flex-direction: column; }
+    #detail:not([hidden]) { flex: 1; }
+  }
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
     #listCol { position: static; max-height: none; }
@@ -379,12 +389,15 @@ function renderList(now) {
   $('qSum').textContent = w === 1 ? '1 waiting' : w + ' waiting';
   $('empty').hidden = visits.length > 0;
   // Rebuild the rows only when something a row shows has changed, so nothing flickers.
-  const sig = current + '|' + visits.map(v => [v.id, v.status, levelOf(v), v.picture, v.placed_ahead, Math.round((now - v.created) / 60), headline(v)].join(',')).join(';');
+  const sig = current + '|' + visits.map(v => [v.id, v.status, levelOf(v), v.picture, v.placed_ahead, Math.round((now - v.created) / 60), headline(v), v.status === 'seen' ? v.updated : ''].join(',')).join(';');
   if (sig === listSig) return;
   listSig = sig;
-  const groups = [['Waiting for the nurse', waiting], ['Speaking to the helper now', v => v.status === 'talking'], ['Seen', v => v.status === 'seen']];
-  $('list').innerHTML = groups.map(([title, f]) => {
+  // The waiting queue keeps the server's order: most urgent first, then longest wait. The other groups are history: latest first.
+  const newest = k => (a, b) => (b[k] || b.created) - (a[k] || a.created);
+  const groups = [['Waiting for the nurse', waiting, null], ['Speaking to the helper now', v => v.status === 'talking', newest('created')], ['Seen', v => v.status === 'seen', newest('updated')]];
+  $('list').innerHTML = groups.map(([title, f, order]) => {
     const rows = visits.filter(f);
+    if (order) rows.sort(order);
     if (!rows.length) return '';
     return `<p class="group">${title} (${rows.length})</p>` + rows.map(v => rowHtml(v, now, !first && waiting(v) && !seenIds.has(v.id))).join('');
   }).join('');

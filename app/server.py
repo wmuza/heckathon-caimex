@@ -624,7 +624,8 @@ async def consider(sid: str):
 def _doctor_row(s: dict) -> dict:
     n = s.get("note") or {}
     signs = [x["label"] for x in s.get("live_signs", [])]
-    return {**visits.vitals_row(s), "stage": pharmacy.stage(s), "consult": s.get("consult"), "alarm": s.get("alarm"),
+    return {**visits.vitals_row(s), "updated": s.get("updated") or s["created"],
+            "stage": pharmacy.stage(s), "consult": s.get("consult"), "alarm": s.get("alarm"),
             "consider": s.get("consider"), "has_note": bool(s.get("note")),
             "patient": n.get("patient"), "complaint": n.get("chief_complaint"), "history": n.get("history") or [],
             "signs": signs + [f for f in n.get("red_flags") or [] if f not in signs and "?" not in f],
