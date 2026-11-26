@@ -23,6 +23,7 @@
   --tile-a: #24448A; --tile-b: #0B1F4D; --tile-c: #081638;
   --navy: #0B1F4D; --navy-2: #15306B; --navy-line: #2A4785; --on-navy: #FFFFFF; --on-navy-2: #C9D4EC;
   --brand-red: #D22630; --brand-red-press: #B01E27;
+  --btn-edge: #1A3A7A; --btn-ink: #0B1F4D; --blue-press: #15306B;
   --ghost-fill: #FFFFFF; --ghost-edge: #7C879B;
   --disabled: #E5E9F2; --disabled-ink: #5B6474;
   --red-fill: #D22630; --red-ink: #B4232A; --red-tint: #FDECEC;
@@ -45,6 +46,7 @@
   --tile-a: #2B4C9B; --tile-b: #1F3C80; --tile-c: #16306B;
   --navy: #0A1838; --navy-2: #122552; --navy-line: #2A4785; --on-navy: #FFFFFF; --on-navy-2: #BFCBE6;
   --brand-red: #D22630; --brand-red-press: #E0434C;
+  --btn-edge: #6F8FD6; --btn-ink: #DCE5F8; --blue-press: #3A5CB0;
   --ghost-fill: transparent; --ghost-edge: #6F7F99;
   --disabled: #1B2331; --disabled-ink: #A9B2C1;
   --red-fill: #D22630; --red-ink: #FFC2C5; --red-tint: #3A1A1C;
@@ -153,13 +155,14 @@ a.mark { text-decoration: none; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 48px; padding: 0 22px; border-radius: 999px; font-weight: 600; cursor: pointer;
-  border: 1px solid var(--ghost-edge); background: var(--ghost-fill); color: var(--ink);
+  border: 1.5px solid var(--btn-edge); background: var(--ghost-fill); color: var(--btn-ink);
   transition: transform 160ms ease, background 160ms ease, border-color 160ms ease; text-decoration: none;
 }
 .btn svg { width: 18px; height: 18px; flex: none; }
-.btn:hover { border-color: var(--blue-edge); }
+.btn:hover { background: var(--selected); }
 .btn:active { transform: scale(0.98); }
 .btn.primary { background: var(--blue-fill); border-color: var(--blue-edge); color: var(--ink-on); box-shadow: var(--blue-shadow); }
+.btn.primary:hover { background: var(--blue-press); }
 .btn.danger { background: var(--red-fill); border-color: transparent; color: var(--ink-on); box-shadow: var(--red-shadow); }
 .btn:disabled { background: var(--disabled); color: var(--disabled-ink); border-color: transparent; box-shadow: none; cursor: default; }
 .btn.block { width: 100%; }

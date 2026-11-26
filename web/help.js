@@ -42,7 +42,7 @@
   const style = document.createElement('style');
   style.textContent = `.help-steps{display:grid;gap:12px;padding:0;margin:0}.help-steps li{list-style:none;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;font-size:1.0625rem}
     .help-steps b{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--selected);color:var(--blue-ink);font-weight:700}
-    .help-btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--ghost-edge);background:var(--ghost-fill);color:var(--ink);font-weight:600;font-size:.9375rem;cursor:pointer}
+    .help-btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--btn-edge);background:var(--ghost-fill);color:var(--btn-ink);font-weight:600;font-size:.9375rem;cursor:pointer}.help-btn:hover{background:var(--selected)}
     .help-btn svg{width:18px;height:18px}.embed .help-btn{display:none}`;
   document.head.appendChild(style);
   const btn = document.createElement('button');
