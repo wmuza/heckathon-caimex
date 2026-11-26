@@ -52,6 +52,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._proxy()
         if path in PAGES:  # /nurse -> nurse.html, as the backend does
             self.path = path + ".html"
+        elif path.startswith("/status/"):  # a patient's status link: the page reads the key from the address
+            self.path = "/status.html"
         super().do_GET()
 
     do_POST = do_PUT = do_PATCH = do_DELETE = _proxy

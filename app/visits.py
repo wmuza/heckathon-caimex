@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import asyncio
+import hmac
 import json
 import re
+import secrets
 import shutil
 import time
 import uuid
 
-from . import ai, config, details, gateway, prompts, triage
+from . import ai, config, details, gateway, pharmacy, prompts, triage, voice
 
 SESSIONS: dict[str, dict] = {}
 _tasks: set[asyncio.Task] = set()
@@ -71,16 +73,21 @@ def purge() -> None:
             shutil.rmtree(config.AUDIO_DIR / sid, ignore_errors=True)
 
 
-def new(lang: str = "sn", sample: str | None = None) -> dict:
+def new(lang: str = "sn", sample: str | None = None, online: bool = False, phone: str | None = None) -> dict:
+    """A new visit. An online one (from home) has a callback phone number, seen only by the nurse."""
     lang = lang if lang in config.LANGS else "sn"
+    greeting = prompts.lines(lang, online)["greeting"]
     sid = uuid.uuid4().hex[:10]
     number = 1 + max((s.get("number", 0) for s in SESSIONS.values()), default=0)
     s = {
         "v": SCHEMA, "id": sid, "number": number, "lang": lang, "sample": sample,
         "created": time.time(), "updated": time.time(),
         "status": "talking",          # talking → summarising → ready → seen
-        "turns": [{"role": "assistant", "text": prompts.LINES[lang]["greeting"], "topic": "main",
-                   "en": prompts.english_of(lang, prompts.LINES[lang]["greeting"])}],
+        "online": bool(online), "phone": phone if online else None,
+        # The key in the patient's status link: long and random, and not the id the staff screens use.
+        "status_key": secrets.token_urlsafe(16) if online else None,
+        "turns": [{"role": "assistant", "text": greeting, "topic": "main",
+                   "en": prompts.english_of(lang, greeting)}],
         "questions": 1, "topics": ["main"], "child": False, "repeats": 0,
         "covered": [],                      # topics the patient has already answered, asked or not
         "alarm": None, "alarm_by": None, "live_signs": [], "answer_signs": [],
@@ -246,6 +253,9 @@ def set_detail(s: dict, field: str, value, unit: str | None = None, source: str 
     if field == "age" and d.get("weight"):          # the age changed: look at the weight warning again
         w = d["weight"]
         w["flag"] = details.entry("weight", w["value"], child=details.is_child(d, s.get("child", False)))["flag"]
+    if field == "bp" and s.get("triage") and s.get("status") != "talking":     # the reading can raise the level
+        _set_triage(s, {**triage.combine(_checks(s, s.get("second"))),
+                        "provisional": s.get("status") == "summarising"})
     s["updated"] = time.time()
     save()
     return d
@@ -282,7 +292,7 @@ async def take_turn(s: dict, *, text: str | None = None, blob: bytes | None = No
                     mime: str = "audio/wav", want_audio: bool = True):
     """One patient turn. Yields events: heard, reply, audio, timing."""
     lang = s["lang"]
-    lines = prompts.LINES[lang]
+    lines = prompts.lines(lang, s.get("online", False))
     asked = s["topics"][-1]                 # the topic of the question being answered
     t0 = time.time()
 
@@ -454,6 +464,9 @@ def _checks(s: dict, second: dict | None = None) -> list[triage.Check]:
             {"kind": "model", "model": config.CHAT_MODEL}),
         note_check,
     ]
+    vitals, why = details.vitals_level(s.get("details") or {})
+    if vitals:          # only once a blood pressure is entered
+        checks.append(triage.Check("Measured vitals", vitals, why, {"kind": "rules"}))
     if second is not None:
         checks.append(triage.Check(
             "Second opinion", second.get("level"), second.get("detail", ""),
@@ -555,6 +568,7 @@ async def _conclude(s: dict) -> None:
     """After the note (or its failure): the second opinion, then every check combined."""
     others = triage.combine(_checks(s))["level"]
     second = await _second_opinion(s, others)
+    s["second"] = second            # kept, so a later blood pressure can re-combine the checks
     s["status"] = "ready"
     _set_triage(s, triage.combine(_checks(s, second)))
     s["updated"] = time.time()
@@ -632,11 +646,61 @@ def picture_for(s: dict) -> str:
     return "other"
 
 
+SAMPLE_STATUS_KEY = "sample"
+
+
+def sample_online_visit(lang: str = "en") -> dict:
+    """A made-up patient at home with an e-prescription, for the demo's /status/sample (digits 567).
+    Built fresh each time and never stored, so it is in no queue, no count and no pharmacy record."""
+    return {"id": "sample", "number": 12, "lang": lang if lang in config.LANGS else "en", "status": "seen",
+            "online": True, "phone": "0771234567", "sample": True, "alarm": None,
+            "consult": {"diagnosis": "(never shown)", "outcome": "treated", "at": time.time(), "suggested": False,
+                        "rx": [{"med": "paracetamol", "qty": 20, "how": "When needed"},
+                               {"med": "amoxicillin", "qty": 15, "how": "Three times a day"}]}}
+
+
+def by_status_key(key: str, lang: str = "en") -> dict | None:
+    """The online visit a status link belongs to, or None. "sample" is the demo's made-up patient."""
+    if key == SAMPLE_STATUS_KEY:
+        return sample_online_visit(lang)
+    for s in SESSIONS.values():
+        if s.get("status_key") and hmac.compare_digest(s["status_key"].encode(), (key or "").encode()):
+            return s
+    return None
+
+
+def status_view(s: dict) -> dict:
+    """What a patient at home sees of their own visit: one fixed sentence for where it is and, once the
+    doctor has decided, the e-prescription to show at any pharmacy. Never the diagnosis, the note or a
+    model's words."""
+    lang = s["lang"]
+    say = prompts.STATUS_SAY[lang]
+    fill = lambda key: say[key].format(n=s["number"], p=s.get("phone") or "")
+    consult = s.get("consult")
+    texts, rx = [], None
+    if not consult:
+        stage = "doctor" if s["status"] == "seen" else "nurse"
+        texts.append(fill(stage))
+    else:
+        stage = consult["outcome"]
+        if stage == "come_in" or not consult["rx"]:
+            texts.append(fill(stage))
+        if consult["rx"]:
+            texts.append(fill("prescription"))
+            meds = {m["id"]: m for m in pharmacy.STATE.get("medicines", [])}
+            rx = {"date": consult["at"], "number": s["number"],
+                  "items": [{"name": meds.get(l["med"], {}).get("name", l["med"]), "qty": l["qty"],
+                             "unit": meds.get(l["med"], {}).get("unit", ""), "how": voice.how_text(lang, l["how"])}
+                            for l in consult["rx"]]}
+    return {"lang": lang, "number": s["number"], "stage": stage, "texts": texts, "prescription": rx,
+            "emergency": bool(s.get("alarm")), "sample": bool(s.get("sample"))}
+
+
 def public(s: dict, full: bool = True) -> dict:
     """A visit as the nurse's screen sees it."""
     out = {k: s.get(k) for k in ("id", "number", "lang", "sample", "created", "updated", "status",
                                   "alarm", "alarm_by", "live_signs", "note", "triage", "error",
-                                  "talk_seconds")}
+                                  "talk_seconds", "online", "phone")}
     out["turns"] = [
         {"role": t["role"], "text": t["text"], "en": t.get("en"),
          "topic": t.get("topic"),

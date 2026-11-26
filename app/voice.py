@@ -46,8 +46,8 @@ def how_text(lang: str, how: str) -> str:
     return table.get(how, table["As directed"])
 
 
-def alarm_text(number: int, sign: str) -> str:
-    return prompts.ALARM_SAY.format(n=number, sign=sign)
+def alarm_text(number: int, sign: str, online: bool = False) -> str:
+    return (prompts.ALARM_SAY_ONLINE if online else prompts.ALARM_SAY).format(n=number, sign=sign)
 
 
 def briefing_text(pred: dict, warnings: list[dict]) -> str:
@@ -85,6 +85,8 @@ def call(visit: dict, to: str) -> dict:
     in the patient's own language first."""
     if to not in PLACES:
         raise ValueError("Unknown place")
+    if visit.get("online"):
+        return None          # at home, not in the room: nothing is shown or said on the board. The clinic calls back.
     # The id is built on the clock, so it is never used twice, even after the server starts again. An id
     # that began at 1 each time made a board left open ignore new calls, and made the browser replay
     # the sound it had kept for an earlier call with the same id: the wrong ticket was said.

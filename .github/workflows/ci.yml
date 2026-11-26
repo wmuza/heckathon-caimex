@@ -1,0 +1,17 @@
+# Every test, including the floor that no emergency in eval/heldout.json is missed.
+# No secrets: the tests replace the gateway with fakes.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run pytest -q

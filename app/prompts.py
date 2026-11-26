@@ -11,6 +11,8 @@ native speaker before real use. They are short on purpose: each is read aloud.
 
 from __future__ import annotations
 
+from .config import EMERGENCY_NUMBER
+
 MAX_QUESTIONS = 6
 
 LANG_NAME = {"sn": "Shona", "en": "English"}
@@ -34,9 +36,59 @@ LINES = {
     },
 }
 
+# An online visit: the patient is at home, so nobody is coming and there is no seat to take. Only these
+# three lines differ; every question is the same. The clinic calls back on the number the patient typed.
+ONLINE_LINES = {
+    "sn": {
+        "greeting": ("Mhoroi. Ndiri helper yeClinic, handisi doctor. "
+                     "Ndichakubvunzai maQuestions mashoma kuti nurse akurumidze kukubatsirai. "
+                     "Chii chiri kukunetsai nhasi?"),
+        "closing": "Thank you. Ndaudza nurse zvamataura. Clinic ichakufonerai munguva pfupi.",
+        "alarm": (f"Izvi zvingangova emergency. Fonerai ambulance pa {EMERGENCY_NUMBER}, "
+                  "kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi."),
+    },
+    "en": {
+        "greeting": ("Hello. I am the clinic's helper, not a doctor. "
+                     "I will ask you a few short questions so the nurse can help you sooner. "
+                     "What is troubling you today?"),
+        "closing": "Thank you. I have passed this to the nurse. The clinic will call you back soon.",
+        "alarm": (f"This may be an emergency. Call an ambulance on {EMERGENCY_NUMBER}, "
+                  "or go to the nearest clinic or hospital now."),
+    },
+}
+
+
+# The status page an online patient comes back to (/status/<key>). One fixed sentence for each stage;
+# {n} is the reference (the ticket number) and {p} the phone number. A patient at home never uses the
+# clinic's pharmacy: the doctor gives an e-prescription to buy from any pharmacy, or asks them to come to
+# the hospital. Never the diagnosis: that is said by a person, on the phone.
+STATUS_SAY = {
+    "sn": {
+        "nurse": "MaAnswers enyu ari kuna nurse. Clinic ichakufonerai pa {p}.",
+        "doctor": "Nurse ane case yenyu. Doctor achasarudza zvinotevera.",
+        "come_in": "Please uyai kuHospital. Uyai neReference {n}.",
+        "treated": "Doctor aona case yenyu. Hamudi mushonga parizvino. Kana mukanzwa worse, uyai kuHospital.",
+        "prescription": "Doctor akunyorerai prescription. Iratidzei kuPharmacy ipi neipi kuti mutenge mushonga wenyu.",
+    },
+    "en": {
+        "nurse": "Your answers are with the nurse. The clinic will call you on {p}.",
+        "doctor": "The nurse has your case. A doctor will decide what happens next.",
+        "come_in": "Please come to the hospital. Bring your reference {n}.",
+        "treated": "The doctor has looked at your case. You do not need medicine now. If you feel worse, come to the hospital.",
+        "prescription": "The doctor has written you a prescription. Show it at any pharmacy to buy your medicine.",
+    },
+}
+
+
+def lines(lang: str, online: bool = False) -> dict:
+    """The helper's fixed lines for this visit: the clinic's, or the online ones for a patient at home."""
+    return {**LINES[lang], **ONLINE_LINES[lang]} if online else LINES[lang]
+
+
 # What the screen shows while the greeting is spoken: only its question, so the
 # patient is not handed a paragraph to read. The whole greeting is still said aloud.
 GREETING_SHOWN = {"sn": "Chii chakuunzai nhasi?", "en": "What brings you here today?"}
+GREETING_SHOWN_ONLINE = {"sn": "Chii chiri kukunetsai nhasi?", "en": "What is troubling you today?"}
 
 # topic -> the question, word for word. A "_child" variant is spoken when the
 # sick person is a child brought by an adult.
@@ -135,6 +187,7 @@ WARN_SAY = {
 
 # Said to staff at the nurse's station, in English. {sign} is a fixed danger-sign label.
 ALARM_SAY = "Emergency. Ticket {n}. {sign}."
+ALARM_SAY_ONLINE = "Emergency. Online patient, reference {n}. {sign}. Call them back now."
 
 # What one question is about. "main" is the greeting's own question.
 ASKABLE = tuple(k for k in BANK["en"] if not k.endswith("_child"))
@@ -148,18 +201,16 @@ def english_of(lang: str, text: str) -> str | None:
     """The English of a line the helper said, for the captions."""
     if lang == "en":
         return None
-    for key, line in LINES[lang].items():
-        if line == text:
-            return LINES["en"][key]
-    for key, line in BANK[lang].items():
-        if line == text:
-            return BANK["en"][key]
+    for table in (LINES, ONLINE_LINES, BANK):
+        for key, line in table[lang].items():
+            if line == text:
+                return table["en"][key]
     return None
 
 
 def fixed_lines(lang: str) -> list[str]:
     """Every line the helper can say. All of them are synthesised at start-up."""
-    return [*LINES[lang].values(), *BANK[lang].values()]
+    return [*LINES[lang].values(), *ONLINE_LINES[lang].values(), *BANK[lang].values()]
 
 
 def everything_the_helper_can_say() -> set[str]:

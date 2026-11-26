@@ -134,7 +134,8 @@ def forecast(now: float | None = None) -> list[dict]:
 
 DIAGNOSES = ("High blood pressure", "Diabetes", "Chest infection", "Malaria", "Diarrhoea", "Injury",
              "Pregnancy care", "Headache")       # quick picks for the doctor, who may type any other
-OUTCOMES = ("treated", "referred", "admitted")
+OUTCOMES = ("treated", "referred", "admitted", "come_in")
+ONLINE_OUTCOMES = ("treated", "come_in")    # at home: treated with an e-prescription, or come to the hospital
 HOW = ("Once a day", "Twice a day", "Three times a day", "When needed", "As directed")    # keys of prompts.HOW_SAY
 
 
@@ -146,6 +147,10 @@ def consult(visit: dict, diagnosis: str, outcome: str, rx: list, suggested: bool
         raise Refused("Type the diagnosis")
     if outcome not in OUTCOMES:
         raise Refused("Choose what happens next")
+    if visit.get("online") and outcome not in ONLINE_OUTCOMES:
+        raise Refused("For a patient at home, choose treat at home or come to the hospital")
+    if outcome == "come_in" and not visit.get("online"):
+        raise Refused("Come to the hospital is only for a patient at home")
     lines, seen = [], set()
     for line in rx or []:
         m = _med(str(line.get("med")))
@@ -175,6 +180,8 @@ def stage(visit: dict) -> str:
     if visit["status"] == "talking":
         return "intake"
     if visit.get("consult"):
+        if visit.get("online"):
+            return "done"          # an e-prescription: bought at any pharmacy, never dispensed here
         owed = any(remaining(visit, l["med"]) for l in visit["consult"]["rx"])
         return "pharmacy" if owed else "done"
     return "doctor" if visit["status"] == "seen" else "nurse"

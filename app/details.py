@@ -3,8 +3,9 @@
 No model is used here and none sees these values. The age is read out of what
 the patient said by the fixed number tables below. Sex, weight and height are
 never taken from speech: a member of staff enters them against the ticket
-number, on the vitals page or the nurse's page. Nothing here changes the
-urgency level.
+number, on the vitals page or the nurse's page. Only a measured blood
+pressure changes the urgency level: a very low or very high reading raises the
+visit to urgent (vitals_level). It never lowers a level.
 
 No name is kept. The ticket number links the visit to the clinic's own register.
 
@@ -52,7 +53,7 @@ RANGE = {"weight": (1.0, 250.0, "kg"), "height": (45.0, 220.0, "cm")}
 BP_UPPER, BP_LOWER = (50, 300), (30, 200)
 # Readings that are kept with a warning for the nurse. These are the commonly used limits for a
 # very high reading (180 upper or 120 lower) and a low one (upper under 90). No clinician has
-# reviewed them. The warning does not change the urgency level.
+# reviewed them. Either one raises the visit to urgent (vitals_level).
 BP_VERY_HIGH, BP_LOW_UPPER = (180, 120), 90
 CHILD_HEAVY_KG = 40          # a child above this is weighed again: 6.5 keyed as 65 is the dangerous slip
 SEXES = ("female", "male")
@@ -162,8 +163,30 @@ def is_child(details: dict, child_flag: bool) -> bool:
     return bool(child_flag)
 
 
+def vitals_level(d: dict) -> tuple[str | None, str]:
+    """The level the measured blood pressure gives, and why. None: no reading, so no verdict."""
+    bp = (d or {}).get("bp")
+    if not bp:
+        return None, "No blood pressure entered"
+    up, low = bp["upper"], bp["lower"]
+    if up < BP_LOW_UPPER:
+        return "urgent", f"Low blood pressure {bp['value']}"
+    if up >= BP_VERY_HIGH[0] or low >= BP_VERY_HIGH[1]:
+        return "urgent", f"Very high blood pressure {bp['value']}"
+    return "routine", f"Blood pressure {bp['value']}"
+
+
 class Refused(ValueError):
     """A typed value that is not kept. The message is shown to the member of staff."""
+
+
+def phone(value) -> str:
+    """A Zimbabwe mobile number for an online visit's callback, kept as 07XXXXXXXX. Only the nurse sees it."""
+    digits = re.sub(r"[\s\-().]", "", str(value or ""))
+    m = re.fullmatch(r"(?:\+?263|0)(7\d{8})", digits)
+    if not m:
+        raise Refused("Type a mobile number, like 0771 234 567")
+    return "0" + m[1]
 
 
 def entry(field: str, value, unit: str | None = None, source: str = "measured", child: bool = False) -> dict | None:
@@ -191,8 +214,8 @@ def entry(field: str, value, unit: str | None = None, source: str = "measured", 
             raise Refused(f"The upper number must be {BP_UPPER[0]} to {BP_UPPER[1]} and the lower {BP_LOWER[0]} to {BP_LOWER[1]}")
         if low >= up:
             raise Refused("The upper number must be larger than the lower number")
-        flag = "Very high reading: measure again and tell the nurse" if up >= BP_VERY_HIGH[0] or low >= BP_VERY_HIGH[1] \
-            else "Low reading: measure again and tell the nurse" if up < BP_LOW_UPPER else None
+        flag = "Very high reading: measure again. This visit is now urgent" if up >= BP_VERY_HIGH[0] or low >= BP_VERY_HIGH[1] \
+            else "Low reading: measure again. This visit is now urgent" if up < BP_LOW_UPPER else None
         return {"value": f"{up}/{low}", "upper": up, "lower": low, "unit": "mmHg", "source": "measured", "at": now, "flag": flag}
     try:
         n = float(str(value).replace(",", "."))

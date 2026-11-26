@@ -25,6 +25,10 @@ def table(title, where, rows):
 
 table("What the helper says: fixed lines", "app/prompts.py",
       [(prompts.LINES["sn"][k], prompts.LINES["en"][k]) for k in prompts.LINES["sn"]])
+table("What the helper says to a patient at home (online visits)", "app/prompts.py",
+      [(prompts.ONLINE_LINES["sn"][k], prompts.ONLINE_LINES["en"][k]) for k in prompts.ONLINE_LINES["sn"]])
+table("The status page a patient at home comes back to", "app/prompts.py",
+      [(prompts.STATUS_SAY["sn"][k], prompts.STATUS_SAY["en"][k]) for k in prompts.STATUS_SAY["sn"]])
 table("What the helper says: the questions", "app/prompts.py",
       [(prompts.BANK["sn"][k], prompts.BANK["en"][k]) for k in prompts.BANK["sn"]])
 
@@ -50,6 +54,10 @@ def pairs(text):
 
 sn, en = pairs(block("sn")), pairs(block("en"))
 table("The patient's screen", "web/index.html", [(sn[k], en.get(k, "")) for k in sn])
+
+html = (ROOT / "web" / "status.html").read_text()
+sn, en = pairs(block("sn")), pairs(block("en"))
+table("The status page's own words", "web/status.html", [(sn[k], en.get(k, "")) for k in sn])
 
 data = json.loads((ROOT / "samples" / "patients.json").read_text())
 table("Sample patients: answers every Shona patient shares", "samples/patients.json",

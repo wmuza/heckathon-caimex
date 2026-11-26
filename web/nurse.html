@@ -115,8 +115,9 @@
   .dots i.me { width: 16px; height: 16px; border: 0; background: var(--blue-fill); animation: step 2.6s ease-in-out 1 both; }
   @keyframes step { from { transform: translateX(calc(var(--n) * 18px)); } 30% { transform: translateX(calc(var(--n) * 18px)); } to { transform: none; } }
 
-  /* The four checks: four lights. The ones that gave the level are ringed. */
-  .checks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  /* The checks: one light each. Four sit in a row; five (with a blood pressure) take two columns,
+     the last across the row, since five in a row are too narrow. The ones that gave the level are ringed. */
+  .checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
   .check { border: 1px solid var(--hairline); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; background: var(--panel); }
   .check.won { border-color: var(--blue-fill); box-shadow: inset 0 0 0 1px var(--blue-fill); }
   .check .ic { display: flex; align-items: center; gap: 8px; width: 100%; }
@@ -174,7 +175,10 @@
   .toast .t small { display: block; font-weight: 400; color: var(--ink-2); }
   @keyframes drop { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
+  /* Two columns when narrow, or when five checks would be too tight in one row. An odd last tile spans the row. */
+  .checks:has(> .check:nth-child(5)) { grid-template-columns: repeat(2, 1fr); }
   @media (max-width: 1080px) { .checks { grid-template-columns: repeat(2, 1fr); } }
+  .checks:has(> .check:nth-child(5)) > .check:last-child:nth-child(odd) { grid-column: 1 / -1; }
   /* Side by side: the queue and the note are the same height; the queue scrolls inside its column. */
   @media screen and (min-width: 861px) {
     .layout { align-items: stretch; }
@@ -310,6 +314,7 @@ const CHECK_ICON = {
   'Interview model': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14v10H10l-4 3.500V15H5z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></svg>',
   'Note model': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>',
   'Second opinion': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M7 20h10M5 8h14M5 8l-2 6h4zM19 8l-2 6h4z"/></svg>',
+  'Measured vitals': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="7"/><path d="M12 10l3-3"/><path d="M12 17v1.5a2.5 2.5 0 0 0 2.5 2.5H19"/></svg>',
 };
 let visits = [], current = null, full = {}, lastSig = '', listSig = '', known = new Set(), seenIds = new Set(), first = true, traceOpen = false;
 const pictures = {};                          // name -> inline SVG text, loaded once
@@ -369,7 +374,7 @@ function rowHtml(v, now, fresh) {
   return `<button class="row ${fresh ? 'fresh' : ''}" data-id="${v.id}" aria-current="${v.id === current}">
     ${glyph(lvl)}${art(v.picture, 'pict still')}
     <span><span class="cc">${esc(headline(v))}</span>
-      <span class="sub"><span class="tk">Ticket ${v.number}</span>${v.placed_ahead ? `<span>ahead of ${v.placed_ahead}</span>` : ''}${v.status === 'summarising' ? '<span>writing note…</span>' : ''}${v.sample ? '<span class="smp">Sample</span>' : ''}</span></span>
+      <span class="sub"><span class="tk">Ticket ${v.number}</span>${v.placed_ahead ? `<span>ahead of ${v.placed_ahead}</span>` : ''}${v.status === 'summarising' ? '<span>writing note…</span>' : ''}${v.sample ? '<span class="smp">Sample</span>' : ''}${v.online ? '<span class="smp">Online · call back</span>' : ''}</span></span>
     ${ring(now - v.created)}
   </button>`;
 }
@@ -406,7 +411,7 @@ function open(id, now) {
 function checksHtml(t) {
   if (!t || !t.checks) return '';
   const top = t.draft_level || t.level;
-  return `<h3>Four checks. The highest wins.</h3><div class="checks">` + t.checks.map(c => {
+  return `<h3>${t.checks.length} checks. The highest wins.</h3><div class="checks">` + t.checks.map(c => {
     const p = c.probabilities;
     return `<div class="check ${c.level && c.level === top ? 'won' : ''}">
       <span class="ic">${CHECK_ICON[c.name] || ''}<span class="nm">${esc(c.name)}</span>${c.level ? glyph(c.level) : ''}</span>
@@ -447,7 +452,7 @@ function detailsHtml(v) {
   };
   const sex = d.sex && d.sex.value ? `<span class="det entered">${art('who', 'still')}<span><b>${d.sex.value === 'female' ? 'Female' : 'Male'}</b></span></span>` : '';
   return `<div class="dets" aria-label="Patient details">${one('age', 'Age', d.age, 'Age not said')}${sex}${one('weight', 'Weight', d.weight, 'Not weighed yet')}${one('height', 'Height', d.height, 'Height not measured')}${one('bp', 'Blood pressure', d.bp, 'Blood pressure not taken')}
-    <a class="linkbtn noprint" href="/vitals">Weigh and measure</a></div>`;
+    ${v.online ? '' : '<a class="linkbtn noprint" href="/vitals">Weigh and measure</a>'}</div>`;
 }
 
 function renderDetail(now) {
@@ -477,9 +482,10 @@ function renderDetail(now) {
   const signs = (t.checks && t.checks[0] && t.checks[0].signs) || v.live_signs || [];
   const flagged = new Set(signs.map(s => s.label.toLowerCase()));
   const extra = ((n && n.red_flags) || []).filter(f => !flagged.has(f.toLowerCase()) && !/\?/.test(f));
-  const ran = (t.checks || []).filter(c => c.level).length;
+  // When the checks disagree, say which raised the level and why: the note's own reason may call it routine.
+  const raisers = (t.raised_by && t.raised_by.length && !t.agreed) ? (t.checks || []).filter(c => t.raised_by.includes(c.name)) : [];
   const why = t.set_by_nurse ? `Level set by the nurse. The draft said ${t.draft_level || 'nothing'}.`
-    : (t.raised_by && t.raised_by.length && !t.agreed) ? `${(n && n.urgency_reason) ? n.urgency_reason + ' ' : ''}${t.raised_by.length} of ${ran} checks said ${(t.level || '').toLowerCase()}.`
+    : raisers.length ? raisers.map(c => `${c.name} said ${c.level}${c.detail ? ': ' + c.detail.replace(/\.$/, '') : ''}.`).join(' ')
     : (n && n.urgency_reason) || '';
   const PIC = { 'Difficulty breathing': 'breathing', 'Fits or convulsions': 'fits', 'Child cannot drink or vomits everything': 'drinking', 'Heavy bleeding': 'bleeding', 'Bleeding in pregnancy': 'pregnancy', 'Stiff neck with fever or headache': 'neck', 'Stiff neck': 'neck', 'Chest pain': 'where', 'Serious injury or burn': 'where', 'Baby only days or weeks old': 'who', 'Blood in stool, urine, vomit or cough': 'bleeding', 'Bleeding (answered yes when asked)': 'bleeding', 'Poisoning or snake bite': 'medicines' };
   const acting = v.status === 'ready' || v.status === 'seen';
@@ -487,7 +493,7 @@ function renderDetail(now) {
     <div class="d-head">
       ${art(v.picture)}
       <div style="min-width:0">
-        <div class="who-line">${glyph(lvl, true)}<span class="title">${lvl ? LABEL[lvl] : 'Speaking now'}</span><span class="tag">Ticket ${v.number}</span>${v.sample ? '<span class="tag">Sample, synthetic voice</span>' : ''}</div>
+        <div class="who-line">${glyph(lvl, true)}<span class="title">${lvl ? LABEL[lvl] : 'Speaking now'}</span><span class="tag">Ticket ${v.number}</span>${v.sample ? '<span class="tag">Sample, synthetic voice</span>' : ''}${v.online ? `<span class="tag blue">Online · call back</span>` : ''}</div>
         <h2>${esc(headline(v))}</h2>
         <p class="meta">${n && n.patient ? `<span>${esc(n.patient)}</span>` : ''}<span>Waiting ${mins(now - v.created)}</span><span>${v.lang === 'sn' ? 'Shona' : 'English'}</span></p>
       </div>
@@ -498,14 +504,14 @@ function renderDetail(now) {
         <div class="seg" role="group" aria-labelledby="lvlLab">${['emergency', 'urgent', 'routine'].map(l =>
           `<button data-level="${l}" aria-pressed="${l === lvl}">${CK}${LABEL[l]}</button>`).join('')}</div></div>
       <div class="d-acts">
-        <button class="btn sm" id="callIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg>Call ticket ${v.number}</button>
+        ${v.online ? `<a class="btn sm" href="tel:${esc(v.phone || '')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Call back ${esc(v.phone || '')}</a>` : `<button class="btn sm" id="callIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg>Call ticket ${v.number}</button>`}
         <button class="btn sm" id="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></svg>Print note</button>
         <button class="btn primary sm" id="seen">${v.status === 'seen' ? 'Put back in the queue' : 'Mark as seen'}</button>
       </div>
     </div>` : ''}
     <div class="d-body">
     ${detailsHtml(v)}
-    ${v.alarm ? `<div class="alarm" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19zM12 10v4.5M12 17.5v.3"/></svg><span>${esc(v.alarm)}. The patient was told a nurse is coming.</span></div>` : ''}
+    ${v.alarm ? `<div class="alarm" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19zM12 10v4.5M12 17.5v.3"/></svg><span>${esc(v.alarm)}. ${v.online ? `The patient is at home and was told to call an ambulance or go to the nearest clinic now. Call them on ${esc(v.phone || '')}.` : 'The patient was told a nurse is coming.'}</span></div>` : ''}
     ${v.error ? `<div class="alarm warn" role="alert"><span>${esc(v.error)}</span>${!n && v.status === 'ready' ? '<button class="btn sm noprint" id="renote">Try again</button>' : ''}</div>` : ''}
     ${v.placed_ahead ? `<div class="ahead"><span class="dots" style="--n:${Math.min(v.placed_ahead, 8)}" aria-hidden="true"><i class="me"></i>${'<i></i>'.repeat(Math.min(v.placed_ahead, 8))}</span><span>Placed ahead of ${v.placed_ahead} who arrived earlier</span></div>` : ''}
     ${why ? `<p style="margin-top:14px">${esc(why)}</p>` : ''}

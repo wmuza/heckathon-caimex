@@ -26,7 +26,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import ai, config, details, gateway, metrics, national, pharmacy, prediction, surveillance, voice, prompts, samples, triage, visits
+from . import ai, config, details, eprescription, gateway, metrics, national, pharmacy, prediction, surveillance, voice, prompts, samples, triage, visits
 from .gateway import GatewayError
 
 CATALOGUE: dict[str, dict] = {}
@@ -147,24 +147,87 @@ def _b64(data: bytes | None) -> str | None:
 @app.get("/api/config")
 async def get_config():
     return {"languages": [{"code": c, "name": prompts.LANG_NAME[c]} for c in config.LANGS],
-            "max_questions": prompts.MAX_QUESTIONS, "pin_required": bool(config.NURSE_PIN)}
+            "max_questions": prompts.MAX_QUESTIONS, "pin_required": bool(config.NURSE_PIN),
+            "emergency_number": config.EMERGENCY_NUMBER}
+
+
+ONLINE_STARTS: list[tuple[float, str]] = []     # (time, address) of recent online visits, for the limits
+
+
+def _online_allowed(request: Request) -> None:
+    """At most ONLINE_PER_HOUR online visits an hour from one address, and ONLINE_PER_DAY a day in all."""
+    now, who = time.time(), request.client.host if request.client else "?"
+    ONLINE_STARTS[:] = [(t, a) for t, a in ONLINE_STARTS if now - t < 86400]
+    if sum(1 for t, a in ONLINE_STARTS if a == who and now - t < 3600) >= config.ONLINE_PER_HOUR:
+        raise HTTPException(429, "Too many checks from this phone. Try again in an hour, or call the clinic.")
+    if len(ONLINE_STARTS) >= config.ONLINE_PER_DAY:
+        raise HTTPException(429, "The clinic has had too many online checks today. Please call the clinic.")
+    ONLINE_STARTS.append((now, who))
 
 
 @app.post("/api/visits")
-async def start_visit(lang: str = "sn", sample: str | None = None):
+async def start_visit(request: Request, lang: str = "sn", sample: str | None = None, online: bool = False,
+                      phone: str | None = Form(None)):
+    """Start a visit. An online one (from home) needs a mobile number, sent in the body so it stays out of logs."""
     if sample and not samples.get(sample):
         raise HTTPException(404, "No such sample patient")
-    s = visits.new(lang, sample=sample)
+    online = online and not sample
+    number = None
+    if online:
+        try:
+            number = details.phone(phone)
+        except details.Refused as e:
+            raise HTTPException(400, str(e))
+        _online_allowed(request)
+    s = visits.new(lang, sample=sample, online=online, phone=number)
     visits.save()
-    text = prompts.LINES[s["lang"]]["greeting"]
+    text = prompts.lines(s["lang"], online)["greeting"]
     try:
         mp3, _ = await gateway.speak(text, s["lang"])
     except GatewayError:
         mp3 = None
-    shown = prompts.GREETING_SHOWN[s["lang"]]
-    return {"id": s["id"], "number": s["number"], "lang": s["lang"], "text": text, "show": shown,
-            "en": None if s["lang"] == "en" else prompts.GREETING_SHOWN["en"], "audio": _b64(mp3),
+    shown = (prompts.GREETING_SHOWN_ONLINE if online else prompts.GREETING_SHOWN)
+    return {"id": s["id"], "number": s["number"], "lang": s["lang"], "text": text, "show": shown[s["lang"]],
+            "en": None if s["lang"] == "en" else shown["en"], "online": online, "phone": number, "audio": _b64(mp3),
+            "status_url": f"/status/{s['status_key']}" if online else None,
             "question": 1, "of": prompts.MAX_QUESTIONS}
+
+
+STATUS_TRIES: dict[str, list[float]] = {}        # status key -> times of recent wrong tries
+
+
+def _own_visit(key: str, digits: str, lang: str) -> dict:
+    """The visit behind a status link, once the last 3 digits of the phone match. Five wrong tries lock
+    the link for an hour (not the demo's sample, so a demo is never locked out)."""
+    s = visits.by_status_key(key, lang)
+    if not s:
+        raise HTTPException(404, "This link has expired. Please call the clinic.")
+    now = time.time()
+    tries = STATUS_TRIES.setdefault(key, [])
+    tries[:] = [t for t in tries if now - t < 3600]
+    if len(tries) >= 5 and not s.get("sample"):
+        raise HTTPException(429, "Too many wrong tries. Try again in an hour, or call the clinic.")
+    if not (s.get("phone") and len(digits) == 3 and _same(digits, s["phone"][-3:])):
+        tries.append(now)
+        raise HTTPException(401, "Those are not the last 3 digits of your phone number")
+    return s
+
+
+@app.post("/api/status/{key}")
+async def patient_status(key: str, digits: str = Form(""), lang: str = Form("en")):
+    """A patient at home checks their own visit. The link's key, plus the last 3 digits of their phone."""
+    return visits.status_view(_own_visit(key, digits, lang))
+
+
+@app.post("/api/status/{key}/prescription.pdf")
+async def patient_prescription(key: str, digits: str = Form(""), lang: str = Form("en")):
+    """The e-prescription as a PDF to download. POST, so the digits never sit in an address or a log."""
+    view = visits.status_view(_own_visit(key, digits, lang))
+    if not view["prescription"]:
+        raise HTTPException(404, "There is no prescription for this visit")
+    name = f"e-prescription-{view['number']}{'-sample' if view['sample'] else ''}.pdf"
+    return Response(eprescription.pdf(view), media_type="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="{name}"', "Cache-Control": "no-store"})
 
 
 @app.post("/api/visits/{sid}/turn")
@@ -410,7 +473,7 @@ async def pharmacy_state():
         if s["status"] == "talking":
             continue
         tickets.append({"id": s["id"], "number": s["number"], "photo": visits.photo_url(s), "fee": s.get("fee"),
-                        "lang": s["lang"],
+                        "lang": s["lang"], "online": bool(s.get("online")),
                         "picture": visits.picture_for(s), "stage": pharmacy.stage(s),
                         "consult": s.get("consult"),
                         "owed": {l["med"]: pharmacy.remaining(s, l["med"]) for l in (s.get("consult") or {}).get("rx", [])},
@@ -427,6 +490,8 @@ async def pharmacy_state():
 @app.post("/api/pharmacy/dispense", dependencies=[Depends(nurse)])
 async def pharmacy_dispense(body: Supply):
     s = _visit(body.sid)
+    if s.get("online"):
+        raise HTTPException(409, "This patient is at home: they have an e-prescription to buy from any pharmacy")
     try:
         return pharmacy.dispense(s["id"], s["number"], body.med, body.qty, body.pin, body.reason,
                                  allowed=pharmacy.remaining(s, body.med),
@@ -454,7 +519,10 @@ async def call_ticket(sid: str, body: Call):
     """Call a ticket to the nurse, the doctor or the pharmacy on the waiting-room board."""
     if body.to not in voice.PLACES:
         raise HTTPException(400, "Unknown place")
-    return voice.call(_visit(sid), body.to)
+    s = _visit(sid)
+    if s.get("online"):
+        raise HTTPException(409, "This patient is at home: call them back")
+    return voice.call(s, body.to)
 
 
 _NOTICES: dict = {"at": 0.0, "list": []}
@@ -479,7 +547,8 @@ async def board(after: int = 0):
     and the province's public health notices. Nothing about any one patient."""
     return {"calls": [{k: c[k] for k in ("id", "at", "number", "to", "langs")} for c in voice.CALLS if c["id"] > after][-12:],
             "last": voice.CALLS[-1]["id"] if voice.CALLS else 0, "now": time.time(),
-            "waiting": sum(1 for s in visits.SESSIONS.values() if s["status"] in ("summarising", "ready")),
+            "waiting": sum(1 for s in visits.SESSIONS.values()
+                           if s["status"] in ("summarising", "ready") and not s.get("online")),
             "notices": _board_notices()}
 
 
@@ -503,7 +572,7 @@ async def alarm_audio(sid: str):
     """The emergency, said aloud at the nurse's station. The sign is a fixed label, not a model's words."""
     s = _visit(sid)
     sign = next((x["label"] for x in s.get("live_signs", []) if x["level"] == "emergency"), "Danger sign reported")
-    return await _mp3(voice.alarm_text(s["number"], sign), "en")
+    return await _mp3(voice.alarm_text(s["number"], sign, bool(s.get("online"))), "en")
 
 
 @app.post("/api/dictate", dependencies=[Depends(nurse)])
@@ -657,6 +726,7 @@ def _doctor_row(s: dict) -> dict:
     signs = [x["label"] for x in s.get("live_signs", [])]
     return {**visits.vitals_row(s), "updated": s.get("updated") or s["created"],
             "stage": pharmacy.stage(s), "consult": s.get("consult"), "alarm": s.get("alarm"),
+            "online": bool(s.get("online")), "phone": s.get("phone"),
             "consider": s.get("consider"), "has_note": bool(s.get("note")),
             "patient": n.get("patient"), "complaint": n.get("chief_complaint"), "history": n.get("history") or [],
             "signs": signs + [f for f in n.get("red_flags") or [] if f not in signs and "?" not in f],
@@ -740,7 +810,7 @@ async def counts():
 
     return {"nurse": len(waiting),
             "emergency": sum(1 for s in waiting if level(s) == "emergency"),
-            "vitals": sum(1 for s in waiting if level(s) != "emergency" and not measured(s)),
+            "vitals": sum(1 for s in waiting if level(s) != "emergency" and not measured(s) and not s.get("online")),
             "doctor": sum(1 for s in ss if s["status"] in ("ready", "seen") and pharmacy.stage(s) == "doctor"),
             "pharmacy": sum(1 for s in ss if s["status"] != "talking" and pharmacy.stage(s) == "pharmacy"),
             "order": sum(1 for m in pharmacy.forecast() if m["status"] in ("now", "none"))}
@@ -749,7 +819,8 @@ async def counts():
 @app.get("/api/vitals", dependencies=[Depends(nurse)])
 async def vitals():
     """The tickets waiting for the nurse, for the person at the scale. No complaint, no transcript."""
-    rows = [visits.vitals_row(s) for s in visits.SESSIONS.values() if s["status"] in ("summarising", "ready")]
+    rows = [visits.vitals_row(s) for s in visits.SESSIONS.values()
+            if s["status"] in ("summarising", "ready") and not s.get("online")]      # nobody to weigh at home
     return {"visits": sorted(rows, key=lambda r: r["number"]), "now": time.time()}
 
 
@@ -934,6 +1005,11 @@ async def doctor_page():
 @app.get("/pharmacy")
 async def pharmacy_page():
     return FileResponse(config.WEB / "pharmacy.html")
+
+
+@app.get("/status/{key}")
+async def status_page(key: str):
+    return FileResponse(config.WEB / "status.html", headers={"Cache-Control": "no-store", "Referrer-Policy": "no-referrer"})
 
 
 @app.get("/vitals")

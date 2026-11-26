@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="sn" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Mukoti</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+<script src="/theme.js"></script>
+<style>
+  /* A patient at home checks their own visit: the 3 digits, then where the visit is and what to do. */
+  body { display: flex; flex-direction: column; min-height: 100dvh; }
+  main { flex: 1; }
+  .card { display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center; padding: 28px 22px; margin-top: 24px; }
+  .card h1 { font-size: 1.5rem; font-weight: 700; }
+  .digits { font-size: 2rem; letter-spacing: 0.4em; text-align: center; max-width: 8ch; font-variant-numeric: tabular-nums; }
+  #texts { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .say { font-size: 1.1875rem; font-weight: 600; max-width: 26ch; line-height: 1.45; }
+  .n { font-size: 3.5rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; min-width: 2.2em;
+    background: var(--navy); color: var(--on-navy); border-radius: 20px; padding: 14px 24px 16px; border-bottom: 6px solid var(--brand-red); }
+  .rx { width: 100%; text-align: left; border: 2px solid var(--navy); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .rx header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 8px; border-bottom: 1px solid var(--hairline); padding-bottom: 8px; }
+  .rx h2 { font-size: 1.125rem; font-weight: 700; white-space: nowrap; }
+  .rx .when { color: var(--ink-2); font-size: 0.875rem; }
+  .rx .note { color: var(--ink-2); font-size: 0.875rem; }
+  .meds { list-style: none; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  @media print { .noprint { display: none !important; } .card { box-shadow: none; border: 0; } }
+  .meds li { background: var(--panel-sunk); border-radius: 14px; padding: 12px 14px; }
+  .meds b { display: block; }
+  .meds span { color: var(--ink-2); }
+  .help { width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .btn.block { width: 100%; max-width: 320px; }
+</style>
+</head>
+<body class="kiosk">
+<main>
+  <div class="wrap">
+    <section id="ask" class="panel card">
+      <h1 data-t="title"></h1>
+      <label class="lab" for="digits" data-t="digitsLab"></label>
+      <input id="digits" class="field digits" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off">
+      <p class="quiet" id="sampleHint" data-t="sampleHint" hidden></p>
+      <p class="callout" id="err" role="alert" hidden></p>
+      <button id="open" class="btn primary block" data-t="open"></button>
+    </section>
+
+    <section id="show" class="panel card" hidden>
+      <span class="tag" id="sampleTag" hidden><span class="dot"></span><span data-t="sampleTag"></span></span>
+      <div class="help" id="help" hidden>
+        <span class="tag lg emergency"><span class="dot"></span><span data-t="emTag"></span></span>
+        <p class="say" id="emText"></p>
+        <a id="emCall" class="btn danger block"></a>
+      </div>
+      <p class="quiet" data-t="ref"></p>
+      <p class="n" id="num"></p>
+      <div id="texts"></div>
+      <section class="rx" id="rx" hidden aria-labelledby="rxTitle">
+        <header><h2 id="rxTitle" data-t="rxTitle"></h2><span class="when" id="rxWhen"></span></header>
+        <ul class="meds" id="meds"></ul>
+        <p class="note" data-t="rxNote"></p>
+      </section>
+      <button class="btn primary block noprint" id="download" hidden data-t="download"></button>
+      <p class="quiet noprint" data-t="refresh"></p>
+    </section>
+  </div>
+</main>
+<script>
+const T = {
+  sn: {
+    title: 'Ziva kuti case yenyu yasvika papi', digitsLab: 'Typai maDigits matatu ekupedzisira enumber yenyu yefoni',
+    open: 'Ratidza', ref: 'Reference yenyu', emTag: 'Emergency', refresh: 'Peji iyi inozvichinja yoga.',
+    emText: 'Kana muchiri kunzwa zvakaipa, fonerai ambulance pa {n}, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi.',
+    emCall: 'Fonerai {n}', bad: 'Typai maDigits matatu.', failed: 'Pane error yaitika. Tryai futi.',
+    rxTitle: 'E-prescription', rxRef: 'Reference {n}', download: 'Downloadai prescription (PDF)',
+    sampleTag: 'Sample, haisi patient chaiye', sampleHint: 'Sample: maDigits ndi 567.',
+    rxNote: 'Iratidzei kuPharmacy ipi neipi. Pharmacist achatarisa kuti iri kushanda.',
+  },
+  en: {
+    title: 'Check your progress', digitsLab: 'Type the last 3 digits of your phone number',
+    open: 'Show', ref: 'Your reference', emTag: 'This may be an emergency', refresh: 'This page updates by itself.',
+    emText: 'If you still feel very unwell, call an ambulance on {n}, or go to the nearest clinic or hospital now.',
+    emCall: 'Call {n}', bad: 'Type 3 digits.', failed: 'Something went wrong. Please try again.',
+    rxTitle: 'E-prescription', rxRef: 'Reference {n}', download: 'Download prescription (PDF)',
+    sampleTag: 'Sample, not a real patient', sampleHint: 'Sample: the digits are 567.',
+    rxNote: 'Show this at any pharmacy. The pharmacist will check it is valid.',
+  },
+};
+const $ = id => document.getElementById(id);
+const key = decodeURIComponent(location.pathname.split('/').pop());
+let lang = 'sn', S = T.sn, emergency = '994', timer = null;
+try { lang = localStorage.getItem('mukoti-lang') || 'sn'; } catch (e) {}
+
+function applyLang(l) {
+  lang = T[l] ? l : 'sn'; S = T[lang]; document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = S[el.dataset.t]; });
+}
+function fail(msg) { $('err').textContent = msg; $('err').hidden = false; }
+
+// The digits stay in this tab only, for the refresh. They are never put in the address.
+async function load(digits) {
+  const fd = new FormData(); fd.append('digits', digits); fd.append('lang', lang);
+  let r;
+  try { r = await fetch('/api/status/' + encodeURIComponent(key), { method: 'POST', body: fd }); }
+  catch (e) { if (!$('show').hidden) return; return fail(S.failed); }
+  if (!r.ok) {
+    const why = (await r.json().catch(() => ({}))).detail || S.failed;
+    try { sessionStorage.removeItem('mukoti-digits:' + key); } catch (e) {}
+    clearInterval(timer); $('show').hidden = true; $('ask').hidden = false;
+    return fail(why);
+  }
+  const v = await r.json();
+  try { sessionStorage.setItem('mukoti-digits:' + key, digits); } catch (e) {}
+  applyLang(v.lang);
+  $('ask').hidden = true; $('show').hidden = false; $('err').hidden = true;
+  $('num').textContent = v.number;
+  $('texts').innerHTML = '';
+  v.texts.forEach(t => { const p = document.createElement('p'); p.className = 'say'; p.textContent = t; $('texts').append(p); });
+  // The e-prescription: what to buy, how much and how to take it. Never the diagnosis.
+  const rx = v.prescription;
+  $('meds').innerHTML = '';
+  if (rx) rx.items.forEach(m => { const li = document.createElement('li'); const b = document.createElement('b');
+    b.textContent = `${m.name} · ${m.qty} ${m.unit}`;
+    const s = document.createElement('span'); s.textContent = m.how; li.append(b, s); $('meds').append(li); });
+  if (rx) $('rxWhen').textContent = S.rxRef.replace('{n}', rx.number) + ' · ' + new Date(rx.date * 1000).toLocaleDateString(lang === 'sn' ? 'en-ZW' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  $('rx').hidden = $('download').hidden = !rx;
+  $('sampleTag').hidden = !v.sample;
+  $('help').hidden = !v.emergency;
+  $('emText').textContent = S.emText.replace('{n}', emergency);
+  $('emCall').href = 'tel:' + emergency; $('emCall').textContent = S.emCall.replace('{n}', emergency);
+  clearInterval(timer); timer = setInterval(() => load(digits), 30000);
+}
+
+$('open').onclick = () => {
+  const d = $('digits').value.replace(/\D/g, '');
+  if (d.length !== 3) return fail(S.bad);
+  load(d);
+};
+// The PDF is asked for with a POST, so the digits are never in an address. The browser saves what comes back.
+$('download').onclick = async () => {
+  const digits = (() => { try { return sessionStorage.getItem('mukoti-digits:' + key); } catch (e) { return null; } })();
+  if (!digits) return;
+  const fd = new FormData(); fd.append('digits', digits); fd.append('lang', lang);
+  const r = await fetch('/api/status/' + encodeURIComponent(key) + '/prescription.pdf', { method: 'POST', body: fd }).catch(() => null);
+  if (!r || !r.ok) return alert(S.failed);
+  const name = ((r.headers.get('content-disposition') || '').match(/filename="([^"]+)"/) || [])[1] || 'e-prescription.pdf';
+  const a = document.createElement('a'); a.href = URL.createObjectURL(await r.blob()); a.download = name;
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+};
+$('digits').onkeydown = e => { if (e.key === 'Enter') $('open').click(); };
+
+applyLang(lang);
+$('sampleHint').hidden = key !== 'sample';
+fetch('/api/config').then(r => r.json()).then(c => { if (c.emergency_number) emergency = c.emergency_number; }).catch(() => {});
+try { const d = sessionStorage.getItem('mukoti-digits:' + key); if (d) load(d); } catch (e) {}
+</script>
+</body>
+</html>

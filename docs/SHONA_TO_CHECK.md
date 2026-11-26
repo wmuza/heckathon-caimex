@@ -15,6 +15,28 @@ In `app/prompts.py`.
 | Thank you. Ndaudza nurse zvamataura. Please garai mumirire, nurse achakudaidzai. | Thank you. I have passed this to the nurse. Please take a seat, the nurse will call you. |  |
 | Thank you. Ndiri kudaidza nurse izvozvi. Please garai pano, nurse ari kuuya. | Thank you. I am calling the nurse now. Please stay here, the nurse is coming. |  |
 
+## What the helper says to a patient at home (online visits)
+
+In `app/prompts.py`.
+
+| Shona | Meant to say | OK? |
+|---|---|---|
+| Mhoroi. Ndiri helper yeClinic, handisi doctor. Ndichakubvunzai maQuestions mashoma kuti nurse akurumidze kukubatsirai. Chii chiri kukunetsai nhasi? | Hello. I am the clinic's helper, not a doctor. I will ask you a few short questions so the nurse can help you sooner. What is troubling you today? |  |
+| Thank you. Ndaudza nurse zvamataura. Clinic ichakufonerai munguva pfupi. | Thank you. I have passed this to the nurse. The clinic will call you back soon. |  |
+| Izvi zvingangova emergency. Fonerai ambulance pa 994, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi. | This may be an emergency. Call an ambulance on 994, or go to the nearest clinic or hospital now. |  |
+
+## The status page a patient at home comes back to
+
+In `app/prompts.py`.
+
+| Shona | Meant to say | OK? |
+|---|---|---|
+| MaAnswers enyu ari kuna nurse. Clinic ichakufonerai pa {p}. | Your answers are with the nurse. The clinic will call you on {p}. |  |
+| Nurse ane case yenyu. Doctor achasarudza zvinotevera. | The nurse has your case. A doctor will decide what happens next. |  |
+| Please uyai kuHospital. Uyai neReference {n}. | Please come to the hospital. Bring your reference {n}. |  |
+| Doctor aona case yenyu. Hamudi mushonga parizvino. Kana mukanzwa worse, uyai kuHospital. | The doctor has looked at your case. You do not need medicine now. If you feel worse, come to the hospital. |  |
+| Doctor akunyorerai prescription. Iratidzei kuPharmacy ipi neipi kuti mutenge mushonga wenyu. | The doctor has written you a prescription. Show it at any pharmacy to buy your medicine. |  |
+
 ## What the helper says: the questions
 
 In `app/prompts.py`.
@@ -154,6 +176,43 @@ In `web/index.html`.
 | Tryai futi | Try again |  |
 | Thank you. Garai mumirire, nurse achakudaidzai. | Thank you. Please take a seat, the nurse will call you. |  |
 | Thank you. Nurse adaidzwa izvozvi. Please garai pano. | Thank you. The nurse has been called. Please stay here. |  |
+| Number yenyu yefoni | Your phone number |  |
+| Nurse chete ndiye anoona number iyi, kuti akufonerei. InoDeletwa after 24 hours. | Only the clinic's nurse sees this number, to call you back. It is deleted after one day. |  |
+| Helper yeClinic | The clinic's helper |  |
+| Reference yenyu | Your reference |  |
+| Ndichakubvunzai maQuestions mashoma chete. MaAnswers enyu anoenda kuna nurse, uye clinic ichakufonerai. | I will ask you a few short questions. Your answers go to the nurse, and the clinic will call you back. |  |
+| Helper iyi iComputer, haisi doctor. Kana iri emergency, fonerai {n} izvozvi. | This helper is a computer, not a doctor. If it is serious, call {n} now. |  |
+| Thank you. Clinic ichakufonerai pa {p} munguva pfupi. | Thank you. The clinic will call you on {p} soon. |  |
+| Emergency | This may be an emergency |  |
+| Fonerai ambulance pa {n}, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi. | Call an ambulance on {n}, or go to the nearest clinic or hospital now. |  |
+| Fonerai {n} | Call {n} |  |
+| Ziva kuti case yenyu yasvika papi | Check your progress |  |
+| Onai visit yenyu yekupedzisira | Check my last visit |  |
+| Onai sample e-prescription | See a sample e-prescription |  |
+| Chengetai link iyi. Muchada maDigits matatu ekupedzisira enumber yenyu yefoni. | Keep this link. You will need the last 3 digits of your phone number. |  |
+
+## The status page's own words
+
+In `web/status.html`.
+
+| Shona | Meant to say | OK? |
+|---|---|---|
+| Ziva kuti case yenyu yasvika papi | Check your progress |  |
+| Typai maDigits matatu ekupedzisira enumber yenyu yefoni | Type the last 3 digits of your phone number |  |
+| Ratidza | Show |  |
+| Reference yenyu | Your reference |  |
+| Emergency | This may be an emergency |  |
+| Peji iyi inozvichinja yoga. | This page updates by itself. |  |
+| Kana muchiri kunzwa zvakaipa, fonerai ambulance pa {n}, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi. | If you still feel very unwell, call an ambulance on {n}, or go to the nearest clinic or hospital now. |  |
+| Fonerai {n} | Call {n} |  |
+| Typai maDigits matatu. | Type 3 digits. |  |
+| Pane error yaitika. Tryai futi. | Something went wrong. Please try again. |  |
+| E-prescription | E-prescription |  |
+| Reference {n} | Reference {n} |  |
+| Downloadai prescription (PDF) | Download prescription (PDF) |  |
+| Sample, haisi patient chaiye | Sample, not a real patient |  |
+| Sample: maDigits ndi 567. | Sample: the digits are 567. |  |
+| Iratidzei kuPharmacy ipi neipi. Pharmacist achatarisa kuti iri kushanda. | Show this at any pharmacy. The pharmacist will check it is valid. |  |
 
 ## Sample patients: answers every Shona patient shares
 

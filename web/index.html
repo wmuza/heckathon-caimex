@@ -167,8 +167,15 @@
       <div class="facts">
         <div class="fact"><span class="art mini" id="artRec" hidden></span><span data-t="consent"></span></div>
         <div class="fact"><span class="art mini" id="artDoc" hidden></span><span data-t="notdoctor"></span></div>
+        <div class="fact" id="phoneWhyFact" hidden><span data-t="phoneWhy"></span></div>
+      </div>
+      <div class="group" id="phoneGroup" hidden>
+        <label class="lab" for="phone" data-t="phoneLab"></label>
+        <input id="phone" class="field" type="tel" inputmode="tel" autocomplete="tel" placeholder="0771 234 567">
+        <p class="callout" id="phoneErr" role="alert" hidden></p>
       </div>
       <button id="go" class="btn primary block go" data-t="start"></button>
+      <a id="lastVisit" class="btn block" hidden data-t="lastVisit"></a>
       <details class="more">
         <summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span data-t="more"></span></summary>
         <div class="opts">
@@ -176,6 +183,7 @@
           <button class="opt" id="optType" role="switch" aria-checked="false"><span class="box"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span data-t="type"></span></button>
           <button class="opt" id="optGloss" role="switch" aria-checked="false"><span class="box"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span data-t="captions"></span></button>
           <button id="samples" class="btn block" data-t="sample"></button>
+          <a id="sampleRx" class="btn block" href="/status/sample" hidden data-t="sampleRx"></a>
         </div>
       </details>
       </div>
@@ -208,6 +216,9 @@
       <p class="quiet" data-t="yourNumber"></p>
       <p class="n" id="num">1</p>
       <p class="big" id="doneText"></p>
+      <a id="callEm" class="btn danger block" style="max-width:320px" hidden></a>
+      <a id="statusLink" class="btn primary block" style="max-width:320px" hidden data-t="checkProgress"></a>
+      <p class="quiet" id="keepLink" data-t="keepLink" style="max-width:30ch" hidden></p>
       <button id="again" class="btn block" style="max-width:320px" data-t="next"></button>
     </section>
   </div>
@@ -266,6 +277,15 @@ const T = {
     done: 'Done', alarmTag: 'Nurse ari kuuya', retry: 'Tryai futi',
     doneText: 'Thank you. Garai mumirire, nurse achakudaidzai.',
     alarmText: 'Thank you. Nurse adaidzwa izvozvi. Please garai pano.',
+    // Online, from home
+    phoneLab: 'Number yenyu yefoni', phoneWhy: 'Nurse chete ndiye anoona number iyi, kuti akufonerei. InoDeletwa after 24 hours.',
+    onWelcome: 'Helper yeClinic', yourRef: 'Reference yenyu',
+    onIntro: 'Ndichakubvunzai maQuestions mashoma chete. MaAnswers enyu anoenda kuna nurse, uye clinic ichakufonerai.',
+    onNotdoctor: 'Helper iyi iComputer, haisi doctor. Kana iri emergency, fonerai {n} izvozvi.',
+    onDone: 'Thank you. Clinic ichakufonerai pa {p} munguva pfupi.', onAlarmTag: 'Emergency',
+    onAlarmText: 'Fonerai ambulance pa {n}, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi.', callEm: 'Fonerai {n}',
+    checkProgress: 'Ziva kuti case yenyu yasvika papi', lastVisit: 'Onai visit yenyu yekupedzisira', sampleRx: 'Onai sample e-prescription',
+    keepLink: 'Chengetai link iyi. Muchada maDigits matatu ekupedzisira enumber yenyu yefoni.',
   },
   en: {
     sub: "The nurse's helper. Speak, and be helped sooner", welcome: 'Welcome to the clinic',
@@ -287,9 +307,21 @@ const T = {
     done: 'Finished', alarmTag: 'The nurse is coming', retry: 'Try again',
     doneText: 'Thank you. Please take a seat, the nurse will call you.',
     alarmText: 'Thank you. The nurse has been called. Please stay here.',
+    // Online, from home
+    phoneLab: 'Your phone number', phoneWhy: "Only the clinic's nurse sees this number, to call you back. It is deleted after one day.",
+    onWelcome: "The clinic's helper", yourRef: 'Your reference',
+    onIntro: 'I will ask you a few short questions. Your answers go to the nurse, and the clinic will call you back.',
+    onNotdoctor: 'This helper is a computer, not a doctor. If it is serious, call {n} now.',
+    onDone: 'Thank you. The clinic will call you on {p} soon.', onAlarmTag: 'This may be an emergency',
+    onAlarmText: 'Call an ambulance on {n}, or go to the nearest clinic or hospital now.', callEm: 'Call {n}',
+    checkProgress: 'Check your progress', lastVisit: 'Check my last visit', sampleRx: 'See a sample e-prescription',
+    keepLink: 'Keep this link. You will need the last 3 digits of your phone number.',
   },
 };
 const params = new URLSearchParams(location.search);
+// Online: the patient is at home. They give a phone number, the clinic calls back, and an emergency is told to call for help.
+const online = params.get('online') === '1';
+let emergency = '994';
 let lang = 'sn', S = T.sn;
 let visit = null, sample = null, busy = false, maxQ = 6;
 let autoListen = true, typing = false, captions = params.get('captions') === '1';
@@ -306,6 +338,11 @@ function applyLang(l) {
   document.querySelectorAll('[data-t]').forEach(el => { el.textContent = S[el.dataset.t]; });
   document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
   $('text').placeholder = S.placeholder;
+  if (online) {
+    const say = (k, v) => document.querySelectorAll(`[data-t="${k}"]`).forEach(el => { el.textContent = v; });
+    say('welcome', S.onWelcome); say('intro', S.onIntro); say('yourNumber', S.yourRef);
+    say('notdoctor', S.onNotdoctor.replace('{n}', emergency));
+  }
   try { localStorage.setItem('mukoti-lang', lang); } catch (e) {}
 }
 document.querySelectorAll('[data-lang]').forEach(b => {
@@ -473,9 +510,16 @@ async function begin(sampleInfo) {
   $('go').disabled = true;
   try {
     const q = new URLSearchParams({ lang: sample ? sample.lang : lang }); if (sample) q.set('sample', sample.id);
-    const r = await fetch('/api/visits?' + q, { method: 'POST' });
+    const fd = new FormData();
+    if (online && !sample) { q.set('online', '1'); fd.append('phone', $('phone').value); }
+    const r = await fetch('/api/visits?' + q, { method: 'POST', body: fd });
+    if (online && (r.status === 400 || r.status === 429)) {      // a wrong number, or too many checks: say why, here
+      const why = (await r.json().catch(() => ({}))).detail || S.failed;
+      $('phoneErr').textContent = why; $('phoneErr').hidden = false; $('go').disabled = false; sample = null; $('phone').focus();
+      return;
+    }
     if (!r.ok) throw new Error(r.status);
-    visit = await r.json();
+    visit = await r.json(); $('phoneErr').hidden = true;
   } catch (e) { $('go').disabled = false; sample = null; alert(S.failed); return; }
   if (visit.lang !== lang) applyLang(visit.lang);
   maxQ = visit.of || 6;
@@ -565,7 +609,24 @@ function finished(alarm) {
   $('doneTag').className = 'tag lg ' + (alarm ? 'urgent' : 'routine');
   $('doneTagText').textContent = alarm ? S.alarmTag : S.done;
   $('doneText').textContent = alarm ? S.alarmText : S.doneText;
-  Art.show($('ticketArt'), alarm ? 'nurse_coming' : 'wait', $('doneText').textContent);
+  $('callEm').hidden = true; $('again').hidden = !!visit.online;
+  $('statusLink').hidden = $('keepLink').hidden = !visit.status_url;
+  if (visit.status_url) {
+    $('statusLink').href = visit.status_url;                          // the patient's own page, for the doctor's answer
+    try { localStorage.setItem('mukoti-status', JSON.stringify({ url: visit.status_url, number: visit.number })); } catch (e) {}
+  }      // "Next patient" is for the clinic's tablet
+  if (visit.online) {
+    // At home nobody is coming: an emergency is told to call for help now, the rest that the clinic will call back.
+    $('doneTag').className = 'tag lg ' + (alarm ? 'emergency' : 'routine');
+    $('doneTagText').textContent = alarm ? S.onAlarmTag : S.done;
+    $('doneText').textContent = alarm ? S.onAlarmText.replace('{n}', emergency) : S.onDone.replace('{p}', visit.phone);
+    if (alarm) {
+      $('callEm').href = 'tel:' + emergency; $('callEm').textContent = S.callEm.replace('{n}', emergency); $('callEm').hidden = false;
+      $('doneTag').after($('doneText'), $('callEm'));                  // what to do, then the button, before the reference
+    }
+  }
+  if (visit.online && alarm) $('ticketArt').hidden = true;          // no "nurse coming" picture: the call button leads
+  else Art.show($('ticketArt'), alarm ? 'nurse_coming' : 'wait', $('doneText').textContent);
   visit = null;
 }
 
@@ -610,6 +671,11 @@ $('closeSheet').onclick = () => { $('sheet').hidden = true; };
 $('sheet').onclick = e => { if (e.target === $('sheet')) $('sheet').hidden = true; };
 
 applyLang(lang);
+if (online) {
+  $('phoneGroup').hidden = false; $('phoneWhyFact').hidden = false; $('sampleRx').hidden = false;
+  try { const last = JSON.parse(localStorage.getItem('mukoti-status') || 'null'); if (last && last.url) { $('lastVisit').href = last.url; $('lastVisit').hidden = false; } } catch (e) {}
+  fetch('/api/config').then(r => r.json()).then(c => { if (c.emergency_number) { emergency = c.emergency_number; applyLang(lang); } }).catch(() => {});
+}
 Art.show($('artWelcome'), 'welcome', ''); Art.show($('artRec'), 'recording', ''); Art.show($('artDoc'), 'not_doctor', '');
 </script>
 <script src="footer.js"></script>

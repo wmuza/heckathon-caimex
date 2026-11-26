@@ -59,4 +59,10 @@ PROVINCE = os.environ.get("MUKOTI_PROVINCE", "Manicaland")
 # Visits older than this are deleted, recordings included, when the server starts.
 KEEP_HOURS = float(os.environ.get("MUKOTI_KEEP_HOURS", "24"))
 
+# Online visits, from home (/?online=1). The emergency number is said to a patient at home with a danger
+# sign. 994 is the ambulance number commonly given for Zimbabwe: confirm it for the clinic's area before use.
+EMERGENCY_NUMBER = os.environ.get("MUKOTI_EMERGENCY_NUMBER", "994")
+ONLINE_PER_HOUR = 3                                                   # from one device (address)
+ONLINE_PER_DAY = int(os.environ.get("MUKOTI_ONLINE_PER_DAY", "100"))  # for the whole clinic
+
 LANGS = ("sn", "en")

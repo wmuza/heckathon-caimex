@@ -24,6 +24,7 @@ echo 'CAIMEX_API_KEY=sk-or-...' > .env     # never commit this file
 | Welcome | http://127.0.0.1:8000/welcome | Front page: start a visit or open a staff workspace |
 | Demo | http://127.0.0.1:8000/demo | A room: the patient and the nurse side by side |
 | Patient | http://127.0.0.1:8000 | The patient, on a phone or tablet at the door. Use `/?kiosk=1` there: no menu, so no way into the staff screens |
+| Online | http://127.0.0.1:8000/?online=1 | A patient at home, on their own phone. The clinic calls them back |
 | Nurse's queue | http://127.0.0.1:8000/nurse | The nurse |
 | Engine | http://127.0.0.1:8000/engine | Judges: how CAIMEx is used, with live numbers |
 | Voice check | http://127.0.0.1:8000/check | The team: test the recogniser on real voices |
@@ -82,13 +83,15 @@ Three other agents were asked for a design (Codex, Antigravity, Cursor); this is
   number counts only when the words say someone has that age, so "three days ago" is not an age.
 - **Blood pressure** is keyed as upper over lower (120/80). A slip such as 80/120 or 400/80 is
   refused. A reading of 180 upper or 120 lower and above, or under 90 upper, is kept with a
-  warning to measure again and tell the nurse. Those limits are the commonly used ones; no
-  clinician has reviewed them, and the warning does not change the level.
+  warning to measure again, and the visit is raised to urgent (never lowered). Those limits are the
+  commonly used ones; no clinician has reviewed them.
 - **Weight, height and sex** are never taken from speech. Staff key them in on `/vitals` against
   the ticket number, and they show as "measured". Outside 1 to 250 kg or 45 to 220 cm a value is
   refused. A child keyed above 40 kg is kept with a warning to weigh again.
-- **No name is kept.** The ticket number links the visit to the clinic's own register.
-- The details sit beside the note. They cannot change the level, and no model is sent them.
+- **No name is kept.** The ticket number links the visit to the clinic's own register. An online
+  visit also keeps a phone number for the callback (see below).
+- The details sit beside the note. Only a measured blood pressure can change the level, and no model
+  is sent them.
   Both are tests. An emergency ticket cannot be opened on the vitals page: it goes straight to the nurse.
 
 Screenshots: `docs/screens/4_details_*.png`.
@@ -97,6 +100,57 @@ Screenshots: `docs/screens/4_details_*.png`.
 The Shona number words were written by an AI assistant and need a native speaker. The nurse page
 has no control yet to correct a misheard age (the server accepts one). A low weight for a
 child's age is not flagged: that needs the WHO weight-for-age tables.
+
+## Online, from home
+
+`/?online=1` (or "Check from home" on the welcome page) is the same six-question talk for a patient
+who is not at the clinic. Only what is said at the start and the end changes, because nobody is
+coming and there is no seat to take:
+
+- **The patient types a mobile number** before the talk. It is sent in the request body, shown only
+  on the nurse's screen (behind the PIN) with a "Call back" button, never sent to a model, and deleted
+  with the visit after 24 hours. A test checks that no model call carries it.
+- **An emergency is told to get help now:** "This may be an emergency. Call an ambulance on 994, or
+  go to the nearest clinic or hospital now", with a button that dials. The nurse's station still
+  sounds the alarm, saying "Online patient… Call them back now". **994 is not yet confirmed** for the
+  clinic's area: set `MUKOTI_EMERGENCY_NUMBER`.
+- **Anything else ends with "The clinic will call you back soon"**, the number they gave, and their
+  reference (the ticket number).
+- An online visit is in the nurse's queue with an "Online · call back" label, ordered by urgency like
+  any other. It is left off the vitals page and the waiting-room board, and cannot be called to a room.
+- **Limits:** 3 online checks an hour from one address and 100 a day for the clinic
+  (`MUKOTI_ONLINE_PER_DAY`). Visits at the clinic are not limited.
+
+**The status page.** The end screen gives a "Check your progress" link, `/status/<key>`, which the
+phone also remembers. The key is long and random and is not the visit id the staff screens use. The
+page asks for the last 3 digits of the phone number; five wrong tries lock the link for an hour. It
+shows one fixed sentence for where the visit is: with the nurse, waiting for the doctor, then the
+doctor's decision.
+
+**A patient at home never uses the clinic's pharmacy.** For an online visit the doctor has two
+choices: **treat at home**, with an **e-prescription** the patient shows at any pharmacy to buy the
+medicine, or **come to the hospital**. The e-prescription on the status page lists each medicine, how
+much and how to take it, with the reference and the date, and downloads as a one-page PDF (written by
+`app/eprescription.py`, with no new dependency).
+
+**For the demo:** `/status/sample` (also "See a sample e-prescription" under "More options" on the
+online start screen) is a made-up patient with an e-prescription. The digits are **567**. It is built
+fresh on each request and never stored, so it is in no queue, count or pharmacy record, it is never
+locked out, and the page and the PDF are marked "Sample, not a real patient" / "SAMPLE - NOT A VALID
+PRESCRIPTION". Online visits
+are never owed anything at the clinic pharmacy, and dispensing to one is refused. **The page never
+shows the diagnosis**, the note or anything a model wrote: the diagnosis is said by a person, on the
+phone. A test puts a unique diagnosis through the doctor's page and checks it never reaches the status
+page. The link lasts as long as the visit, 24 hours by default.
+
+Online visits are never called on the waiting-room board, even when the nurse marks them seen or the
+doctor prescribes; the doctor's and pharmacy pages label them "online".
+
+Not done: no SMS, so the number is not proven to belong to the patient and the patient must open the
+link to learn the doctor's decision. **The e-prescription is not yet one a pharmacy can trust**: it has
+no prescriber's name or registration number (MDPCZ), no signature, and no way for a pharmacist to check
+it against the clinic. Those, and MCAZ's rules for electronic prescriptions, come before real use. The
+link ends after 24 hours by default. The Shona lines are in `docs/SHONA_TO_CHECK.md` for a native speaker.
 
 ## From the door to the pharmacy
 
@@ -304,6 +358,10 @@ gives a second opinion with a score for each level (`/v1/decisions`).
 | Interview model | The chat model, during the talk | Sound the alarm |
 | Note model | The chat model with reasoning, after the talk | Give any level |
 | Second opinion | A smaller, different model reading the finished note | Raise routine to urgent, never more |
+
+A fifth check joins once staff type a blood pressure on the vitals or nurse's page: an upper
+number under 90, or a reading of 180 upper or 120 lower and over, raises the visit to urgent
+(`details.vitals_level`). The limits are the commonly used ones; no clinician has reviewed them.
 
 The level shown is the highest any check gives. If the note cannot be written, the visit is shown
 as urgent, never routine. Only the nurse can lower a level, and her choice is recorded as hers.

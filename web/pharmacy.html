@@ -241,7 +241,7 @@ function renderGive() {
   const t = d.tickets.find(x => x.id === ticket);
   if (!t) return;
   $('whoFace').innerHTML = face(t, 'lg');
-  $('whoT').textContent = `Ticket ${t.number}` + (t.photo ? '' : ' · no photo taken');
+  $('whoT').textContent = `Ticket ${t.number}` + (t.online ? ' · online: e-prescription, not dispensed here' : t.photo ? '' : ' · no photo taken');
   $('whoGot').textContent = t.given.length ? 'Already given: ' + t.given.map(g => `${med(g.med) ? med(g.med).name : g.med} × ${g.qty}`).join(', ') : 'Nothing dispensed to this ticket yet.';
   const c = t.consult;
   $('rxBox').innerHTML = !c ? '<p class="quiet">The doctor has not written a prescription for this ticket. Anything dispensed needs the supervisor.</p>'

@@ -141,7 +141,11 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const CK = '<svg class="ck" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
 const LABEL = { emergency: 'Emergency', urgent: 'Urgent', routine: 'Routine' };
 const STEPS = [['intake', 'Helper'], ['nurse', 'Nurse'], ['doctor', 'Doctor'], ['pharmacy', 'Pharmacy'], ['done', 'Done']];
-const OUT = { treated: 'Treated here', referred: 'Referred', admitted: 'Admitted' };
+const OUT = { treated: 'Treated here', referred: 'Referred', admitted: 'Admitted', come_in: 'Come to the hospital' };
+// A patient at home is treated at home with an e-prescription (bought at any pharmacy), or asked to come in.
+const OUT_ONLINE = { treated: 'Treat at home (e-prescription)', come_in: 'Come to the hospital' };
+const outLabel = (v, k) => (v.online ? OUT_ONLINE : OUT)[k];
+const outcomes = v => v.online ? Object.keys(OUT_ONLINE) : ['treated', 'referred', 'admitted'];
 const pictures = {};
 let d = null, current = null, form = null, editing = false, lastSig = '';
 
@@ -173,7 +177,7 @@ function renderList() {
     const rows = d.visits.filter(v => v.stage === st);
     if (latest) rows.sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
     return rows.length ? `<p class="group">${title} (${rows.length})</p>` + rows.map(v => `<button class="row" data-id="${v.id}" aria-current="${v.id === current}">
-      ${face(v)}<span><span class="cc ${v.complaint || v.alarm ? '' : 'nonote'}">${esc(headline(v))}</span><span class="sub">Ticket ${v.number}</span></span>
+      ${face(v)}<span><span class="cc ${v.complaint || v.alarm ? '' : 'nonote'}">${esc(headline(v))}</span><span class="sub">Ticket ${v.number}${v.online ? ' · online, call back' : ''}</span></span>
       <span class="tag ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span></button>`).join('') : '';
   }).join('');
   $('list').querySelectorAll('.row').forEach(b => b.onclick = () => { current = b.dataset.id; form = null; editing = false; lastSig = ''; render(); });
@@ -238,11 +242,11 @@ function renderDetail() {
   el.hidden = !v;
   if (!v) return;
   const c = v.consult, open = !c || editing;
-  if (open && !form) form = c ? { diagnosis: c.diagnosis, outcome: c.outcome, rx: c.rx.map(l => ({ ...l })) } : { diagnosis: '', outcome: 'treated', rx: [] };
+  if (open && !form) form = c ? { diagnosis: c.diagnosis, outcome: c.outcome, rx: c.rx.map(l => ({ ...l })) } : { diagnosis: '', outcome: v.online ? 'come_in' : 'treated', rx: [] };
   const given = v.given.length ? `<p class="quiet small" style="margin-top:8px">Dispensed so far: ${v.given.map(g => `${esc(med(g.med).name)} × ${g.qty}`).join(', ')}.</p>` : '';
   el.innerHTML = `
     <div class="hero">${face(v, 'lg')}
-      <div style="min-width:0"><div class="who-line"><span class="tag lg ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span><span class="tag">Ticket ${v.number}</span></div>
+      <div style="min-width:0"><div class="who-line"><span class="tag lg ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span><span class="tag">Ticket ${v.number}</span>${v.online ? `<span class="tag blue">Online · call back ${esc(v.phone || '')}</span>` : ''}</div>
         <h2>${esc(headline(v))}</h2><p class="quiet">${esc(v.patient || '')}</p></div></div>
     ${v.has_note ? '' : `<p class="callout warn">The helper could not write a note for this patient. What they said, and their recording, are on the <a href="/nurse">nurse's queue</a>.</p>`}
     ${steps(v.stage)}
@@ -270,12 +274,12 @@ function renderDetail() {
       <button class="linkbtn" data-drop="${i}">Remove</button></li>`).join('')}</ul>
     ${form.rx.length ? '' : '<p class="quiet small" style="margin-top:8px">Nothing prescribed yet.</p>'}
     <h3 class="sec-h" id="outLab">What happens next</h3>
-    <div class="seg big" role="group" aria-labelledby="outLab">${Object.keys(OUT).map(k => `<button data-out="${k}" aria-pressed="${k === form.outcome}">${CK}${OUT[k]}</button>`).join('')}</div>
+    <div class="seg big" role="group" aria-labelledby="outLab">${outcomes(v).map(k => `<button data-out="${k}" aria-pressed="${k === form.outcome}">${CK}${outLabel(v, k)}</button>`).join('')}</div>
     <p class="msg" id="msg" role="alert" style="margin-top:10px"></p>
     <button class="btn primary block" id="send">${form.rx.length ? 'Send the prescription to the pharmacy' : 'Finish the visit'}</button>`
     : `
     <h3 class="sec-h">Your diagnosis</h3>
-    <p class="title">${esc(c.diagnosis)}</p><p class="quiet">${OUT[c.outcome]}</p>
+    <p class="title">${esc(c.diagnosis)}</p><p class="quiet">${outLabel(v, c.outcome)}</p>
     <h3 class="sec-h">Prescription</h3>
     ${c.rx.length ? `<ul class="rx">${c.rx.map(l => `<li><span><span class="strong">${esc(med(l.med).name)}</span><br><span class="q">${l.qty} ${esc(med(l.med).unit)} · ${esc(l.how)}</span></span></li>`).join('')}</ul>` : '<p class="quiet">Nothing was prescribed.</p>'}
     ${given}

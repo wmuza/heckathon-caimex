@@ -337,14 +337,59 @@ def test_blood_pressure_is_typed_as_upper_over_lower():
             details.entry("bp", bad)
 
 
-def test_a_very_high_or_low_pressure_is_kept_with_a_warning_and_does_not_move_the_level():
+def test_a_very_high_or_low_pressure_is_kept_with_a_warning():
     assert "Very high" in details.entry("bp", "190/100")["flag"]
     assert "Very high" in details.entry("bp", "150/125")["flag"]
     assert "Low" in details.entry("bp", "85/50")["flag"]
-    s = visits.new("sn")
-    before = triage.combine(visits._checks(s))
-    visits.set_detail(s, "bp", "190/100")
-    assert triage.combine(visits._checks(s)) == before
+
+
+@pytest.mark.parametrize("bp,level", [
+    (None, None), ("120/80", "routine"), ("89/60", "urgent"), ("90/60", "routine"),
+    ("180/90", "urgent"), ("150/120", "urgent"), ("179/119", "routine"),
+])
+def test_the_blood_pressure_gives_a_level(bp, level):
+    d = {"bp": details.entry("bp", bp) if bp else None}
+    assert details.vitals_level(d)[0] == level
+
+
+def _routine_visit(monkeypatch):
+    fake_chat(monkeypatch, {"heard_en": "I have a headache", "topic": "age", "done": True}, NOTE)
+    fake_second(monkeypatch, {"0": 1.0, "1": 0.0, "2": 0.0})
+    s = talk(visits.new("en"), ["I have a headache"])
+    assert s["triage"]["level"] == "routine"
+    return s
+
+
+def test_a_low_or_very_high_pressure_raises_a_finished_visit_to_urgent(monkeypatch):
+    for bp in ("80/50", "190/125"):
+        s = _routine_visit(monkeypatch)
+        visits.set_detail(s, "bp", bp)
+        assert s["triage"]["level"] == "urgent" and s["triage"]["raised_by"] == ["Measured vitals"]
+        assert "Second opinion" in [c["name"] for c in s["triage"]["checks"]]     # not lost on re-combine
+
+
+def test_a_normal_pressure_leaves_a_routine_visit_routine(monkeypatch):
+    s = _routine_visit(monkeypatch)
+    visits.set_detail(s, "bp", "120/80")
+    assert s["triage"]["level"] == "routine"
+    assert "Measured vitals" in [c["name"] for c in s["triage"]["checks"]]
+
+
+def test_a_pressure_never_overrides_the_nurses_level(monkeypatch):
+    s = _routine_visit(monkeypatch)
+    s["triage"] = {**s["triage"], "level": "routine", "set_by_nurse": True}
+    visits.set_detail(s, "bp", "80/50")
+    assert s["triage"]["level"] == "routine" and s["triage"]["draft_level"] == "urgent"
+
+
+def test_a_pressure_entered_during_the_talk_counts_when_it_ends(monkeypatch):
+    fake_chat(monkeypatch, {"heard_en": "I have a headache", "topic": "age", "done": True}, NOTE)
+    fake_second(monkeypatch, {"0": 1.0, "1": 0.0, "2": 0.0})
+    s = visits.new("en")
+    visits.set_detail(s, "bp", "80/50")
+    assert s["triage"] is None
+    talk(s, ["I have a headache"])
+    assert s["triage"]["level"] == "urgent"
 
 
 # ── Not asking what the patient has already said ──
