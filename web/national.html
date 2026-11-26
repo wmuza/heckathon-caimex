@@ -58,7 +58,38 @@
   .tag.confirmed { background: var(--red-fill); color: var(--ink-on); } .tag.confirmed .dot { background: var(--ink-on); }
   .tag.likely { background: var(--warn-tint); color: var(--warn-ink); } .tag.likely .dot { background: var(--warn-dot); }
   .tag.watch { background: var(--selected); color: var(--blue-ink); } .tag.watch .dot { background: var(--blue-fill); }
-  .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
+  /* A warning: its score, its main reason and the next step; the full breakdown behind "Score breakdown" */
+  .main { margin-top: 10px; font-size: 0.9375rem; color: var(--ink-2); display: flex; gap: 4px 12px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+  .main > span { flex: 1 1 240px; }
+  .main .more-tg { min-height: 32px; padding: 0; white-space: nowrap; }
+  .main b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .scbar { height: 8px; border-radius: 4px; background: var(--neutral-tint); overflow: hidden; margin-top: 10px; }
+  .scbar i { display: block; height: 100%; border-radius: 4px; background: var(--blue-fill); }
+  .warn.confirmed .scbar i { background: var(--red-fill); } .warn.likely .scbar i { background: var(--warn-dot); }
+  .next { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: var(--selected); box-shadow: inset 4px 0 0 var(--blue-fill); font-weight: 600; line-height: 1.45; }
+  .next b { display: block; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-ink); }
+  .warn.confirmed .next { background: var(--red-tint); box-shadow: inset 4px 0 0 var(--red-fill); }
+  .warn.confirmed .next b { color: var(--red-ink); }
+  .more-tg svg { width: 16px; height: 16px; transition: transform 200ms ease; }
+  .more-tg[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .more { margin-top: 8px; padding: 4px 14px 10px; border-radius: 16px; background: var(--panel-sunk); }
+  /* Sources under the map, folded to one line */
+  details.cred { margin-top: 12px; }
+  details.cred > summary { cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--blue-ink); min-height: 36px; display: inline-flex; align-items: center; gap: 6px; list-style: none; }
+  details.cred > summary::-webkit-details-marker { display: none; }
+  details.cred > summary svg { width: 16px; height: 16px; transition: transform 200ms ease; }
+  details.cred[open] > summary svg { transform: rotate(180deg); }
+  /* Folded sections: a title and one line until opened */
+  details.fold { margin-top: 16px; padding: 0; }
+  details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-radius: 22px; }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+  details.fold > summary .t { flex: 1; min-width: 0; }
+  details.fold > summary .chev { width: 22px; height: 22px; flex: none; color: var(--btn-ink); transition: transform 200ms ease; }
+  details.fold[open] > summary .chev { transform: rotate(180deg); }
+  details.fold[open] > summary { border-bottom: 1px solid var(--divider); border-radius: 22px 22px 0 0; }
+  details.fold > .in { padding: 4px 20px 20px; }
   .out { margin-top: 10px; padding: 12px 14px; border-radius: 16px; background: var(--selected); }
   .out pre { white-space: pre-wrap; font: inherit; margin: 6px 0 0; }
   .ev { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 10px; margin-top: 12px; }
@@ -94,7 +125,8 @@
       </div>
       <div id="map"></div>
       <div class="legend" id="legend"></div>
-      <p class="quiet small" id="credit" style="margin-top:12px"></p>
+      <details class="cred"><summary>Map and weather sources<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <p class="quiet small" id="credit" style="margin-top:4px"></p></details>
     </section>
 
     <section class="panel warnpanel" aria-labelledby="wT">
@@ -104,15 +136,15 @@
     </section>
   </div>
 
-  <section class="panel" style="margin-top:16px" aria-labelledby="evT">
-    <h2 class="title" id="evT">The evidence behind the map</h2>
-    <div class="ev" id="ev"></div>
-  </section>
+  <details class="panel fold" id="evFold">
+    <summary><span class="t"><h2 class="title" id="evT">The evidence behind the map</h2><span class="quiet small">Weather is real · water reports and past cases are made up for the demo · the score uses our own weights</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+    <div class="in"><div class="ev" id="ev"></div></div>
+  </details>
 
-  <section class="panel" style="margin-top:16px" aria-labelledby="tblT">
-    <h2 class="title" id="tblT">Every province, as a table</h2>
-    <div class="scroll-x" style="margin-top:8px"><table class="t" id="tbl"></table></div>
-  </section>
+  <details class="panel fold" id="tblFold">
+    <summary><span class="t"><h2 class="title" id="tblT">Every province, as a table</h2><span class="quiet small" id="tblSum"></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+    <div class="in"><div class="scroll-x"><table class="t" id="tbl"></table></div></div>
+  </details>
 </div>
 
 <footer class="foot noprint">
@@ -166,16 +198,22 @@ function mapSvg() {
       <rect width="9" height="9" fill="var(--red-tint)"/><rect width="3" height="9" fill="var(--red-fill)" opacity="0.55"/></pattern></defs>${shapes}${labels}</svg>`;
 }
 
+const openWarn = new Set();                   // which warnings show their breakdown, kept across redraws
 function warnHtml(w) {
-  const id = w.province + '|' + w.disease, o = said[id];
-  return `<article class="warn">
+  const id = w.province + '|' + w.disease, o = said[id], open = openWarn.has(id), top = w.drivers[0];
+  return `<article class="warn ${w.level}">
     <div class="hd"><span class="art" aria-hidden="true">${pictures[w.picture] || ''}</span>
       <div><span class="tag ${w.level}"><span class="dot"></span>${LEVEL[w.level]}</span><h3 style="margin-top:4px">${esc(w.name)} in ${esc(w.province)}</h3></div>
       <div class="sc">${w.score}<small>out of 100</small></div></div>
-    <div class="dr">${w.drivers.map(x => `<span class="lb">${esc(x.label)}: <b>${esc(x.value)}</b> <span class="src ${SRC[x.source][0]}">${SRC[x.source][1]}</span></span><span class="pt">${x.points} of ${x.max}</span><span class="tr"><i style="width:${x.points / x.max * 100}%"></i></span>`).join('')}</div>
-    <p class="strong" style="margin-top:6px">${esc(w.advice)}</p>
-    <div class="acts"><button class="btn sm" data-why="${esc(id)}">Why? Ask CAIMEx</button><button class="btn sm" data-draft="${esc(id)}">Draft the alert with CAIMEx</button>
-      <button class="btn sm" data-say="${w.disease}">Hear the Shona warning</button></div>
+    <div class="scbar" aria-hidden="true"><i style="width:${Math.max(2, Math.min(100, w.score))}%"></i></div>
+    <div class="main"><span>${top ? `Main reason · ${esc(top.label)}: <b>${esc(top.value)}</b>` : ''}</span>
+      <button class="linkbtn more-tg" data-more="${esc(id)}" aria-expanded="${open}">${open ? 'Hide breakdown' : 'Score breakdown'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>
+    <div class="more" ${open ? '' : 'hidden'}>
+      <div class="dr">${w.drivers.map(x => `<span class="lb">${esc(x.label)}: <b>${esc(x.value)}</b> <span class="src ${SRC[x.source][0]}">${SRC[x.source][1]}</span></span><span class="pt">${x.points} of ${x.max}</span><span class="tr"><i style="width:${x.points / x.max * 100}%"></i></span>`).join('')}</div>
+    </div>
+    <p class="next"><b>Next step</b>${esc(w.advice)}</p>
+    <div class="acts"><button class="btn sm" data-why="${esc(id)}">Why? Ask CAIMEx</button><button class="btn sm" data-draft="${esc(id)}">Draft the alert</button>
+      <button class="btn sm" data-say="${w.disease}">Hear in Shona</button></div>
     ${o ? `<div class="out"><span class="src ai">${esc(o.by)}</span><pre>${esc(o.text)}</pre></div>` : ''}
   </article>`;
 }
@@ -202,6 +240,12 @@ function render() {
   $('warns').innerHTML = shown.length ? shown.map(warnHtml).join('') : `<p class="quiet" style="padding:16px 0">No warning for ${esc(picked)}. Conditions there are as usual.</p>`;
   $('warns').querySelectorAll('[data-why],[data-draft]').forEach(b => b.onclick = () => ask(b.dataset.why || b.dataset.draft, b.dataset.why ? 'why' : 'draft'));
   $('warns').querySelectorAll('[data-say]').forEach(b => b.onclick = () => new Audio(`/api/say/warning.mp3?disease=${b.dataset.say}&lang=sn`).play().catch(() => {}));
+  $('warns').querySelectorAll('[data-more]').forEach(b => b.onclick = () => {
+    const id = b.dataset.more; if (openWarn.has(id)) openWarn.delete(id); else openWarn.add(id);
+    render(); const again = document.querySelector(`[data-more="${CSS.escape(id)}"]`); if (again) again.focus();
+  });
+  const warned = new Set(d.warnings.map(w => w.province)).size;
+  $('tblSum').textContent = `${d.provinces.length} provinces · ${warned} with a warning`;
 
   $('ev').innerHTML = [
     ['Weather', 'real', 'Real', 'Rainfall and temperature for the last eight weeks and the coming week, for each province. Heavy rain favours diarrhoeal disease; rain a few weeks earlier, with warmth, favours malaria; cold favours chest infections.'],
