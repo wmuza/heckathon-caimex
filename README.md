@@ -2,7 +2,7 @@
 
 # Mukoti
 
-The first person every patient talks to at the clinic, in Shona or English.
+The first person every patient talks to at the clinic, in Shona or English..
 
 A patient speaks. Mukoti asks up to six short questions aloud, then gives the nurse a note in
 English and a queue with the most urgent patient at the top. Every model it calls is listed by the
