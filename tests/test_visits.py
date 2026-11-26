@@ -165,6 +165,33 @@ def test_a_level_the_nurse_set_survives_the_note_arriving(monkeypatch):
     assert s["triage"]["level"] == "routine" and s["triage"]["draft_level"] == "emergency"
 
 
+def test_a_failed_note_can_be_written_again_and_the_nurses_level_stands(monkeypatch):
+    fake_chat(monkeypatch, {"heard_en": "I have a headache", "topic": "age", "done": True}, None)
+    fake_second(monkeypatch, None)
+    s = talk(visits.new("en"), ["I have a headache"])
+    assert s["status"] == "ready" and s["note"] is None and s["note_failed"] and "could not be written" in s["error"]
+    assert s["triage"]["level"] == "urgent"                              # nobody read the talk: ahead of the queue
+
+    # It fails again: it says so again, and the visit is back where it was.
+    async def again():
+        visits.retry_note(s)
+        assert s["status"] == "summarising" and "error" not in s
+        await visits.wait_for_notes()
+    asyncio.run(again())
+    assert s["status"] == "ready" and s["note"] is None and "could not be written" in s["error"]
+
+    # Now the note model answers: the note is in, the message is gone, the checks are combined again.
+    fake_chat(monkeypatch, {"heard_en": "x", "topic": "age", "done": True}, NOTE)
+    asyncio.run(again())
+    assert s["status"] == "ready" and s["note"]["chief_complaint"] == "headache"
+    assert "error" not in s and not s["note_failed"] and s["triage"]["level"] == "routine"
+
+    # A level the nurse set herself is never overwritten by a new note.
+    s["note"], s["note_failed"], s["triage"] = None, True, {**s["triage"], "level": "emergency", "set_by_nurse": True}
+    asyncio.run(again())
+    assert s["triage"]["level"] == "emergency" and s["triage"]["draft_level"] == "routine"
+
+
 def test_three_silences_hand_the_visit_to_the_nurse(monkeypatch):
     fake_chat(monkeypatch, {"heard_en": "", "topic": "age", "done": False}, None)
     fake_second(monkeypatch, None)

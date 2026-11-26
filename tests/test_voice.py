@@ -92,6 +92,22 @@ def test_the_counts_are_numbers_only_and_match_each_screen(fresh, monkeypatch):
     assert TestClient(server.app).get("/api/counts").status_code == 401   # behind the staff PIN
 
 
+def test_only_a_waiting_visit_without_a_note_can_have_it_written_again(fresh, monkeypatch):
+    async def down(*a, **k):
+        raise gateway.GatewayError("down")
+    monkeypatch.setattr(gateway, "chat_json", down)
+    monkeypatch.setattr(gateway, "decide", down)
+    c = TestClient(server.app)
+    noted = visits.new("en"); noted["status"] = "ready"; noted["note"] = {"chief_complaint": "x"}
+    silent = visits.new("en"); silent["status"] = "ready"
+    failed = visits.new("en"); failed["status"] = "ready"; failed["note_failed"] = True
+    failed["turns"].append({"role": "user", "text": "My chest hurts"})
+    assert c.post(f"/api/visits/{noted['id']}/note").status_code == 409        # it has its note
+    assert c.post(f"/api/visits/{silent['id']}/note").status_code == 409       # nothing to write from
+    assert c.post("/api/visits/nosuch/note").status_code == 404
+    assert c.post(f"/api/visits/{failed['id']}/note").json() == {"ok": True, "status": "summarising"}
+
+
 def test_no_pharmacy_call_when_nothing_was_prescribed():
     s = visits.new("en"); s["status"] = "seen"
     TestClient(server.app).post(f"/api/visits/{s['id']}/consult", json={"diagnosis": "Headache", "outcome": "treated"})

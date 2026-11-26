@@ -700,6 +700,18 @@ async def set_fee(sid: str, body: Fee):
     return visits.vitals_row(s)
 
 
+@app.post("/api/visits/{sid}/note", dependencies=[Depends(nurse)])
+async def write_note_again(sid: str):
+    """The nurse asks for a note that could not be written to be written again."""
+    s = _visit(sid)
+    if s["status"] != "ready" or s.get("note"):
+        raise HTTPException(409, "Only a visit waiting for the nurse, without a note, can have it written again")
+    if not any(t["role"] == "user" for t in s["turns"]):
+        raise HTTPException(409, "The patient said nothing to write a note from")
+    visits.retry_note(s)
+    return {"ok": True, "status": s["status"]}
+
+
 @app.get("/api/counts", dependencies=[Depends(nurse)])
 async def counts():
     """How much work waits at each staff screen, for the menu bar and the welcome page. Numbers only,

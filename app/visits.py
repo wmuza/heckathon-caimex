@@ -487,6 +487,43 @@ def finish(s: dict) -> None:
 
 async def summarise(s: dict) -> None:
     """Write the nurse's note, ask for the second opinion, combine the checks."""
+    await _write_note(s)
+    await _conclude(s)
+    # For the outbreak watch: which symptom group is this visit? Asked of the model after the
+    # nurse already has her note, so it never delays her. If it fails, fixed words are used instead.
+    if not s.get("sample"):
+        said = " ".join(t.get("en") or t["text"] for t in s["turns"] if t["role"] == "user")
+        try:
+            s["syndrome"] = await ai.syndrome(((s.get("note") or {}).get("chief_complaint") or "") + ". " + said) or ""
+            save()
+        except Exception:
+            pass
+
+
+def retry_note(s: dict) -> None:
+    """The nurse asks for a failed note to be written again. The visit keeps its place in the queue and
+    its level until the new note is in; then the checks are combined again, and the nurse's own level,
+    if she set one, still stands. If it fails again, the visit says so again."""
+    s["status"] = "summarising"
+    s["note_failed"] = False
+    s.pop("error", None)
+    s["updated"] = time.time()
+    save()
+    try:
+        task = asyncio.get_running_loop().create_task(_rewrite_note(s))
+        _tasks.add(task)
+        task.add_done_callback(_tasks.discard)
+    except RuntimeError:        # no loop: the caller runs _rewrite_note() itself
+        pass
+
+
+async def _rewrite_note(s: dict) -> None:
+    await _write_note(s)
+    await _conclude(s)
+
+
+async def _write_note(s: dict) -> None:
+    """Ask the note model for the nurse's note. If it cannot be had, say why; the transcript stays."""
     lines = "\n".join(("Helper: " if t["role"] == "assistant" else "Patient: ") + t["text"]
                       for t in s["turns"])
     try:
@@ -513,21 +550,15 @@ async def summarise(s: dict) -> None:
         s["note"] = None
         s["note_failed"] = True
 
+
+async def _conclude(s: dict) -> None:
+    """After the note (or its failure): the second opinion, then every check combined."""
     others = triage.combine(_checks(s))["level"]
     second = await _second_opinion(s, others)
     s["status"] = "ready"
     _set_triage(s, triage.combine(_checks(s, second)))
     s["updated"] = time.time()
     save()
-    # For the outbreak watch: which symptom group is this visit? Asked of the model after the
-    # nurse already has her note, so it never delays her. If it fails, fixed words are used instead.
-    if not s.get("sample"):
-        said = " ".join(t.get("en") or t["text"] for t in s["turns"] if t["role"] == "user")
-        try:
-            s["syndrome"] = await ai.syndrome(((s.get("note") or {}).get("chief_complaint") or "") + ". " + said) or ""
-            save()
-        except Exception:
-            pass
 
 
 async def _second_opinion(s: dict, others: str) -> dict:
