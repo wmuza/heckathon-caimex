@@ -284,11 +284,6 @@
 </div>
 
 <footer class="foot noprint">
-  <div class="seg" role="group" aria-label="Appearance">
-    <button data-theme-choice="light">Light</button>
-    <button data-theme-choice="dark">Dark</button>
-    <button data-theme-choice="match">Match phone</button>
-  </div>
   <button id="clear" class="linkbtn">Clear the queue</button>
 </footer>
 
@@ -706,5 +701,6 @@ Promise.all(NAMES.map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(()
 });
 </script>
 <script src="help.js"></script>
+<script src="footer.js"></script>
 </body>
 </html>

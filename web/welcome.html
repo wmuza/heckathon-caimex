@@ -102,13 +102,6 @@
   .space .nm { display: block; font-weight: 700; font-size: 1.0625rem; }
   .space .for { display: block; color: var(--w-ink-2); font-size: 0.9375rem; margin-top: 2px; }
 
-  .w-foot { border-top: 1px solid var(--w-line); padding: 24px 0 32px; }
-  .w-foot .w-col { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
-  .w-foot p { color: var(--w-ink-2); font-size: 0.9375rem; }
-  .w-foot .seg { background: var(--w-tint); }
-  .w-foot .seg button { color: var(--w-ink-2); }
-  .w-foot .seg button[aria-pressed="true"] { background: var(--w-panel); color: var(--w-ink); box-shadow: 0 0 0 1px var(--w-line); }
-  .w-foot .seg button .ck { color: var(--red-text); }
 
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 24px; padding-bottom: 56px; }
@@ -186,20 +179,11 @@
   </section>
 </main>
 
-<footer class="w-foot">
-  <div class="w-col">
-    <p>Mukoti helps the nurse. It does not diagnose or advise treatment.</p>
-    <div class="seg" role="group" aria-label="Appearance">
-      <button data-theme-choice="light">Light</button>
-      <button data-theme-choice="dark">Dark</button>
-      <button data-theme-choice="match">Match phone</button>
-    </div>
-  </div>
-</footer>
 
 <script src="art.js"></script>
 <script>
   Art.show(document.getElementById('artWelcome'), 'welcome', 'A helper at the clinic door, waving a patient in');
 </script>
+<script src="footer.js"></script>
 </body>
 </html>

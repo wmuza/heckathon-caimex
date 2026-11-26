@@ -199,11 +199,6 @@
 </div>
 
 <footer class="foot">
-  <div class="seg" role="group" aria-label="Appearance">
-    <button data-theme-choice="light">Light</button>
-    <button data-theme-choice="dark">Dark</button>
-    <button data-theme-choice="match">Match phone</button>
-  </div>
   <span class="quiet small">Live numbers from this server</span>
 </footer>
 
@@ -364,5 +359,6 @@ $('replay').onclick = () => {
 const NAMES = ['other', 'listening', 'not_doctor', 'nurse_coming', 'recording', 'welcome'];
 Promise.all(NAMES.map(n => Art.load(n).then(t => { pictures[n] = t; }))).then(() => { load(); setInterval(load, 6000); });
 </script>
+<script src="footer.js"></script>
 </body>
 </html>

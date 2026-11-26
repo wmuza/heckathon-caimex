@@ -132,7 +132,6 @@
   .ticket .n { font-size: 4.5rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; min-width: 2.4em;
     background: var(--navy); color: var(--on-navy); border-radius: 22px; padding: 16px 28px 18px; border-bottom: 6px solid var(--brand-red); }
   #done { margin-top: 24px; }
-  #foot { justify-content: center; }
   .ticket .big { font-size: 1.1875rem; font-weight: 600; max-width: 24ch; }
 
   .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
@@ -234,13 +233,6 @@
   </div>
 </main>
 
-<footer class="foot" id="foot">
-  <div class="seg" role="group" aria-label="Chitarisiko / Appearance">
-    <button data-theme-choice="light"><span data-t="light"></span></button>
-    <button data-theme-choice="dark"><span data-t="dark"></span></button>
-    <button data-theme-choice="match"><span data-t="match"></span></button>
-  </div>
-</footer>
 
 <div id="sheet" class="sheet-back" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
@@ -489,7 +481,7 @@ async function begin(sampleInfo) {
   maxQ = visit.of || 6;
   $('pips').innerHTML = '<i></i>'.repeat(maxQ); $('hist').innerHTML = ''; $('said').hidden = true;
   document.body.classList.add('talking');
-  $('start').hidden = true; $('foot').hidden = true; $('talk').hidden = false; $('dock').hidden = false;
+  $('start').hidden = true; $('talk').hidden = false; $('dock').hidden = false;
   $('sampleTag').hidden = !sample; $('finish').hidden = !!sample;
   Art.warm(PICTURES);
   asked = ['welcome'];
@@ -567,7 +559,7 @@ async function send(fd, keepBubble, redo) {
 
 function finished(alarm) {
   document.body.classList.remove('talking');
-  $('talk').hidden = true; $('dock').hidden = true; $('done').hidden = false; $('foot').hidden = false; $('sampleTag').hidden = true;
+  $('talk').hidden = true; $('dock').hidden = true; $('done').hidden = false; $('sampleTag').hidden = true;
   $('num').textContent = visit.number;
   // Calm on purpose: the patient is told a nurse is coming, not shown an alarm.
   $('doneTag').className = 'tag lg ' + (alarm ? 'urgent' : 'routine');
@@ -618,7 +610,10 @@ $('closeSheet').onclick = () => { $('sheet').hidden = true; };
 $('sheet').onclick = e => { if (e.target === $('sheet')) $('sheet').hidden = true; };
 
 applyLang(lang);
+// The shared footer is drawn after this script; once the page is whole, put its words in this language too.
+document.addEventListener('DOMContentLoaded', () => applyLang(lang));
 Art.show($('artWelcome'), 'welcome', ''); Art.show($('artRec'), 'recording', ''); Art.show($('artDoc'), 'not_doctor', '');
 </script>
+<script src="footer.js"></script>
 </body>
 </html>
