@@ -118,3 +118,12 @@ EDLIZ has a triage chapter could not be checked.
 - **The reasons behind the national score** (rain and unsafe water favour diarrhoeal disease;
   rain some weeks earlier and warmth favour malaria; cold favours chest infections) are stated
   from general public-health knowledge. No source was checked for them and no weight was fitted.
+
+## Images
+
+- **Welcome page photo** (`web/img/welcome-hero.jpg`): "Health professtional using a Stethoscope",
+  by Kwameghana, 2018. Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
+  https://commons.wikimedia.org/wiki/File:Health_professtional_using_a_Stethoscope.jpg
+  Downloaded on 2026-11-26 as Wikimedia's 3840px copy, scaled to 2000px and saved as a JPEG
+  without its metadata; not otherwise changed. The page darkens it with a navy layer in CSS.
+  Credited in the welcome page's footer.
