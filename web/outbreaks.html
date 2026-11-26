@@ -59,10 +59,19 @@
   .brief-body .strong { margin-top: 4px; }
   @media (prefers-reduced-motion: reduce) { .brief-roll, .brief-body > *, .brief-tg .chev { transition: none !important; } }
   .say ul { padding-left: 20px; display: grid; gap: 2px; }
-  .natl { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 14px; padding: 12px 14px; border-radius: 16px; background: var(--panel-sunk); }
-  .natl .art { width: 44px; height: 44px; flex: none; }
-  .natl .tag { white-space: normal; }
-  .natl > span { min-width: 0 !important; flex: 1 1 180px; }
+  /* National warnings: side by side, the risk as a bar rather than a sentence */
+  .natls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px; margin-top: 14px; }
+  .natl { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 6px 14px; align-items: center; padding: 14px 16px; border-radius: 18px; background: var(--panel-sunk); }
+  .natl .art { width: 48px; height: 48px; grid-row: span 2; }
+  .natl .tag { white-space: normal; justify-self: start; }
+  .natl .nm { font-weight: 700; line-height: 1.3; }
+  .risk { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; margin-top: 4px; }
+  .risk .bar { height: 10px; border-radius: 5px; background: var(--divider); overflow: hidden; }
+  .risk .bar i { display: block; height: 100%; border-radius: 5px; background: var(--blue-fill); }
+  .risk.confirmed .bar i { background: var(--red-fill); } .risk.likely .bar i { background: var(--warn-dot); }
+  .risk b { font-size: 1.125rem; font-variant-numeric: tabular-nums; } .risk b small { font-size: 0.75rem; color: var(--ink-2); font-weight: 600; }
+  .risk .why { grid-column: 1 / -1; font-size: 0.8125rem; color: var(--ink-2); }
+  .natl .go { grid-column: 1 / -1; justify-self: start; margin-top: 2px; }
 
   /* The map: level by fill, texture and a mark, never colour alone */
   .map { width: 100%; height: auto; display: block; }
@@ -86,16 +95,25 @@
   .tm input[type=range] { width: 100%; accent-color: var(--blue-fill); min-height: 32px; }
   .tm .row-gap { justify-content: space-between; }
 
-  /* One signal */
+  /* One signal: the numbers, the chart and the next step; the rest behind "More detail" */
   .sig { padding: 18px 0; border-bottom: 1px solid var(--divider); }
-  .sig:first-of-type { padding-top: 6px; } .sig:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .sig:first-of-type { padding-top: 14px; } .sig:last-of-type { border-bottom: 0; padding-bottom: 0; }
   .sig .hd { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; }
   .sig .art { width: 64px; height: 64px; border-radius: 16px; background: var(--panel-sunk); padding: 5px; }
   .sig h3 { font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
-  .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; margin-top: 12px; }
+  .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 10px; margin-top: 12px; }
   .num1 { background: var(--panel-sunk); border-radius: 14px; padding: 10px 12px; }
   .num1 b { display: block; font-size: 1.5rem; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .num1 b small { font-size: 0.875rem; font-weight: 600; color: var(--ink-2); }
   .num1 span { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .next { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: var(--selected); box-shadow: inset 4px 0 0 var(--blue-fill); font-weight: 600; line-height: 1.45; }
+  .next b { display: block; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-ink); }
+  .sig.confirmed .next { background: var(--red-tint); box-shadow: inset 4px 0 0 var(--red-fill); }
+  .sig.confirmed .next b { color: var(--red-ink); }
+  .more-tg { margin-left: auto; }
+  .more-tg svg { width: 16px; height: 16px; transition: transform 200ms ease; }
+  .more-tg[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .more { margin-top: 4px; }
   .chart { width: 100%; height: auto; display: block; margin-top: 12px; overflow: visible; }
   .chart .bar { fill: var(--neutral-dot); } .chart .bar.hot { fill: var(--red-fill); }
   .chart .usual { fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-dasharray: 4 4; }
@@ -103,7 +121,7 @@
   .chart .today { stroke: var(--ink-2); stroke-width: 1.5; }
   .chart text { font: 600 11px 'Figtree', sans-serif; fill: var(--ink-2); }
   .chart .hit { fill: transparent; }
-  .ck-key { display: flex; gap: 6px 14px; flex-wrap: wrap; margin-top: 6px; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .ck-key { display: flex; gap: 4px 12px; flex-wrap: wrap; margin-top: 4px; font-size: 0.75rem; font-weight: 600; color: var(--ink-2); }
   .ck-key i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
   .facts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
   .facts .tag { white-space: normal; }
@@ -114,10 +132,21 @@
   .stock .cmp { display: flex; gap: 10px 22px; flex-wrap: wrap; align-items: baseline; margin-top: 4px; }
   .stock .cmp b { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
   .stock input[type=range] { width: 100%; accent-color: var(--blue-fill); min-height: 32px; }
-  .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
   .out { margin-top: 10px; padding: 12px 14px; border-radius: 16px; background: var(--selected); }
   .out pre { white-space: pre-wrap; font: inherit; margin: 6px 0 0; }
   .calm { text-align: center; padding: 24px 12px; }
+
+  /* Folded sections: a title and one line until opened */
+  details.fold { margin-top: 16px; padding: 0; }
+  details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-radius: 22px; }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+  details.fold > summary .t { flex: 1; min-width: 0; }
+  details.fold > summary .chev { width: 22px; height: 22px; flex: none; color: var(--btn-ink); transition: transform 200ms ease; }
+  details.fold[open] > summary .chev { transform: rotate(180deg); }
+  details.fold[open] > summary { border-bottom: 1px solid var(--divider); border-radius: 22px 22px 0 0; }
+  details.fold > .in { padding: 4px 20px 20px; }
 
   /* How it works: four steps, and how well */
   .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 10px; margin-top: 12px; }
@@ -156,7 +185,7 @@
       <button class="btn sm" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg><span>Hear the briefing</span></button>
     </div>
     <div class="tiles" id="tiles"></div>
-    <div id="natl"></div>
+    <div class="natls" id="natl"></div>
     <div class="say" id="say"></div>
   </section>
 
@@ -182,17 +211,19 @@
     </section>
   </div>
 
-  <section class="panel" style="margin-top:16px" aria-labelledby="howT">
-    <h2 class="title" id="howT">How this is worked out, and how well</h2>
-    <div class="flow" id="flow"></div>
-    <div class="score" id="score"></div>
-    <p class="quiet small" id="scoreNote" style="margin-top:10px"></p>
-  </section>
+  <details class="panel fold" id="howFold">
+    <summary><span class="t"><h2 class="title" id="howT">How this is worked out, and how well</h2><span class="quiet small" id="howSum"></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+    <div class="in">
+      <div class="flow" id="flow"></div>
+      <div class="score" id="score"></div>
+      <p class="quiet small" id="scoreNote" style="margin-top:10px"></p>
+    </div>
+  </details>
 
-  <section class="panel" style="margin-top:16px" aria-labelledby="tblT">
-    <h2 class="title" id="tblT">Every ward, as a table</h2>
-    <div class="scroll-x" style="margin-top:8px"><table class="t" id="tbl"></table></div>
-  </section>
+  <details class="panel fold" id="tblFold">
+    <summary><span class="t"><h2 class="title" id="tblT">Every ward, as a table</h2><span class="quiet small" id="tblSum"></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+    <div class="in"><div class="scroll-x"><table class="t" id="tbl"></table></div></div>
+  </details>
 </div>
 
 <footer class="foot noprint">
@@ -275,9 +306,7 @@ function chart(s) {
 
 function stockHtml(s) {
   const k = s.stock; if (!k) return '';
-  const u = units[s.area + s.syndrome] ?? k.units_per_case;
-  const usual = k.per_day > 0 ? Math.floor(k.left / k.per_day) : null, use = k.per_day + k.extra_cases_a_day * u;
-  const now = use > 0 ? Math.floor(k.left / use) : null;
+  const u = units[s.area + s.syndrome] ?? k.units_per_case, { usual, now } = daysLeft(s);
   return `<div class="stock"><span class="eyebrow">What this does to the shelf · ${esc(k.name)}</span>
     <div class="cmp"><span><b>${usual ?? '–'}</b> days left at the usual use</span><span><b>${now ?? '–'}</b> days left if this rise goes as forecast</span></div>
     <label class="small quiet" for="u${esc(s.area + s.syndrome)}">Assume each extra patient needs <span class="strong" style="color:var(--ink)">${u} ${esc(k.unit)}</span> · ${k.extra_cases_a_day} extra patients a day forecast</label>
@@ -285,25 +314,36 @@ function stockHtml(s) {
     <p class="quiet small">A planning figure you can move, not a treatment rule. ${k.left.toLocaleString()} ${esc(k.unit)} on the shelf, ${k.per_day} going out a day.</p></div>`;
 }
 
+// Days of a medicine left at the usual use, and if the rise goes as forecast (the slider moves the second).
+function daysLeft(s) {
+  const k = s.stock; if (!k) return null;
+  const u = units[s.area + s.syndrome] ?? k.units_per_case, use = k.per_day + k.extra_cases_a_day * u;
+  return { usual: k.per_day > 0 ? Math.floor(k.left / k.per_day) : null, now: use > 0 ? Math.floor(k.left / use) : null, name: k.name };
+}
+const openSig = new Set();                    // which cards show "More detail", kept across redraws
 function sigHtml(s) {
-  const id = s.area + '|' + s.syndrome, o = said[id];
+  const id = s.area + '|' + s.syndrome, o = said[id], open = openSig.has(id), left = daysLeft(s);
   const flag = s.flagged_days_ago == null ? '' : `<span class="tag">Flagged ${s.flagged_days_ago ? s.flagged_days_ago + ' days ago' : 'today'}</span>`;
-  return `<article class="sig">
+  return `<article class="sig ${s.level}">
     <div class="hd"><span class="art" aria-hidden="true">${pictures[s.picture] || ''}</span>
       <div><span class="tag ${s.level}"><span class="dot"></span>${LEVEL[s.level]}</span><h3 style="margin-top:6px">${esc(s.name)} in ${esc(s.area)}</h3></div></div>
     <div class="nums">
-      <div class="num1"><b>${s.seen}</b><span>in the last 7 days · about ${Math.round(s.usual)} is usual</span></div>
-      <div class="num1"><b>${s.next7.lo} to ${s.next7.hi}</b><span>likely in the next 7 days · ${s.next7.mean} is the middle</span></div>
+      <div class="num1"><b>${s.seen} <small>/ ${Math.round(s.usual)} usual</small></b><span>last 7 days</span></div>
+      <div class="num1"><b>${s.next7.lo}–${s.next7.hi}</b><span>next 7 days · middle ${s.next7.mean}</span></div>
+      ${left ? `<div class="num1"><b>${left.usual ?? '–'} → ${left.now ?? '–'}</b><span>days of ${esc(left.name)} left</span></div>` : ''}
     </div>
     ${chart(s)}
-    <div class="facts">
-      ${s.age ? `<span class="tag blue">Mostly aged ${esc(s.age.band)}: ${s.age.count} of ${s.age.of}</span>` : '<span class="tag">All ages</span>'}
-      <span class="tag">${s.diagnosed} diagnosed by the doctor</span>${flag}
-    </div>
-    ${stockHtml(s)}
-    <p class="strong" style="margin-top:12px">${DO[s.level]}</p>
-    <div class="acts"><button class="btn sm" data-why="${esc(id)}">Why? Ask CAIMEx</button>${s.level === 'watch' ? '' : `<button class="btn sm" data-draft="${esc(id)}">Draft the alert with CAIMEx</button>`}</div>
+    <p class="next"><b>Next step</b>${DO[s.level]}</p>
+    <div class="acts"><button class="btn sm" data-why="${esc(id)}">Why? Ask CAIMEx</button>${s.level === 'watch' ? '' : `<button class="btn sm" data-draft="${esc(id)}">Draft the alert</button>`}
+      <button class="linkbtn more-tg" data-more="${esc(id)}" aria-expanded="${open}">${open ? 'Less detail' : 'More detail'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>
     ${o ? `<div class="out"><span class="src ai">${esc(o.by)}</span><pre>${esc(o.text)}</pre></div>` : ''}
+    <div class="more" ${open ? '' : 'hidden'}>
+      <div class="facts">
+        ${s.age ? `<span class="tag blue">Mostly aged ${esc(s.age.band)}: ${s.age.count} of ${s.age.of}</span>` : '<span class="tag">All ages</span>'}
+        <span class="tag">${s.diagnosed} diagnosed by the doctor</span>${flag}
+      </div>
+      ${stockHtml(s)}
+    </div>
   </article>`;
 }
 
@@ -315,9 +355,11 @@ function render() {
     <div><div class="n">${t.expected} <small>expected</small></div><div class="nm">${esc(t.name)}</div>
       <div class="rg">likely ${t.lo} to ${t.hi} · usual ${Math.round(t.usual)}</div>${t.above ? '<span class="up"><i></i>more than usual</span>' : ''}</div></div>`).join('');
   $('natl').innerHTML = d.national.map(w => `<div class="natl"><span class="art" aria-hidden="true">${pictures[w.picture] || ''}</span>
-    <span style="flex:1;min-width:200px"><span class="tag ${w.level}"><span class="dot"></span>National warning for ${esc(d.province)}</span><br>
-    <span class="strong">${esc(w.name)}: risk ${w.score} out of 100.</span> <span class="quiet">${esc(w.drivers[0].label)}: ${esc(w.drivers[0].value)}.</span></span>
-    <a class="btn sm" href="/national">See the map</a></div>`).join('');
+    <span class="tag ${w.level}"><span class="dot"></span>National warning for ${esc(d.province)}</span>
+    <span class="nm">${esc(w.name)}</span>
+    <div class="risk ${w.level}" role="img" aria-label="Risk ${w.score} out of 100"><span class="bar"><i style="width:${Math.max(2, Math.min(100, w.score))}%"></i></span><b>${w.score}<small> / 100 risk</small></b>
+      <span class="why">${esc(w.drivers[0].label)}: ${esc(w.drivers[0].value)}</span></div>
+    <a class="linkbtn go" href="/national">See the map</a></div>`).join('');
   if (b.status === 'ready') {
     const paras = [b.today, b.wards, b.national].filter(Boolean), todo = b.do_first || [];
     const hint = 'Read today\'s briefing' + (todo.length ? ` · ${todo.length} thing${todo.length === 1 ? '' : 's'} to do first` : '');
@@ -359,6 +401,12 @@ function render() {
   $('sigs').innerHTML = shown.length ? shown.map(sigHtml).join('') : `<div class="calm"><p class="strong">Nothing is above the usual${picked ? ' in ' + esc(picked) : ''}.</p></div>`;
   $('sigs').querySelectorAll('[data-units]').forEach(r => r.oninput = () => { units[r.dataset.units] = +r.value; render(); const again = document.querySelector(`[data-units="${r.dataset.units}"]`); if (again) again.focus(); });
   $('sigs').querySelectorAll('[data-why],[data-draft]').forEach(btn => btn.onclick = () => ask(btn.dataset.why || btn.dataset.draft, btn.dataset.why ? 'why' : 'draft'));
+  $('sigs').querySelectorAll('[data-more]').forEach(btn => btn.onclick = () => {
+    const id = btn.dataset.more; if (openSig.has(id)) openSig.delete(id); else openSig.add(id);
+    render(); const again = document.querySelector(`[data-more="${CSS.escape(id)}"]`); if (again) again.focus();
+  });
+  const above = d.areas.filter(a => a.level !== 'usual').length;
+  $('tblSum').textContent = `${d.areas.length} wards · ${above} above the usual`;
 
   $('flow').innerHTML = [
     ['1. The evidence', 'Each visit adds to a tally with no name: the day, the ward, the age band and the symptom group. CAIMEx sorts each visit into its symptom group.'],
@@ -376,6 +424,7 @@ function render() {
       [`${f.this_forecast}`, `cases a week the forecast is out by, on average. "Same as last week" is out by ${f.same_as_last_week}.`],
       [`${Math.round(e.forecast_test.share_of_weeks_inside_the_80_range * 100)}%`, `of weeks fell inside the likely range. During outbreaks: ${Math.round(e.forecast_test.inside_the_range_during_outbreaks * 100)}%.`],
     ].map(([n, t]) => `<div><b>${n}</b><span>${t}</span></div>`).join('');
+    $('howSum').textContent = `Plain arithmetic, then CAIMEx puts it into words · ${a.caught_within_14_days} of ${a.outbreaks} planted outbreaks flagged within 14 days in testing`;
     $('scoreNote').textContent = `Scored on ${e.clinics.test} simulated clinics the settings had not seen (${e.ran_at}). Simulated, because no real patient data may be used: this shows the arithmetic behaves, not that it has predicted a real outbreak. It is no faster than a weekly count; it raises fewer false alarms and gives a range.`;
   }
   $('tbl').innerHTML = '<thead><tr><th>Ward</th><th>Level</th><th class="r">Last 7 days</th><th>What is rising</th><th class="r">Next 7 days</th></tr></thead><tbody>' + d.areas.map(a => {
