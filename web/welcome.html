@@ -55,10 +55,10 @@
   @keyframes shots {
     0%     { transform: scale(1.06) translate(0, 0); }
     33.3%  { transform: scale(1.16) translate(-3%, -1.5%); }
-    33.34% { transform: scale(1.5) translate(-12%, 6%); }
-    66.6%  { transform: scale(1.62) translate(-16%, 4%); }
-    66.67% { transform: scale(1.35) translate(-4%, -12%); }
-    100%   { transform: scale(1.46) translate(-8%, -14%); }
+    33.34% { transform: scale(1.5) translate(12%, 10%); }
+    66.6%  { transform: scale(1.62) translate(15%, 12%); }
+    66.67% { transform: scale(1.4) translate(-8%, -6%); }
+    100%   { transform: scale(1.52) translate(-11%, -9%); }
   }
   @keyframes flash {
     0% { opacity: 1; } 3% { opacity: 0; }
@@ -115,7 +115,6 @@
   .w-foot { border-top: 1px solid var(--w-line); padding: 24px 0 32px; }
   .w-foot .w-col { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
   .w-foot p { color: var(--w-ink-2); font-size: 0.9375rem; }
-  .w-foot .credit { font-size: 0.75rem; } .w-foot .credit a { color: inherit; }
   .w-foot .seg { background: var(--w-tint); }
   .w-foot .seg button { color: var(--w-ink-2); }
   .w-foot .seg button[aria-pressed="true"] { background: var(--w-panel); color: var(--w-ink); box-shadow: 0 0 0 1px var(--w-line); }
@@ -200,8 +199,7 @@
 
 <footer class="w-foot">
   <div class="w-col">
-    <p>Mukoti helps the nurse. It does not diagnose or advise treatment.<br>
-      <small class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Health_professtional_using_a_Stethoscope.jpg">Kwameghana</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons</small></p>
+    <p>Mukoti helps the nurse. It does not diagnose or advise treatment.</p>
     <div class="seg" role="group" aria-label="Appearance">
       <button data-theme-choice="light">Light</button>
       <button data-theme-choice="dark">Dark</button>

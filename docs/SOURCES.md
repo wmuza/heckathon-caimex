@@ -121,9 +121,10 @@ EDLIZ has a triage chapter could not be checked.
 
 ## Images
 
-- **Welcome page photo** (`web/img/welcome-hero.jpg`): "Health professtional using a Stethoscope",
-  by Kwameghana, 2018. Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
-  https://commons.wikimedia.org/wiki/File:Health_professtional_using_a_Stethoscope.jpg
-  Downloaded on 2026-11-26 as Wikimedia's 3840px copy, scaled to 2000px and saved as a JPEG
-  without its metadata; not otherwise changed. The page darkens it with a navy layer in CSS.
-  Credited in the welcome page's footer.
+- **Welcome page photo** (`web/img/welcome-hero.jpg`): "MEDCAP in Kenya 120823-F-CF823-120", a blood
+  pressure check in Lunga Lunga, Kenya, 23 August 2012, by Tech. Sgt. Daniel St. Pierre, US Air Force.
+  Public domain (a work of the US federal government), so no credit is required on the page.
+  https://commons.wikimedia.org/wiki/File:MEDCAP_in_Kenya_120823-F-CF823-120.jpg
+  Chosen because it shows hands and the instrument, not faces. Downloaded on 2026-11-26 as
+  Wikimedia's 3840px copy, scaled to 2000px and saved as a JPEG without its metadata; not otherwise
+  changed. The page darkens it with a navy layer in CSS.
