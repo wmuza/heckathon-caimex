@@ -144,7 +144,10 @@ a.mark { text-decoration: none; }
 @media print { .menubar { display: none; } }
 
 /* The footer (footer.js): one small navy line at the bottom of every screen. */
-.site-foot { margin-top: 32px; background: var(--foot); color: var(--on-navy); }
+.site-foot { position: fixed; left: 0; right: 0; bottom: 0; z-index: 14; background: var(--foot); color: var(--on-navy);
+  box-shadow: 0 -1px 0 var(--navy-line); }
+.has-foot body { padding-bottom: var(--foot-h, 52px); }
+.has-foot body.talking { padding-bottom: 0; }
 .site-foot :focus-visible { outline-color: var(--on-navy); }
 .sf-in { max-width: 1240px; margin: 0 auto; padding: 10px 24px; min-height: 52px; display: flex; flex-wrap: wrap; gap: 8px 20px;
   align-items: center; justify-content: space-between; font-size: 0.8125rem; }
