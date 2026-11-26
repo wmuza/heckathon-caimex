@@ -24,6 +24,7 @@
   --navy: #0B1F4D; --navy-2: #15306B; --navy-line: #2A4785; --on-navy: #FFFFFF; --on-navy-2: #C9D4EC;
   --brand-red: #D22630; --brand-red-press: #B01E27;
   --btn-edge: #1A3A7A; --btn-ink: #0B1F4D; --blue-press: #15306B;
+  --foot: #1A3A7A; --foot-track: #0B1F4D;
   --ghost-fill: #FFFFFF; --ghost-edge: #7C879B;
   --disabled: #E5E9F2; --disabled-ink: #5B6474;
   --red-fill: #D22630; --red-ink: #B4232A; --red-tint: #FDECEC;
@@ -49,6 +50,7 @@
   --navy: #0A1838; --navy-2: #122552; --navy-line: #2A4785; --on-navy: #FFFFFF; --on-navy-2: #BFCBE6;
   --brand-red: #D22630; --brand-red-press: #E0434C;
   --btn-edge: #6F8FD6; --btn-ink: #DCE5F8; --blue-press: #3A5CB0;
+  --foot: #1A3A7A; --foot-track: #0B1F4D;
   --ghost-fill: transparent; --ghost-edge: #6F7F99;
   --disabled: #1B2331; --disabled-ink: #A9B2C1;
   --red-fill: #D22630; --red-ink: #FFC2C5; --red-tint: #3A1A1C;
@@ -142,13 +144,13 @@ a.mark { text-decoration: none; }
 @media print { .menubar { display: none; } }
 
 /* The footer (footer.js): one small navy line at the bottom of every screen. */
-.site-foot { margin-top: 32px; background: var(--navy); color: var(--on-navy-2); }
+.site-foot { margin-top: 32px; background: var(--foot); color: var(--on-navy); }
 .site-foot :focus-visible { outline-color: var(--on-navy); }
 .sf-in { max-width: 1240px; margin: 0 auto; padding: 10px 24px; min-height: 52px; display: flex; flex-wrap: wrap; gap: 8px 20px;
   align-items: center; justify-content: space-between; font-size: 0.8125rem; }
-.site-foot .seg { background: var(--navy-2); padding: 2px; }
+.site-foot .seg { background: var(--foot-track); padding: 2px; }
 .site-foot .seg button { color: var(--on-navy-2); min-height: 30px; padding: 0 12px; font-size: 0.8125rem; }
-.site-foot .seg button[aria-pressed="true"] { background: var(--on-navy); color: var(--navy); box-shadow: none; }
+.site-foot .seg button[aria-pressed="true"] { background: var(--on-navy); color: var(--foot); box-shadow: none; }
 .site-foot .seg button .ck { width: 12px; height: 12px; }
 body.talking .site-foot { display: none; }          /* the patient's talk keeps the whole screen */
 @media print { .site-foot { display: none; } }
