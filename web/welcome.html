@@ -38,15 +38,10 @@
   .w-col { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
   /* Navy top */
-  .top { background: linear-gradient(170deg, var(--navy) 0%, var(--navy) 55%, var(--navy-2) 100%); color: var(--on-navy); border-top: 6px solid var(--red); }
+  .top { background: linear-gradient(170deg, var(--navy) 0%, var(--navy) 55%, var(--navy-2) 100%); color: var(--on-navy); }
   .top :focus-visible { outline-color: var(--on-navy); }
-  .w-head { display: flex; align-items: center; gap: 14px; padding-top: 18px; padding-bottom: 18px; }
-  .w-logo { display: flex; align-items: center; gap: 12px; color: var(--on-navy); text-decoration: none; font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; }
-  .w-logo svg { width: 40px; height: 40px; flex: none; }
-  .w-head .staff-link { margin-left: auto; color: var(--on-navy-2); text-decoration: none; font-weight: 600; font-size: 0.9375rem; padding: 10px 14px; border-radius: 999px; }
-  .w-head .staff-link:hover { color: var(--on-navy); background: var(--navy-2); }
 
-  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; padding-top: 48px; padding-bottom: 80px; }
+  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; padding-top: 64px; padding-bottom: 80px; }
   .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; }
   .hero h1 em { font-style: normal; box-shadow: inset 0 -0.14em 0 var(--red); }
   .lead { margin-top: 20px; max-width: 32em; color: var(--on-navy-2); font-size: 1.125rem; line-height: 1.6; }
@@ -101,15 +96,9 @@
 </style>
 </head>
 <body>
+<script src="menu.js"></script>
 
 <div class="top">
-  <header class="w-col w-head">
-    <a class="w-logo" href="/welcome">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="var(--on-navy)"/><g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path stroke="var(--navy)" d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/><path stroke="var(--red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>
-      Mukoti
-    </a>
-    <a class="staff-link" href="#staff">Staff</a>
-  </header>
 
   <div class="w-col hero">
     <div>

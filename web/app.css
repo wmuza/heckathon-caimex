@@ -1,7 +1,9 @@
-/* Mukoti. Colours and type follow Wilbert's design standard (1 Oct 2026):
-   a cool grey page, white panels, slate ink, blue for what you press.
-   Token values are the Shona Suite web kit's. No colour literal lives in a rule
-   below the token blocks. Light by default; Dark or Match phone when chosen. */
+/* Mukoti. Layout and type follow Wilbert's design standard (1 Oct 2026):
+   a cool grey page, white panels, slate ink. Colours are the team's navy blue
+   and red (26 Nov 2026): navy for what you press, red for alarms and the brand.
+   The --blue-* token names are kept so no page had to change; they hold navy now.
+   No colour literal lives in a rule below the token blocks. Light by default;
+   Dark or Match phone when chosen. */
 
 @font-face { font-family: 'Figtree'; src: url('fonts/figtree-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Figtree'; src: url('fonts/figtree-600.ttf') format('truetype'); font-weight: 600; font-display: swap; }
@@ -9,24 +11,26 @@
 
 :root, [data-theme="light"] {
   color-scheme: light;
-  --page: #F4F5F7; --panel: #FFFFFF; --panel-sunk: #F6F7F9; --band: #EDF2FA;
+  --page: #F4F6FA; --panel: #FFFFFF; --panel-sunk: #F6F7FB; --band: #EEF2F9;
   --hairline: #E5E7EB; --divider: #EEF0F3;
   --shadow-panel: 0 1px 2px rgba(16, 24, 40, 0.05), 0 8px 22px -12px rgba(16, 24, 40, 0.18);
   --shadow-float: 0 2px 6px rgba(16, 24, 40, 0.08), 0 18px 40px -16px rgba(16, 24, 40, 0.3);
   --backdrop: rgba(17, 24, 39, 0.42);
   --ink: #1F2430; --ink-2: #5B6474; --ink-on: #FFFFFF;
-  --blue-fill: #2563EB; --blue-edge: #1D4ED8; --blue-ink: #1D4ED8; --selected: #E8F0FE;
-  --blue-soft: #BFD3FA; --blue-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.55);
-  --blue-halo: rgba(37, 99, 235, 0.16);
-  --tile-a: #4F86F7; --tile-b: #2563EB; --tile-c: #1D4ED8;
+  --blue-fill: #0B1F4D; --blue-edge: #0B1F4D; --blue-ink: #1A3A7A; --selected: #E6ECF8;
+  --blue-soft: #C3D0EA; --blue-shadow: 0 6px 14px -6px rgba(11, 31, 77, 0.5);
+  --blue-halo: rgba(11, 31, 77, 0.14);
+  --tile-a: #24448A; --tile-b: #0B1F4D; --tile-c: #081638;
+  --navy: #0B1F4D; --navy-2: #15306B; --navy-line: #2A4785; --on-navy: #FFFFFF; --on-navy-2: #C9D4EC;
+  --brand-red: #D22630; --brand-red-press: #B01E27;
   --ghost-fill: #FFFFFF; --ghost-edge: #7C879B;
   --disabled: #E5E9F2; --disabled-ink: #5B6474;
-  --red-fill: #CF2A30; --red-ink: #B4232A; --red-tint: #FDECEC;
-  --red-shadow: 0 6px 14px -6px rgba(207, 42, 48, 0.55); --red-halo: rgba(207, 42, 48, 0.2);
+  --red-fill: #D22630; --red-ink: #B4232A; --red-tint: #FDECEC;
+  --red-shadow: 0 6px 14px -6px rgba(210, 38, 48, 0.55); --red-halo: rgba(210, 38, 48, 0.2);
   --green-ink: #1F6B43; --green-tint: #E3F4EA; --green-dot: #268C56;
   --warn-dot: #D9650A; --warn-tint: #FFF1E3; --warn-ink: #4B5565;
   --neutral-tint: #F1F3F6; --neutral-ink: #4B5565; --neutral-dot: #7C879B;
-  --focus: #1D4ED8; --field-edge: #7C879B;
+  --focus: #1A3A7A; --field-edge: #7C879B;
 }
 [data-theme="dark"] {
   color-scheme: dark;
@@ -36,22 +40,24 @@
   --shadow-float: 0 18px 40px -12px rgba(0, 0, 0, 0.7);
   --backdrop: rgba(0, 0, 0, 0.6);
   --ink: #F3F5F9; --ink-2: #C3CAD6; --ink-on: #FFFFFF;
-  --blue-fill: #2F66E8; --blue-edge: transparent; --blue-ink: #9DBBFB; --selected: #1B2A4A;
-  --blue-soft: #2B4379; --blue-shadow: none; --blue-halo: rgba(91, 141, 239, 0.22);
-  --tile-a: #4F86F7; --tile-b: #2563EB; --tile-c: #1D4ED8;
+  --blue-fill: #2B4C9B; --blue-edge: transparent; --blue-ink: #A9BEF0; --selected: #17264A;
+  --blue-soft: #2A4785; --blue-shadow: none; --blue-halo: rgba(120, 155, 230, 0.22);
+  --tile-a: #2B4C9B; --tile-b: #1F3C80; --tile-c: #16306B;
+  --navy: #0A1838; --navy-2: #122552; --navy-line: #2A4785; --on-navy: #FFFFFF; --on-navy-2: #BFCBE6;
+  --brand-red: #D22630; --brand-red-press: #E0434C;
   --ghost-fill: transparent; --ghost-edge: #6F7F99;
   --disabled: #1B2331; --disabled-ink: #A9B2C1;
-  --red-fill: #CF2A30; --red-ink: #FFC2C5; --red-tint: #3A1A1C;
+  --red-fill: #D22630; --red-ink: #FFC2C5; --red-tint: #3A1A1C;
   --red-shadow: none; --red-halo: rgba(255, 138, 143, 0.22);
   --green-ink: #BFE6CE; --green-tint: #17301F; --green-dot: #5CC98B;
   --warn-dot: #F59E42; --warn-tint: #232B3A; --warn-ink: #FFD9B0;
   --neutral-tint: #1B2331; --neutral-ink: #C3CAD6; --neutral-dot: #9AA4B5;
-  --focus: #9DBBFB; --field-edge: #7C879B;
+  --focus: #A9BEF0; --field-edge: #7C879B;
 }
 
 /* Illustrations (web/art/*.svg) draw only with these six, so one file serves both themes. */
-:root, [data-theme="light"] { --accent: #2563EB; --tint: #E8F0FE; --danger: #CF2A30; --paper: #FFFFFF; --quiet: #5B6474; }
-[data-theme="dark"] { --accent: #5B8DEF; --tint: #1B2A4A; --danger: #FF8A8F; --paper: #141A24; --quiet: #C3CAD6; }
+:root, [data-theme="light"] { --accent: #1F4AA8; --tint: #E6ECF8; --danger: #D22630; --paper: #FFFFFF; --quiet: #5B6474; }
+[data-theme="dark"] { --accent: #7EA0E8; --tint: #17264A; --danger: #FF8A8F; --paper: #141A24; --quiet: #C3CAD6; }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -93,6 +99,42 @@ a { color: var(--blue-ink); }
 /* Inside the demo page the logo stays a picture, so a click cannot replace a screen. */
 .embed a.mark { pointer-events: none; }
 a.mark { text-decoration: none; }
+
+/* The menu bar (menu.js), the same on every screen. Under it, a page's own band keeps
+   its title and tools; the logo moves up into the bar. */
+.menubar { position: sticky; top: 0; z-index: 15; background: var(--navy); color: var(--on-navy); border-top: 4px solid var(--brand-red); box-shadow: 0 1px 0 var(--navy-line); }
+.menubar :focus-visible { outline-color: var(--on-navy); }
+.mb-in { max-width: 1440px; margin: 0 auto; padding: 0 20px; min-height: 60px; display: flex; align-items: center; gap: 18px; }
+.mb-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--on-navy); text-decoration: none; font-weight: 700; font-size: 1.125rem; letter-spacing: -0.01em; flex: none; }
+.mb-brand svg { width: 34px; height: 34px; }
+.mb-links { display: flex; align-items: stretch; gap: 2px; margin-left: 8px; align-self: stretch; }
+.mb-links a { position: relative; display: inline-flex; align-items: center; padding: 0 12px; color: var(--on-navy-2); text-decoration: none; font-weight: 600; font-size: 0.9375rem; white-space: nowrap; }
+.mb-links a:hover { color: var(--on-navy); }
+.mb-links a[aria-current="page"] { color: var(--on-navy); }
+.mb-links a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--brand-red); }
+.mb-cta { margin-left: auto; flex: none; display: inline-flex; align-items: center; min-height: 40px; padding: 0 18px; border-radius: 999px; background: var(--brand-red); color: var(--on-navy); font-weight: 700; font-size: 0.9375rem; text-decoration: none; transition: background 160ms ease; }
+.mb-cta:hover { background: var(--brand-red-press); }
+.mb-cta[aria-current="page"] { box-shadow: 0 0 0 2px var(--navy), 0 0 0 4px var(--on-navy-2); }
+.mb-toggle { display: none; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--navy-line); background: transparent; color: var(--on-navy); font-weight: 600; cursor: pointer; }
+.mb-toggle svg { width: 20px; height: 20px; }
+.mb-toggle .mb-close, .menubar.open .mb-toggle .mb-open { display: none; }
+.menubar.open .mb-toggle .mb-close { display: inline; }
+.mb-panel { border-top: 1px solid var(--navy-line); padding: 10px 16px 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px; max-width: 1440px; margin: 0 auto; }
+.mb-panel a { display: flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 12px; color: var(--on-navy); text-decoration: none; font-weight: 600; }
+.mb-panel a:hover { background: var(--navy-2); }
+.mb-panel a[aria-current="page"] { background: var(--navy-2); box-shadow: inset 3px 0 0 var(--brand-red); }
+.mb-panel .mb-cta { margin: 0 0 6px; justify-content: center; grid-column: 1 / -1; min-height: 48px; }
+.mb-panel .mb-cta[aria-current="page"] { background: var(--brand-red); }
+@media (max-width: 1179px) {
+  .mb-links, .mb-in > .mb-cta { display: none; }
+  .mb-toggle { display: inline-flex; margin-left: auto; }
+}
+.has-menu .band .mark { display: none; }
+.page-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.page-tools:empty { display: none; }
+/* On a phone the title takes its own line and the page's tools wrap under it. */
+@media (max-width: 640px) { .band-in { flex-wrap: wrap; } .band .grow { flex-basis: 100%; } }
+@media print { .menubar { display: none; } }
 .wrap { max-width: var(--col, 640px); margin: 0 auto; padding: 16px; }
 .panel {
   background: var(--panel); border: 1px solid var(--hairline); border-radius: 22px;

@@ -36,7 +36,8 @@
       'The blue ring is this clinic\'s province. Its warnings also appear on the Forecast page.']],
   };
   const page = STEPS[location.pathname.replace(/\/$/, '') || '/'];
-  const nav = document.querySelector('.nav');
+  // The Help button sits with the page's own tools in its title band.
+  const nav = document.querySelector('.page-tools') || document.querySelector('.band-in');
   if (!page || !nav) return;
   const style = document.createElement('style');
   style.textContent = `.help-steps{display:grid;gap:12px;padding:0;margin:0}.help-steps li{list-style:none;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;font-size:1.0625rem}
