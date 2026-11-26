@@ -118,6 +118,11 @@ a.mark { text-decoration: none; }
 .mb-links a { position: relative; display: inline-flex; align-items: center; padding: 0 12px; color: var(--on-navy-2); text-decoration: none; font-weight: 600; font-size: 0.9375rem; white-space: nowrap; }
 .mb-links a:hover { color: var(--on-navy); }
 .mb-links a[aria-current="page"] { color: var(--on-navy); }
+/* A count of waiting work on a menu link; red when an emergency waits */
+.mb-badge { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px;
+  background: var(--on-navy); color: var(--navy); font-size: 0.75rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+.mb-badge.alert { background: var(--brand-red); color: var(--on-navy); box-shadow: 0 0 0 2px var(--navy); }
+.mb-panel .mb-badge { margin-left: auto; }
 .mb-links a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--brand-red); }
 .mb-cta { margin-left: auto; flex: none; display: inline-flex; align-items: center; min-height: 40px; padding: 0 18px; border-radius: 999px; background: var(--brand-red); color: var(--on-navy); font-weight: 700; font-size: 0.9375rem; text-decoration: none; transition: background 160ms ease; }
 .mb-cta:hover { background: var(--brand-red-press); }

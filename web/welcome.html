@@ -101,6 +101,11 @@
   .space .ic svg { width: 22px; height: 22px; }
   .space .nm { display: block; font-weight: 700; font-size: 1.0625rem; }
   .space .for { display: block; color: var(--w-ink-2); font-size: 0.9375rem; margin-top: 2px; }
+  /* Live work waiting, from the menu bar's counts */
+  .space .live { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 800;
+    background: var(--w-tint); color: var(--icon); font-variant-numeric: tabular-nums; }
+  .space .live[hidden] { display: none; }
+  .space .live.alert { background: var(--red); color: var(--on-navy); }
 
 
   @media (max-width: 900px) {
@@ -148,19 +153,19 @@
       <div class="spaces">
         <a class="space" href="/nurse">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/></svg></span>
-          <span><span class="nm">Nurse's queue</span><span class="for">Patients in order of urgency, with each note</span></span>
+          <span><span class="nm">Nurse's queue</span><span class="for">Patients in order of urgency, with each note</span><span class="live" data-live="/nurse" hidden></span></span>
         </a>
         <a class="space" href="/vitals">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-8-4.6-8-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 8 2.4C20 15.4 12 20 12 20z"/><path d="M7.5 12.5h2.5l1.2-2 2 4 1.3-2h2"/></svg></span>
-          <span><span class="nm">Vitals</span><span class="for">Weight, height and blood pressure</span></span>
+          <span><span class="nm">Vitals</span><span class="for">Weight, height and blood pressure</span><span class="live" data-live="/vitals" hidden></span></span>
         </a>
         <a class="space" href="/doctor">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3H4v6a5 5 0 0 0 10 0V3h-1"/><path d="M9 14v1a6 6 0 0 0 12 0v-2"/><circle cx="21" cy="11" r="2"/></svg></span>
-          <span><span class="nm">Doctor</span><span class="for">Review the note, diagnose and prescribe</span></span>
+          <span><span class="nm">Doctor</span><span class="for">Review the note, diagnose and prescribe</span><span class="live" data-live="/doctor" hidden></span></span>
         </a>
         <a class="space" href="/pharmacy">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/></svg></span>
-          <span><span class="nm">Pharmacy</span><span class="for">Dispense what was prescribed</span></span>
+          <span><span class="nm">Pharmacy</span><span class="for">Dispense what was prescribed</span><span class="live" data-live="/pharmacy" hidden></span></span>
         </a>
         <a class="space" href="/board">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
@@ -182,6 +187,21 @@
 
 <script src="art.js"></script>
 <script>
+  // The work waiting at each staff screen, as the menu bar counts it (menu.js shares each count).
+  const LIVE = {
+    '/nurse': c => [c.nurse ? `${c.nurse} waiting` + (c.emergency ? ` · ${c.emergency} emergency` : '') : '', c.emergency > 0],
+    '/vitals': c => [c.vitals ? `${c.vitals} to measure` : '', false],
+    '/doctor': c => [c.doctor ? `${c.doctor} waiting` : '', false],
+    '/pharmacy': c => [[c.pharmacy ? `${c.pharmacy} to dispense` : '', c.order ? `${c.order} to order` : ''].filter(Boolean).join(' · '), false],
+  };
+  function live(c) {
+    document.querySelectorAll('[data-live]').forEach(el => {
+      const [text, alert] = LIVE[el.dataset.live](c);
+      el.textContent = text; el.hidden = !text; el.classList.toggle('alert', alert);
+    });
+  }
+  window.addEventListener('mukoti:counts', e => live(e.detail));
+  if (window.MUKOTI_COUNTS) live(window.MUKOTI_COUNTS);
   Art.show(document.getElementById('artWelcome'), 'welcome', 'A helper at the clinic door, waving a patient in');
 </script>
 <script src="footer.js"></script>

@@ -23,7 +23,9 @@
   var here = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '').replace(/(.)\/$/, '$1') || '/';
   function cur(href) { return href === here ? ' aria-current="page"' : ''; }
   function links() {
-    return LINKS.map(function (l) { return '<a href="' + l.href + '"' + cur(l.href) + '>' + l.label + '</a>'; }).join('');
+    return LINKS.map(function (l) {
+      return '<a href="' + l.href + '"' + cur(l.href) + '>' + l.label + '<span class="mb-badge" data-for="' + l.href + '" hidden></span></a>';
+    }).join('');
   }
   var logo = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="var(--on-navy)"/>' +
     '<g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">' +
@@ -64,6 +66,30 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { show(false); btn.focus(); } });
   document.addEventListener('click', function (e) { if (!panel.hidden && !bar.contains(e.target)) show(false); });
   window.matchMedia('(min-width: 1180px)').addEventListener('change', function (m) { if (m.matches) show(false); });
+
+  /* Live counts: how much work waits at each staff screen, as a badge on its link. Numbers only, behind the
+     staff PIN; without it (or offline) there are simply no badges. Shared with the page as an event. */
+  var BADGE = {
+    '/nurse': function (c) { return [c.nurse, c.emergency ? c.emergency + ' emergency' : '', c.emergency > 0]; },
+    '/vitals': function (c) { return [c.vitals, '', false]; },
+    '/doctor': function (c) { return [c.doctor, '', false]; },
+    '/pharmacy': function (c) { return [c.pharmacy, '', false]; },
+  };
+  function showCounts(c) {
+    bar.querySelectorAll('.mb-badge').forEach(function (b) {
+      var f = BADGE[b.getAttribute('data-for')], v = f ? f(c) : [0];
+      b.hidden = !v[0];
+      b.textContent = v[0] || '';
+      b.classList.toggle('alert', !!v[2]);
+      b.title = v[1] || '';
+    });
+    window.MUKOTI_COUNTS = c;
+    window.dispatchEvent(new CustomEvent('mukoti:counts', { detail: c }));
+  }
+  function pollCounts() {
+    fetch('/api/counts').then(function (r) { return r.ok ? r.json() : null; }).then(function (c) { if (c) showCounts(c); }).catch(function () {});
+  }
+  pollCounts(); setInterval(pollCounts, 15000);
 
   // Light or dark: the button flips between them and remembers it, as the old switch did (theme.js reads it).
   document.getElementById('mbTheme').addEventListener('click', function () {

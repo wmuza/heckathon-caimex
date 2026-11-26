@@ -73,6 +73,25 @@ def test_the_board_counts_who_waits_and_shows_only_fixed_public_notices(fresh, m
     server._NOTICES["at"] = 0
 
 
+def test_the_counts_are_numbers_only_and_match_each_screen(fresh, monkeypatch):
+    def visit(status, level=None, **details):
+        s = visits.new("sn"); s["status"] = status
+        if level: s["triage"] = {"level": level}
+        if details: s["details"] = {k: {"value": v} for k, v in details.items()}
+        return s
+    visit("ready", "emergency")                                   # waiting; straight to the nurse, not measured
+    visit("ready", "urgent", weight=10, height=80, bp="100/60")   # waiting, measured
+    visit("summarising")                                          # waiting, to measure
+    visit("talking")                                              # still with the helper: nowhere yet
+    visit("seen", "routine")                                      # seen by the nurse: the doctor's
+    c = TestClient(server.app).get("/api/counts").json()
+    assert c["nurse"] == 3 and c["emergency"] == 1 and c["vitals"] == 1 and c["doctor"] == 1 and c["pharmacy"] == 0
+    assert set(c) == {"nurse", "emergency", "vitals", "doctor", "pharmacy", "order"}
+    assert all(isinstance(v, int) for v in c.values())
+    monkeypatch.setattr(config, "NURSE_PIN", "1234")
+    assert TestClient(server.app).get("/api/counts").status_code == 401   # behind the staff PIN
+
+
 def test_no_pharmacy_call_when_nothing_was_prescribed():
     s = visits.new("en"); s["status"] = "seen"
     TestClient(server.app).post(f"/api/visits/{s['id']}/consult", json={"diagnosis": "Headache", "outcome": "treated"})

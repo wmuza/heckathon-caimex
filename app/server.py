@@ -700,6 +700,28 @@ async def set_fee(sid: str, body: Fee):
     return visits.vitals_row(s)
 
 
+@app.get("/api/counts", dependencies=[Depends(nurse)])
+async def counts():
+    """How much work waits at each staff screen, for the menu bar and the welcome page. Numbers only,
+    counted as each screen counts them."""
+    ss = list(visits.SESSIONS.values())
+    waiting = [s for s in ss if s["status"] in ("summarising", "ready")]
+
+    def level(s):
+        return (s.get("triage") or {}).get("level")
+
+    def measured(s):
+        d = s.get("details") or {}
+        return all((d.get(k) or {}).get("value") is not None for k in ("weight", "height", "bp"))
+
+    return {"nurse": len(waiting),
+            "emergency": sum(1 for s in waiting if level(s) == "emergency"),
+            "vitals": sum(1 for s in waiting if level(s) != "emergency" and not measured(s)),
+            "doctor": sum(1 for s in ss if s["status"] in ("ready", "seen") and pharmacy.stage(s) == "doctor"),
+            "pharmacy": sum(1 for s in ss if s["status"] != "talking" and pharmacy.stage(s) == "pharmacy"),
+            "order": sum(1 for m in pharmacy.forecast() if m["status"] in ("now", "none"))}
+
+
 @app.get("/api/vitals", dependencies=[Depends(nurse)])
 async def vitals():
     """The tickets waiting for the nurse, for the person at the scale. No complaint, no transcript."""
