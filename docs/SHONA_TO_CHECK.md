@@ -114,7 +114,7 @@ In `web/index.html`.
 | Shona | Meant to say | OK? |
 |---|---|---|
 | Mubatsiri wemukoti. Taurai, mukurumidze kubatsirwa | The nurse's helper. Speak, and be helped sooner |  |
-| Mauya kukiriniki | Welcome to the clinic |  |
+| Mauya kuClinic | Welcome to the clinic |  |
 | Ndichakubvunzai mibvunzo mishoma. Mhinduro dzenyu dzinopiwa mukoti kuti akubatsirei nekukurumidza. | I will ask you a few short questions. Your answers go to the nurse, so she can help you sooner. |  |
 | Izwi renyu rinorekodhwa kuti mukoti azorinzwa, rozodzimwa mushure mezuva rimwe chete. | Your voice is recorded so the nurse can listen to it. It is deleted after one day. |  |
 | Ndinobvuma, tanga kutaura | I agree, start talking |  |
