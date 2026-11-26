@@ -90,6 +90,9 @@ a { color: var(--blue-ink); }
 .nav a .ck { width: 14px; height: 14px; }
 
 .embed .nav, .embed #foot { display: none; }
+/* Inside the demo page the logo stays a picture, so a click cannot replace a screen. */
+.embed a.mark { pointer-events: none; }
+a.mark { text-decoration: none; }
 .wrap { max-width: var(--col, 640px); margin: 0 auto; padding: 16px; }
 .panel {
   background: var(--panel); border: 1px solid var(--hairline); border-radius: 22px;
