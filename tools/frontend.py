@@ -13,7 +13,7 @@ from pathlib import Path
 WEB = Path(__file__).resolve().parent.parent / "web"
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 5173
 BACKEND = (sys.argv[2] if len(sys.argv) > 2 else "http://127.0.0.1:8000").rstrip("/")
-PAGES = {"/nurse", "/outbreaks", "/national", "/board", "/doctor",
+PAGES = {"/welcome", "/nurse", "/outbreaks", "/national", "/board", "/doctor",
          "/pharmacy", "/vitals", "/engine", "/check", "/demo"}
 SKIP_REQ = {"host", "connection", "content-length"}
 SKIP_RESP = {"transfer-encoding", "connection"}

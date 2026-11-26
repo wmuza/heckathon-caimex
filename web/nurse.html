@@ -181,11 +181,12 @@
   @media screen and (min-width: 861px) {
     .layout { align-items: stretch; }
     #listCol { display: flex; flex-direction: column; min-height: 80vh; }
-    #list { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 10px 4px 4px; margin: -4px -6px 0 -4px; }
+    #list { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
     #list:empty { display: none; }
     #empty:not([hidden]) { flex: 1; }
     #detailCol { display: flex; flex-direction: column; }
-    #detail:not([hidden]) { flex: 1; }
+    #detail:not([hidden]), #hint:not([hidden]) { flex: 1; }
+    #hint { justify-content: center; }
   }
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
@@ -575,7 +576,10 @@ function signsOf(v) {
   return [...new Set(signs.map(s => s.label))];
 }
 function queueSheet() {
-  const wait = visits.filter(waiting), talking = visits.filter(v => v.status === 'talking'), seen = visits.filter(v => v.status === 'seen');
+  const newest = k => (a, b) => (b[k] || b.created) - (a[k] || a.created);
+  const wait = visits.filter(waiting);
+  const talking = visits.filter(v => v.status === 'talking').sort(newest('created'));
+  const seen = visits.filter(v => v.status === 'seen').sort(newest('updated'));
   const n = l => wait.filter(v => levelOf(v) === l).length;
   const lv = v => { const l = levelOf(v) || 'urgent'; return `<span class="lv">${glyph(l)}${LABEL[l]}</span>`; };
   const rows = wait.map((v, i) => {
