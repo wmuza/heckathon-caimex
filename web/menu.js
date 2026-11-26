@@ -25,7 +25,7 @@
   var logo = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="var(--on-navy)"/>' +
     '<g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">' +
     '<path stroke="var(--navy)" d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/>' +
-    '<path stroke="var(--brand-red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>';
+    '<path class="mb-plus" stroke="var(--brand-red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>';
   var themeBtn = '<button class="mb-theme" type="button" id="mbTheme" aria-label="Switch between light and dark" title="Light or dark">' +
     '<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>' +
     '<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>';

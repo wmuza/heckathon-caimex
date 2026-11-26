@@ -113,7 +113,17 @@ a.mark { text-decoration: none; }
 .menubar :focus-visible { outline-color: var(--on-navy); }
 .mb-in { max-width: 1440px; margin: 0 auto; padding: 0 20px; min-height: 60px; display: flex; align-items: center; gap: 18px; }
 .mb-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--on-navy); text-decoration: none; font-weight: 700; font-size: 1.125rem; letter-spacing: -0.01em; flex: none; }
-.mb-brand svg { width: 34px; height: 34px; }
+.mb-brand svg { width: 34px; height: 34px; overflow: visible; }
+/* The red plus glows softly, like a slow monitor beep. */
+.mb-brand .mb-plus { animation: mb-beep 2.4s ease-in-out infinite; }
+@keyframes mb-beep {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  12% { filter: drop-shadow(0 0 3px var(--brand-red)) drop-shadow(0 0 7px var(--brand-red)); }
+  30% { filter: drop-shadow(0 0 0 transparent); }
+}
+/* A thin line between the name and the menu, sitting in the existing gap so nothing moves. */
+.mb-brand { position: relative; }
+.mb-brand::after { content: ""; position: absolute; right: -13px; top: 50%; width: 1px; height: 26px; transform: translateY(-50%); background: var(--on-navy-2); opacity: 0.45; }
 .mb-links { display: flex; align-items: stretch; gap: 2px; margin-left: 8px; align-self: stretch; }
 .mb-links a { position: relative; display: inline-flex; align-items: center; padding: 0 12px; color: var(--on-navy-2); text-decoration: none; font-weight: 600; font-size: 0.9375rem; white-space: nowrap; }
 .mb-links a:hover { color: var(--on-navy); }
@@ -133,7 +143,7 @@ a.mark { text-decoration: none; }
 .mb-panel .mb-cta { margin: 0 0 6px; justify-content: center; grid-column: 1 / -1; min-height: 48px; }
 .mb-panel .mb-cta[aria-current="page"] { background: var(--brand-red); }
 @media (max-width: 1179px) {
-  .mb-links, .mb-in > .mb-cta { display: none; }
+  .mb-links, .mb-in > .mb-cta, .mb-brand::after { display: none; }
   .mb-theme { margin-left: auto; }
   .mb-toggle { display: inline-flex; }
 }
