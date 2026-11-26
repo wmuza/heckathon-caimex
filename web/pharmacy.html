@@ -9,9 +9,11 @@
 <script src="theme.js"></script>
 <script src="art.js"></script>
 <style>
-  :root { --col: 1180px; }
-  .band-in { flex-wrap: wrap; }
-  .layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  :root { --col: 1240px; }
+  .band-in { flex-wrap: wrap; padding-top: 18px; padding-bottom: 18px; gap: 12px 16px; }
+  .wrap { padding-top: 20px; }
+  /* Dispensing (the main task) beside what to order and what the supervisor signed; then the shelf, full width */
+  .layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: start; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
   /* Side by side: the stock column and the dispensing column end at the same line. */
   @media screen and (min-width: 901px) {
@@ -20,9 +22,14 @@
   }
   h2.title { margin-bottom: 4px; }
 
-  /* One medicine: what is on the shelf, how fast it goes, how long it lasts */
-  .med { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 14px 0; border-bottom: 1px solid var(--divider); align-items: center; }
-  .med:last-child { border-bottom: 0; padding-bottom: 0; }
+  /* One medicine, as a card: what is on the shelf, how fast it goes, how long it lasts */
+  .medgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 14px; margin-top: 16px; }
+  .med { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 16px 18px; align-items: center;
+    background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; box-shadow: var(--shadow-panel); }
+  .med.now, .med.none { box-shadow: inset 4px 0 0 var(--red-fill), var(--shadow-panel); }
+  .med.soon { box-shadow: inset 4px 0 0 var(--warn-dot), var(--shadow-panel); }
+  .stockhead { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: flex-end; justify-content: space-between; }
+  .stack > .sec-h { margin: 14px 0 0; }
   .med .nm { font-weight: 700; }
   .med .fig { color: var(--ink-2); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
   .med .fig b { color: var(--ink); font-weight: 700; }
@@ -41,15 +48,14 @@
   .tag.enough { background: var(--green-tint); color: var(--green-ink); }
   .tag.enough .dot { background: var(--green-dot); }
   .tag .ck { width: 12px; height: 12px; }
-  .adv { background: var(--panel-sunk); border-radius: 18px; padding: 14px 16px; margin: 12px 0 4px; }
-  .adv h3 { font-size: 0.9375rem; font-weight: 700; }
+  .adv { margin-top: 10px; }
   .adv ol { padding: 0; margin: 10px 0 0; display: grid; gap: 10px; }
   .adv li { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
   .adv .by { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); margin-top: 10px; display: flex; gap: 8px; align-items: center; }
   .adv .live { width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); animation: pulse 1.2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: 0.3; } }
   .tag.watch { background: var(--selected); color: var(--blue-ink); } .tag.watch .dot { background: var(--blue-fill); }
-  .key { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .key { display: flex; gap: 8px; align-items: center; }
   .key u { width: 2px; height: 14px; background: var(--ink-2); flex: none; }
 
   /* Choosing the ticket: its number and the face that came with it */
@@ -95,32 +101,21 @@
       <h1>Pharmacy</h1>
       <p class="sub">Stock, dispensing by ticket, and what the supervisor signed</p>
     </div>
+    <div class="counts" id="counts" aria-live="polite"></div>
     <div class="page-tools"></div>
   </div>
 </header>
 
 <div class="wrap">
   <div class="layout">
-    <section class="panel" aria-labelledby="stockT">
-      <h2 class="title" id="stockT">When each medicine runs out</h2>
-      <p class="quiet small" id="stockSub"></p>
-      <div id="advice"></div>
-      <div id="meds"></div>
-      <p class="key quiet small"><u></u><span id="keyTxt"></span></p>
-      <p class="notice quiet small" id="demoNote" hidden style="margin-top:12px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>
-        <span>The use before today is made up for the demonstration. Anything dispensed here is real and counts from now.</span></p>
-    </section>
-
-    <div class="stack">
-      <section class="panel stack" aria-labelledby="giveT">
+    <section class="panel stack" aria-labelledby="giveT">
         <h2 class="title" id="giveT">Dispense to a ticket</h2>
         <div class="tks" id="tks" role="group" aria-label="Ticket"></div>
         <p class="quiet" id="noTk" hidden>No ticket is waiting. A ticket appears when a patient finishes speaking.</p>
         <div id="giveBody" class="stack" hidden>
           <div class="who"><div id="whoFace"></div><div><p class="strong" id="whoT"></p><p class="quiet small" id="whoGot"></p></div></div>
           <div id="rxBox"></div>
-          <p class="eyebrow" id="otherT">Something not on the prescription</p>
+          <p class="sec-h" id="otherT">Something not on the prescription</p>
           <div class="two">
             <div><label class="lab" for="med">Medicine</label><select class="field" id="med"></select></div>
             <div><label class="lab" for="qty">How many</label><input class="field num" id="qty" inputmode="numeric" autocomplete="off"></div>
@@ -130,7 +125,7 @@
           <button class="btn primary block" id="give"></button>
           <hr>
           <div>
-            <span class="eyebrow" id="feeLab">Clinic fee for this ticket</span>
+            <p class="sec-h" id="feeLab" style="margin-top:4px">Clinic fee for this ticket</p>
             <div class="seg big" role="group" aria-labelledby="feeLab" style="margin-top:6px">
               <button data-fee="due"></button><button data-fee="paid"></button><button data-fee="waived"></button>
             </div>
@@ -139,6 +134,11 @@
         </div>
       </section>
 
+    <div class="stack">
+      <section class="panel" aria-labelledby="advT">
+        <h2 class="title" id="advT">What to order first</h2>
+        <div id="advice"></div>
+      </section>
       <section class="panel" aria-labelledby="logT">
         <h2 class="title" id="logT">Signed by the supervisor today</h2>
         <ul class="log" id="log" style="margin-top:10px"></ul>
@@ -146,6 +146,17 @@
       </section>
     </div>
   </div>
+
+  <section class="panel" style="margin-top:16px" aria-labelledby="stockT">
+    <div class="stockhead">
+      <div><h2 class="title" id="stockT">When each medicine runs out</h2><p class="quiet small" id="stockSub"></p></div>
+      <p class="key quiet small"><u></u><span id="keyTxt"></span></p>
+    </div>
+    <div id="meds" class="medgrid"></div>
+    <p class="notice quiet small" id="demoNote" hidden style="margin-top:14px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>
+      <span>The use before today is made up for the demonstration. Anything dispensed here is real and counts from now.</span></p>
+  </section>
 </div>
 
 
@@ -196,13 +207,13 @@ function renderStock() {
   $('keyTxt').textContent = `${d.soon_days / 7} weeks of stock`;
   $('demoNote').hidden = !d.demo_history;
   const a = d.advice || {}, U = { now: 'Order today', soon: 'Order this week', watch: 'Watch' };
-  $('advice').innerHTML = a.orders ? `<div class="adv"><h3>What to order first</h3><p style="margin-top:4px">${esc(a.summary)}</p>
+  $('advice').innerHTML = a.orders ? `<div class="adv"><p>${esc(a.summary)}</p>
       <ol>${a.orders.map(o => `<li><span class="tag ${o.urgency}"><span class="dot"></span>${U[o.urgency]}</span><span><span class="strong">${esc(o.name)}</span><br><span class="quiet">${esc(o.why)}</span></span></li>`).join('')}</ol>
       <p class="by">${a.status === 'working' ? '<span class="live"></span>CAIMEx is reading the shelf again.' : `Advice from CAIMEx · ${esc(a.model)}. It read the shelf below and the outbreak watch together. The days left under it are plain arithmetic.`}</p></div>`
     : `<div class="adv"><p class="by" style="margin:0">${a.status === 'working' ? '<span class="live"></span>CAIMEx is reading the shelf and the outbreak watch.' : 'CAIMEx did not answer. The arithmetic below still holds.'}</p></div>`;
   $('meds').innerHTML = d.medicines.map(m => {
     const pct = m.days_left == null ? 100 : Math.max(2, Math.min(100, m.days_left / span * 100));
-    return `<div class="med">
+    return `<div class="med ${m.status}">
       <div><div class="nm">${esc(m.name)}</div>
         <div class="fig"><b>${m.stock.toLocaleString()}</b> ${esc(m.unit)} on the shelf · <b>${m.per_day}</b> a day${m.for && m.for.length ? ` · mostly for ${esc(m.for.join(' and ').toLowerCase())}` : ''}</div></div>
       <div class="days">${m.days_left == null ? '–' : m.days_left}<small>${m.days_left === 1 ? 'day left' : 'days left'}</small></div>
@@ -234,7 +245,7 @@ function renderGive() {
   $('whoGot').textContent = t.given.length ? 'Already given: ' + t.given.map(g => `${med(g.med) ? med(g.med).name : g.med} × ${g.qty}`).join(', ') : 'Nothing dispensed to this ticket yet.';
   const c = t.consult;
   $('rxBox').innerHTML = !c ? '<p class="quiet">The doctor has not written a prescription for this ticket. Anything dispensed needs the supervisor.</p>'
-    : `<p class="eyebrow">The doctor's prescription · ${esc(c.diagnosis)}</p>` + (c.rx.length ? `<ul class="rxl">${c.rx.map(l => {
+    : `<p class="sec-h" style="margin-top:4px">The doctor's prescription</p><p class="quiet" style="margin-top:-6px">For ${esc(c.diagnosis)}</p>` + (c.rx.length ? `<ul class="rxl">${c.rx.map(l => {
         const left = t.owed[l.med] || 0, mm = med(l.med) || { name: l.med, unit: '' };
         return `<li><span><span class="strong">${esc(mm.name)}</span><br><span class="q">${l.qty} ${esc(mm.unit)} · ${esc(l.how)}</span></span>
           <span class="row-gap" style="justify-content:flex-end"><button class="btn sm say" data-how="${esc(l.how)}" aria-label="Say how to take ${esc(mm.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18.500v-13L7.500 9.500H4zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></svg>Say</button>
@@ -265,7 +276,16 @@ function renderLog() {
     return `<li><time>${clock(r.at)}</time><div><div class="strong">${what}</div><div class="quiet small">${esc(r.reason)}</div></div></li>`;
   }).join('');
 }
-function render() { renderStock(); renderGive(); renderLog(); }
+const PILL = c => `<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="13" fill="var(--${c}-tint, var(--selected))"/><rect x="6.5" y="11" width="15" height="6" rx="3" transform="rotate(-45 14 14)" fill="none" stroke="var(--${c}-dot, var(--blue-fill))" stroke-width="2"/><path d="M11.900 11.900l4.200 4.200" stroke="var(--${c}-dot, var(--blue-fill))" stroke-width="2"/></svg>`;
+function renderCounts() {
+  const n = st => d.medicines.filter(m => st.includes(m.status)).length;
+  const tile = (shape, k, word) => `<span class="count ${k ? '' : 'none'}">${shape}<span class="cn"><b>${k}</b><small>${word}</small></span></span>`;
+  $('counts').innerHTML = tile(PILL('blue'), d.tickets.filter(t => t.stage === 'pharmacy').length, 'To dispense')
+    + tile('<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="13" fill="var(--red-fill)"/><path d="M14 7v9" stroke="var(--ink-on)" stroke-width="3.2" stroke-linecap="round"/><circle cx="14" cy="20.5" r="1.9" fill="var(--ink-on)"/></svg>', n(['now', 'none']), 'Order now')
+    + tile('<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11.5" fill="none" stroke="var(--warn-dot)" stroke-width="3"/><circle cx="14" cy="14" r="5" fill="var(--warn-dot)"/></svg>', n(['soon']), 'Order soon')
+    + tile('<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11.5" fill="none" stroke="var(--green-dot)" stroke-width="3"/><path d="M9 14.5l3.5 3.5 6.5-7" fill="none" stroke="var(--green-dot)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>', n(['enough']), 'Enough');
+}
+function render() { renderCounts(); renderStock(); renderGive(); renderLog(); }
 
 async function post(url, body) {
   const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
