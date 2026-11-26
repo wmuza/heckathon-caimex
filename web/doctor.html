@@ -10,8 +10,9 @@
 <script src="art.js"></script>
 <script src="rec.js"></script>
 <style>
-  :root { --col: 1180px; }
-  .band-in { flex-wrap: wrap; }
+  :root { --col: 1240px; }
+  .band-in { flex-wrap: wrap; padding-top: 18px; padding-bottom: 18px; gap: 12px 16px; }
+  .wrap { padding-top: 20px; }
   /* The patient on the left, the list on the right; on a phone the list comes first */
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: 16px; align-items: start; }
   @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .listcol { order: -1; } }
@@ -24,22 +25,25 @@
     .listcol #empty:not([hidden]) { flex: 1; }
   }
   .list { display: flex; flex-direction: column; gap: 8px; }
-  .group { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 10px 2px 0; }
+  .group { font-size: 0.875rem; font-weight: 800; color: var(--ink); margin: 10px 2px 0; }
   .group:first-child { margin-top: 0; }
   .row {
     display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; width: 100%; text-align: left; cursor: pointer; align-items: center;
-    background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 10px 14px; box-shadow: var(--shadow-panel);
+    background: var(--panel); border: 1px solid var(--hairline); border-radius: 18px; padding: 12px 14px; box-shadow: var(--shadow-panel);
+    color: inherit; font: inherit; transition: border-color 160ms ease;
   }
+  .row:hover { border-color: var(--blue-fill); }
   .row[aria-current="true"] { border-color: var(--blue-fill); box-shadow: 0 0 0 2px var(--blue-fill); }
-  .row .cc { font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .row .sub { color: var(--ink-2); font-size: 0.8125rem; font-weight: 600; }
+  .row .cc { font-weight: 700; font-size: 1.0625rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .row .cc.nonote { color: var(--ink-2); }
+  .row .sub { color: var(--ink); font-size: 0.875rem; font-weight: 800; font-variant-numeric: tabular-nums; }
   .face { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: var(--panel-sunk); display: block; flex: none; }
   span.face { padding: 6px; border-radius: 14px; }
   .face.lg { width: 104px; height: 104px; }
   span.face.lg { border-radius: 22px; padding: 8px; }
   .still svg * { animation: none !important; }
   .hero { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: center; }
-  .hero h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.25; margin-top: 4px; }
+  .hero h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.25; margin-top: 6px; letter-spacing: -0.01em; }
   .who-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
   /* Where the patient is: five steps, the done ones ticked */
@@ -64,7 +68,6 @@
   .det b { font-weight: 700; font-variant-numeric: tabular-nums; }
   .det.todo { background: none; color: var(--ink-2); }
   .det .wdot { width: 9px; height: 9px; border-radius: 50%; background: var(--warn-dot); }
-  h3 { font-size: 0.8125rem; font-weight: 700; color: var(--ink-2); margin: 18px 0 8px; }
   ul.facts { padding-left: 20px; display: grid; gap: 4px; }
   .signs { display: flex; gap: 6px; flex-wrap: wrap; }
   .heard { border-left: 3px solid var(--blue-soft); padding-left: 12px; }
@@ -107,6 +110,7 @@
       <h1>Doctor</h1>
       <p class="sub">The helper's note and the vitals, then your diagnosis and prescription</p>
     </div>
+    <div class="counts" id="counts" aria-live="polite"></div>
     <div class="page-tools"></div>
   </div>
 </header>
@@ -145,8 +149,22 @@ const face = (v, cls) => v.photo ? `<img class="face ${cls || ''}" src="${v.phot
   : `<span class="face art still ${cls || ''}" aria-hidden="true">${pictures[v.picture] || pictures.other || ''}</span>`;
 const med = id => d.medicines.find(m => m.id === id) || { name: id, unit: '' };
 const val = x => `${x.value}${x.unit ? ' ' + x.unit : ''}`;
+// What the visit is about. Visits reach this page once the helper has finished, so a missing complaint
+// means the note could not be written: say so, and use the danger sign the patient said, if any.
+const headline = v => v.complaint || v.alarm || 'No note was written';
+// The tiles in the title band: how many at each step
+const TILE = {
+  doctor: ['Waiting for you', '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11.5" fill="none" stroke="var(--blue-fill)" stroke-width="3" stroke-dasharray="4 5"/></svg>'],
+  nurse: ['With the nurse', '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="13" fill="var(--selected)"/><circle cx="14" cy="11" r="3.5" fill="none" stroke="var(--blue-ink)" stroke-width="2"/><path d="M8 21c1-3.5 3.300-5 6-5s5 1.500 6 5" fill="none" stroke="var(--blue-ink)" stroke-width="2" stroke-linecap="round"/></svg>'],
+  pharmacy: ['At the pharmacy', '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="13" fill="var(--warn-tint)"/><rect x="6.5" y="11" width="15" height="6" rx="3" transform="rotate(-45 14 14)" fill="none" stroke="var(--warn-dot)" stroke-width="2"/><path d="M11.900 11.900l4.200 4.200" stroke="var(--warn-dot)" stroke-width="2"/></svg>'],
+  done: ['Finished', '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11.5" fill="none" stroke="var(--green-dot)" stroke-width="3"/><path d="M9 14.500l3.500 3.500 6.500-7" fill="none" stroke="var(--green-dot)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
+};
 
 function renderList() {
+  $('counts').innerHTML = Object.entries(TILE).map(([st, [word, shape]]) => {
+    const n = d.visits.filter(v => v.stage === st).length;
+    return `<span class="count ${n ? '' : 'none'}">${shape}<span class="cn"><b>${n}</b><small>${word}</small></span></span>`;
+  }).join('');
   $('empty').hidden = d.visits.length > 0;
   // Patients still waiting for care keep the server's order: most urgent first, then longest wait.
   // Those past the doctor are history: latest first.
@@ -155,7 +173,7 @@ function renderList() {
     const rows = d.visits.filter(v => v.stage === st);
     if (latest) rows.sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
     return rows.length ? `<p class="group">${title} (${rows.length})</p>` + rows.map(v => `<button class="row" data-id="${v.id}" aria-current="${v.id === current}">
-      ${face(v)}<span><span class="cc">${esc(v.complaint || 'The note is being written')}</span><span class="sub">Ticket ${v.number}</span></span>
+      ${face(v)}<span><span class="cc ${v.complaint || v.alarm ? '' : 'nonote'}">${esc(headline(v))}</span><span class="sub">Ticket ${v.number}</span></span>
       <span class="tag ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span></button>`).join('') : '';
   }).join('');
   $('list').querySelectorAll('.row').forEach(b => b.onclick = () => { current = b.dataset.id; form = null; editing = false; lastSig = ''; render(); });
@@ -205,7 +223,7 @@ function considerHtml(v, open) {
   const c = v.consider;
   if (asking === v.id) return '<p class="by" style="margin:0"><span class="live"></span>CAIMEx is reading the note and the measurements. About 15 seconds.</p>';
   if (!c) return `<div class="row-gap"><button class="btn sm" id="ask" ${v.has_note ? '' : 'disabled'}>Ask CAIMEx what to consider</button>
-    <span class="quiet small">${v.has_note ? 'A list to widen your thinking. You examine and decide.' : 'The note is still being written.'}</span></div><p class="msg" id="askMsg" role="alert"></p>`;
+    <span class="quiet small">${v.has_note ? 'A list to widen your thinking. You examine and decide.' : 'There is no note for CAIMEx to read.'}</span></div><p class="msg" id="askMsg" role="alert"></p>`;
   const list = (t, xs) => xs.length ? `<h4>${t}</h4><ul>${xs.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
   return `<p class="strong">To consider</p>
     <div class="cs" style="margin-top:8px">${c.consider.map(x => `<div class="c"><span><span class="strong">${esc(x.name)}</span><br><span class="quiet small">${esc(x.why)}</span></span>
@@ -225,22 +243,23 @@ function renderDetail() {
   el.innerHTML = `
     <div class="hero">${face(v, 'lg')}
       <div style="min-width:0"><div class="who-line"><span class="tag lg ${v.level || ''}"><span class="dot"></span>${LABEL[v.level] || 'Waiting'}</span><span class="tag">Ticket ${v.number}</span></div>
-        <h2>${esc(v.complaint || 'The note is being written')}</h2><p class="quiet">${esc(v.patient || '')}</p></div></div>
+        <h2>${esc(headline(v))}</h2><p class="quiet">${esc(v.patient || '')}</p></div></div>
+    ${v.has_note ? '' : `<p class="callout warn">The helper could not write a note for this patient. What they said, and their recording, are on the <a href="/nurse">nurse's queue</a>.</p>`}
     ${steps(v.stage)}
     ${dets(v)}
-    <h3>From the helper's note</h3>
+    <h3 class="sec-h">From the helper's note</h3>
     <div class="heard">
       ${v.signs.length ? `<div class="signs">${v.signs.map(s => `<span class="tag urgent"><span class="dot"></span>${esc(s)}</span>`).join('')}</div>` : ''}
       ${v.history.length ? `<ul class="facts" style="margin-top:8px">${v.history.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : '<p class="quiet">Nothing more was said.</p>'}
     </div>
     <div class="ai" id="aiBox">${considerHtml(v, open)}</div>
     ${open ? `
-    <h3><label for="dx">Your diagnosis</label></h3>
+    <h3 class="sec-h"><label for="dx">Your diagnosis</label></h3>
     <div class="dxrow"><input class="field" id="dx" maxlength="120" autocomplete="off" value="${esc(form.diagnosis)}">
       <button class="btn ${dict.on ? 'danger' : ''}" id="mic" ${dict.busy ? 'disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.500 11a6.500 6.500 0 0 0 13 0M12 17.500V21"/></svg>${dict.on ? 'Stop' : dict.busy ? 'Writing…' : 'Say it'}</button></div>
     <p class="quiet small" id="micMsg" style="margin-top:6px">${esc(dict.msg)}</p>
     <div class="picks">${d.diagnoses.map(x => `<button class="pick" data-dx="${esc(x)}" aria-pressed="${x === form.diagnosis}">${CK}${esc(x)}</button>`).join('')}</div>
-    <h3>Prescription</h3>
+    <h3 class="sec-h">Prescription</h3>
     <div class="rxadd">
       <div><label class="lab" for="rxMed">Medicine</label><select class="field" id="rxMed">${d.medicines.map(m => `<option value="${m.id}">${esc(m.name)}${m.stock <= 0 ? ' (none left)' : ''}</option>`).join('')}</select></div>
       <div><label class="lab" for="rxQty">How many</label><input class="field num" id="rxQty" inputmode="numeric" autocomplete="off"></div>
@@ -250,14 +269,14 @@ function renderDetail() {
     <ul class="rx">${form.rx.map((l, i) => `<li><span><span class="strong">${esc(med(l.med).name)}</span><br><span class="q">${l.qty} ${esc(med(l.med).unit)} · ${esc(l.how)}</span></span>
       <button class="linkbtn" data-drop="${i}">Remove</button></li>`).join('')}</ul>
     ${form.rx.length ? '' : '<p class="quiet small" style="margin-top:8px">Nothing prescribed yet.</p>'}
-    <h3 id="outLab">What happens next</h3>
+    <h3 class="sec-h" id="outLab">What happens next</h3>
     <div class="seg big" role="group" aria-labelledby="outLab">${Object.keys(OUT).map(k => `<button data-out="${k}" aria-pressed="${k === form.outcome}">${CK}${OUT[k]}</button>`).join('')}</div>
     <p class="msg" id="msg" role="alert" style="margin-top:10px"></p>
     <button class="btn primary block" id="send">${form.rx.length ? 'Send the prescription to the pharmacy' : 'Finish the visit'}</button>`
     : `
-    <h3>Your diagnosis</h3>
+    <h3 class="sec-h">Your diagnosis</h3>
     <p class="title">${esc(c.diagnosis)}</p><p class="quiet">${OUT[c.outcome]}</p>
-    <h3>Prescription</h3>
+    <h3 class="sec-h">Prescription</h3>
     ${c.rx.length ? `<ul class="rx">${c.rx.map(l => `<li><span><span class="strong">${esc(med(l.med).name)}</span><br><span class="q">${l.qty} ${esc(med(l.med).unit)} · ${esc(l.how)}</span></span></li>`).join('')}</ul>` : '<p class="quiet">Nothing was prescribed.</p>'}
     ${given}
     <p class="sent" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>

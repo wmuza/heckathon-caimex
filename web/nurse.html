@@ -29,14 +29,7 @@
   .lvl { flex: none; width: 28px; height: 28px; }
   .lvl.big { width: 40px; height: 40px; }
 
-  /* The count of each level, as a glance: shape, number, word */
-  .counts { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-  .count { display: inline-flex; align-items: center; gap: 10px; min-width: 128px; padding: 8px 16px 8px 10px; border-radius: 14px;
-    background: var(--panel); border: 1px solid var(--hairline); box-shadow: var(--shadow-panel); }
-  .count .cn { display: flex; flex-direction: column; line-height: 1.15; }
-  .count b { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .count small { font-weight: 600; font-size: 0.75rem; color: var(--ink-2); }
-  .count.none { opacity: 0.6; box-shadow: none; }
+  /* The count of each level, as a glance: the shared .count tiles in app.css */
 
   /* One patient in the queue: level, picture, a line of words, the wait */
   .row {
@@ -202,7 +195,6 @@
   @media (max-width: 560px) {
     .d-head { grid-template-columns: 68px minmax(0, 1fr); gap: 14px; padding: 18px 18px 16px; } .d-head > .art { width: 68px; height: 68px; }
     .d-tools, .d-body { padding-left: 18px; padding-right: 18px; } .say.h { padding-left: 0; }
-    .count { min-width: 0; padding-right: 12px; }
     .d-acts { width: 100%; } .d-acts #seen { flex: 1; }
   }
   /* Printing. "Print queue" prints a sheet built from the live queue; "Print note" prints the open note

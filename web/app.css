@@ -139,6 +139,28 @@ a.mark { text-decoration: none; }
 }
 .has-menu .band .mark { display: none; }
 .page-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* Summary tiles in a page's title band: a shape, a number, a word (nurse, vitals, doctor, pharmacy) */
+.counts { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.count { display: inline-flex; align-items: center; gap: 10px; min-width: 132px; padding: 8px 16px 8px 10px; border-radius: 14px;
+  background: var(--panel); border: 1px solid var(--hairline); box-shadow: var(--shadow-panel); }
+.count > svg { width: 28px; height: 28px; flex: none; }
+.count .cn { display: flex; flex-direction: column; line-height: 1.15; }
+.count b { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.count small { font-weight: 600; font-size: 0.75rem; color: var(--ink-2); }
+.count.none { opacity: 0.6; box-shadow: none; }
+@media (max-width: 560px) { .count { min-width: 0; padding-right: 12px; } }
+
+/* A section heading inside a panel: navy, bold, a red bar before and a rule after */
+.sec-h { font-size: 0.9375rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--blue-ink);
+  margin: 28px 0 14px; display: flex; align-items: center; gap: 10px; }
+.sec-h::before { content: ""; flex: none; width: 5px; height: 20px; border-radius: 3px; background: var(--brand-red); }
+.sec-h::after { content: ""; flex: 1; height: 2px; border-radius: 1px; background: var(--selected); margin-left: 4px; }
+
+/* A tinted note with a coloured edge: red for alarms, amber for something to check */
+.callout { margin-top: 14px; padding: 12px 16px; border-radius: 12px; background: var(--red-tint); box-shadow: inset 4px 0 0 var(--red-fill); color: var(--red-ink); font-weight: 600; }
+.callout.warn { background: var(--warn-tint); box-shadow: inset 4px 0 0 var(--warn-dot); color: var(--ink); font-weight: 500; }
+.callout a { color: inherit; font-weight: 700; }
 .page-tools:empty { display: none; }
 /* On a phone the title takes its own line and the page's tools wrap under it. */
 @media (max-width: 640px) { .band-in { flex-wrap: wrap; } .band .grow { flex-basis: 100%; } }
