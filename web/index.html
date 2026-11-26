@@ -610,8 +610,6 @@ $('closeSheet').onclick = () => { $('sheet').hidden = true; };
 $('sheet').onclick = e => { if (e.target === $('sheet')) $('sheet').hidden = true; };
 
 applyLang(lang);
-// The shared footer is drawn after this script; once the page is whole, put its words in this language too.
-document.addEventListener('DOMContentLoaded', () => applyLang(lang));
 Art.show($('artWelcome'), 'welcome', ''); Art.show($('artRec'), 'recording', ''); Art.show($('artDoc'), 'not_doctor', '');
 </script>
 <script src="footer.js"></script>

@@ -26,6 +26,9 @@
     '<g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">' +
     '<path stroke="var(--navy)" d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/>' +
     '<path stroke="var(--brand-red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>';
+  var themeBtn = '<button class="mb-theme" type="button" id="mbTheme" aria-label="Switch between light and dark" title="Light or dark">' +
+    '<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>' +
+    '<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>';
   var bars = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path class="mb-open" d="M4 7h16M4 12h16M4 17h16"/><path class="mb-close" d="M6 6l12 12M18 6L6 18"/></svg>';
 
   var html =
@@ -34,6 +37,7 @@
         '<a class="mb-brand" href="/welcome">' + logo + '<span>Mukoti</span></a>' +
         '<nav class="mb-links" aria-label="Main menu">' + links() + '</nav>' +
         '<a class="mb-cta" href="' + START.href + '"' + cur(START.href) + '>' + START.label + '</a>' +
+        themeBtn +
         '<button class="mb-toggle" type="button" aria-expanded="false" aria-controls="mbPanel">' + bars + '<span>Menu</span></button>' +
       '</div>' +
       '<nav class="mb-panel" id="mbPanel" aria-label="Main menu" hidden>' +
@@ -57,4 +61,11 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { show(false); btn.focus(); } });
   document.addEventListener('click', function (e) { if (!panel.hidden && !bar.contains(e.target)) show(false); });
   window.matchMedia('(min-width: 1180px)').addEventListener('change', function (m) { if (m.matches) show(false); });
+
+  // Light or dark: the button flips between them and remembers it, as the old switch did (theme.js reads it).
+  document.getElementById('mbTheme').addEventListener('click', function () {
+    var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('mukoti-theme', next); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', next);
+  });
 })();
