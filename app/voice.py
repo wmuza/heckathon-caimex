@@ -85,7 +85,11 @@ def call(visit: dict, to: str) -> dict:
     in the patient's own language first."""
     if to not in PLACES:
         raise ValueError("Unknown place")
-    row = {"id": (CALLS[-1]["id"] + 1) if CALLS else 1, "at": time.time(), "number": visit["number"], "to": to,
+    # The id is built on the clock, so it is never used twice, even after the server starts again. An id
+    # that began at 1 each time made a board left open ignore new calls, and made the browser replay
+    # the sound it had kept for an earlier call with the same id: the wrong ticket was said.
+    row = {"id": max(int(time.time() * 1000), (CALLS[-1]["id"] + 1) if CALLS else 0), "at": time.time(),
+           "number": visit["number"], "to": to,
            "langs": [visit["lang"]] + [l for l in ("sn", "en") if l != visit["lang"]]}
     CALLS.append(row)
     del CALLS[:-50]

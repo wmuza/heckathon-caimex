@@ -148,3 +148,16 @@ def test_the_briefing_is_read_by_the_english_voice_and_falls_back(monkeypatch):
     fail = True
     asyncio.run(gateway.speak_staff("Good morning."))
     assert asked[-1] == ("en", None, None)          # the clinic's own voice reads it instead
+
+
+def test_a_call_id_is_never_used_again_after_a_restart(monkeypatch):
+    """The board asks for calls after the last id it saw, and the browser keeps each call's sound by its id."""
+    now = [1_800_000_000.0]
+    monkeypatch.setattr(voice.time, "time", lambda: now[0])
+    v = {"number": 7, "lang": "sn"}
+    first = voice.call(v, "nurse")["id"]
+    second = voice.call(v, "doctor")["id"]     # in the same millisecond
+    assert second > first
+    voice.CALLS.clear()                        # the server starts again, a few seconds later
+    now[0] += 5
+    assert voice.call({"number": 8, "lang": "sn"}, "nurse")["id"] > second
