@@ -43,10 +43,10 @@
   /* The navy band: a photo that drifts slowly under a deep navy veil, darkest behind the words */
   .top { position: relative; overflow: hidden; isolation: isolate; background: var(--navy); color: var(--on-navy); }
   .top .photo { position: absolute; inset: -6%; z-index: -2; background: url(img/welcome-hero.jpg) center 45% / cover no-repeat;
-    transform-origin: 62% 50%; animation: drift 38s ease-in-out infinite alternate; will-change: transform; }
+    transform-origin: 62% 50%; animation: drift 14s ease-in-out infinite alternate; will-change: transform; }
   .top::before { content: ""; position: absolute; inset: 0; z-index: -1;
     background: linear-gradient(90deg, var(--veil-a) 0%, var(--veil-b) 48%, var(--veil-c) 100%); }
-  @keyframes drift { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.12) translate(-2.5%, -1.5%); } }
+  @keyframes drift { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.16) translate(-3.5%, -2%); } }
   @media (prefers-reduced-motion: reduce) { .top .photo { animation: none; } }
   .top :focus-visible { outline-color: var(--on-navy); }
 
