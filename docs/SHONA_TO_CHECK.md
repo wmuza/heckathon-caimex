@@ -37,6 +37,36 @@ In `app/prompts.py`.
 | Doctor aona case yenyu. Hamudi mushonga parizvino. Kana mukanzwa worse, uyai kuHospital. | The doctor has looked at your case. You do not need medicine now. If you feel worse, come to the hospital. |  |
 | Doctor akunyorerai prescription. Iratidzei kuPharmacy ipi neipi kuti mutenge mushonga wenyu. | The doctor has written you a prescription. Show it at any pharmacy to buy your medicine. |  |
 
+## First aid for a patient at home with a danger sign (NOT YET REVIEWED BY A CLINICIAN)
+
+In `app/prompts.py`.
+
+| Shona | Meant to say | OK? |
+|---|---|---|
+| Mugarisei akatwasuka. Musamurega achirara pasi akatambarara. | Sit them upright. Do not let them lie flat. |  |
+| Sunungurai mbatya dzakasungirira mumuchengete akadzikama. | Loosen tight clothing and keep them calm. |  |
+| Murarisei nerutivi, kure nezvinhu zvakaoma. | Lay them on their side, away from anything hard. |  |
+| Musaisa chinhu mumuromo make uye musamubata nesimba. | Do not put anything in their mouth and do not hold them down. |  |
+| Murarisei nerutivi kuti akwanise kufema. | Lay them on their side so they can breathe. |  |
+| Musamupa chikafu kana kunwa. Garai naye. | Do not give food or drink. Stay with them. |  |
+| Dzvanyai pachironda nemachira akachena, murambe muchidzvanya. | Press firmly on the wound with a clean cloth and keep pressing. |  |
+| Kana zvichikwanisika, simudzai pari kubuda ropa. | If you can, raise the bleeding part. |  |
+| Rarai nerutivi rwekuruboshwe muzorore. | Lie down on your left side and rest. |  |
+| Endai nemumwe munhu kana zvichikwanisika. | Bring someone with you if you can. |  |
+| Musamurutsisa. | Do not make them vomit. |  |
+| Kana iri snake bite, musazungunusa gumbo kana ruoko rwakarumwa. Musacheka kana kusveta pakarumwa. | For a snake bite, keep the bitten limb still. Do not cut or suck the bite. |  |
+| Endai nechigaba kana packet yazvo. | Bring the container or packet with you. |  |
+| Garai naye. Musamusiya ari ega. | Stay with them. Do not leave them alone. |  |
+| Bvisai zvinhu zvaangashandisa kuzvikuvadza. | Remove anything they could use to hurt themselves. |  |
+| Mupei ORS kana mvura yakachena zvishoma zvishoma, kazhinji, muri munzira. | Give small sips of oral rehydration solution (ORS) or clean water, often, while you travel. |  |
+| Kana muchiyamwisa, rambai muchiyamwisa. | If you breastfeed, keep breastfeeding. |  |
+| Mudziyisei mwana. | Keep the child warm. |  |
+| Murarisei pasi mumutonhodze. | Keep them lying down and cool. |  |
+| Musamirira kuti fever idzike musati maenda. | Do not wait for the fever to go down before you go. |  |
+| Garai nemurwere mumuchengete akadzikama. | Stay with the patient and keep them calm. |  |
+| Musamupa chikafu kana mushonga kunze kwekunge health worker akuudzai. | Do not give food or medicine unless a health worker tells you to. |  |
+| Nurse ane case yenyu uye achakufonerai pa {p}. | The nurse has your case and will call you on {p}. |  |
+
 ## What the helper says: the questions
 
 In `app/prompts.py`.
@@ -186,6 +216,7 @@ In `web/index.html`.
 | Emergency | This may be an emergency |  |
 | Fonerai ambulance pa {n}, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi. | Call an ambulance on {n}, or go to the nearest clinic or hospital now. |  |
 | Fonerai {n} | Call {n} |  |
+| Pamuri kuenda: | While you get help: |  |
 | Ziva kuti case yenyu yasvika papi | Check your progress |  |
 | Onai visit yenyu yekupedzisira | Check my last visit |  |
 | Onai sample e-prescription | See a sample e-prescription |  |

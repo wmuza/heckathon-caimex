@@ -293,3 +293,42 @@ def test_the_demo_sample_shows_an_e_prescription_and_is_in_no_queue(fresh):
     assert "sample.pdf" in pdf.headers["content-disposition"]
     assert visits.SESSIONS == {} and c.get("/api/visits").json()["visits"] == []
     pharmacy.STATE.clear(); server.STATUS_TRIES.clear()
+
+
+# ── Help at home during an emergency ────────────────────────────────────────
+
+def test_an_emergency_at_home_gets_first_aid_for_its_sign_and_word_that_the_nurse_will_call(fresh):
+    s = visits.new("en", online=True, phone=PHONE)
+    events = []
+
+    async def go():
+        async for ev in visits.take_turn(s, text="My daughter has had diarrhoea since yesterday and now she cannot drink anything"):
+            events.append(ev)
+        await visits.wait_for_notes()
+    asyncio.run(go())
+    reply = next(e for e in events if e["type"] == "reply")
+    assert reply["alarm"] and reply["first_aid"] == prompts.FIRST_AID["en"]["cannot_drink"]
+    assert reply["nurse_calls"] == prompts.NURSE_WILL_CALL["en"].format(p=PHONE)
+    assert visits.status_view(s)["first_aid"] == prompts.FIRST_AID["en"]["cannot_drink"]
+
+
+def test_at_the_clinic_an_emergency_gets_no_first_aid_because_the_nurse_is_coming(fresh):
+    s = talk(visits.new("en"), ["My daughter cannot drink anything"])
+    assert s["alarm"] and visits.help_at_home(s) == {}
+
+
+def test_first_aid_exists_for_every_emergency_sign_in_both_languages():
+    from app import triage
+    for lang in ("en", "sn"):
+        assert set(prompts.FIRST_AID[lang]) == {r.key for r in triage.RULES if r.level == "emergency"} | {"default"}
+        assert prompts.first_aid(lang, "not-a-sign") == prompts.FIRST_AID[lang]["default"]
+
+
+def test_an_emergency_at_home_is_first_in_the_nurses_queue(fresh):
+    import time as _t
+    c = TestClient(server.app)
+    older = visits.new("en"); older["status"] = "ready"; older["triage"] = {"level": "emergency"}; older["created"] = _t.time() - 600
+    home = visits.new("en", online=True, phone=PHONE); home["status"] = "ready"; home["triage"] = {"level": "emergency"}
+    urgent = visits.new("en", online=True, phone=PHONE); urgent["status"] = "ready"; urgent["triage"] = {"level": "urgent"}
+    ids = [v["id"] for v in c.get("/api/visits").json()["visits"]]
+    assert ids[:3] == [home["id"], older["id"], urgent["id"]]

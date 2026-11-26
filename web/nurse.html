@@ -426,12 +426,11 @@ function traceHtml(v) {
   const tr = (full[v.id] && full[v.id].trace) || null;
   if (!tr || !tr.length) return '';
   const live = tr.filter(c => !c.cached), ms = live.reduce((s, c) => s + c.ms, 0) || 1;
-  const total = tr.reduce((s, c) => s + (c.cost || 0), 0);
   const steps = Object.keys(STEP).filter(k => live.some(c => c.step === k));
   const sum = k => live.filter(c => c.step === k).reduce((s, c) => s + c.ms, 0);
   return `<details class="trace noprint" ${traceOpen ? 'open' : ''}>
     <summary><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-      How CAIMEx handled this visit <span class="tag blue">${tr.length} calls</span><span class="tag">${(ms / 1000).toFixed(1)} s</span><span class="tag">${money(total)}</span></summary>
+      How CAIMEx handled this visit <span class="tag blue">${tr.length} calls</span><span class="tag">${(ms / 1000).toFixed(1)} s</span></summary>
     <div class="tbar" role="img" aria-label="Where the time went">${steps.map(k => `<i class="s-${k}" style="flex:${sum(k)}"></i>`).join('')}</div>
     <div class="scroll-x"><table class="t"><thead><tr><th>Step</th><th>Model</th><th class="r">Calls</th><th class="r">Time</th><th class="r">Cost</th></tr></thead><tbody>
     ${steps.map(k => { const cs = tr.filter(c => c.step === k); return `<tr><td><span class="key s-${k}"></span>${STEP[k]}</td><td class="strong">${esc(cs[0].model)}</td><td class="r num">${cs.length}</td><td class="r num">${(sum(k) / 1000).toFixed(1)} s</td><td class="r num">${money(cs.reduce((s, c) => s + (c.cost || 0), 0))}</td></tr>`; }).join('')}

@@ -411,7 +411,7 @@ async def take_turn(s: dict, *, text: str | None = None, blob: bytes | None = No
         save()
     yield {"type": "reply", "text": reply, "en": reply_en, "heard_en": turn.get("en"),
            "topic": topic or "other", "done": done, "alarm": alarm,
-           "question": s["questions"], "of": prompts.MAX_QUESTIONS}
+           "question": s["questions"], "of": prompts.MAX_QUESTIONS, **help_at_home(s)}
 
     if want_audio:
         yield {"type": "audio", "mp3": await _say(s, reply, lang)}
@@ -669,6 +669,16 @@ def by_status_key(key: str, lang: str = "en") -> dict | None:
     return None
 
 
+def help_at_home(s: dict) -> dict:
+    """For a patient at home with a danger sign: first-aid steps for that sign and word that the nurse will
+    call. Fixed sentences only. Empty for a clinic visit, where the nurse is coming."""
+    if not (s.get("online") and s.get("alarm")):
+        return {}
+    sign = next((x["key"] for x in s.get("live_signs", []) if x["level"] == "emergency"), None)
+    return {"first_aid": prompts.first_aid(s["lang"], sign),
+            "nurse_calls": prompts.NURSE_WILL_CALL[s["lang"]].format(p=s.get("phone") or "")}
+
+
 def status_view(s: dict) -> dict:
     """What a patient at home sees of their own visit: one fixed sentence for where it is and, once the
     doctor has decided, the e-prescription to show at any pharmacy. Never the diagnosis, the note or a
@@ -693,7 +703,8 @@ def status_view(s: dict) -> dict:
                              "unit": meds.get(l["med"], {}).get("unit", ""), "how": voice.how_text(lang, l["how"])}
                             for l in consult["rx"]]}
     return {"lang": lang, "number": s["number"], "stage": stage, "texts": texts, "prescription": rx,
-            "emergency": bool(s.get("alarm")), "sample": bool(s.get("sample"))}
+            "emergency": bool(s.get("alarm")), "sample": bool(s.get("sample")),
+            "first_aid": help_at_home(s).get("first_aid", [])}
 
 
 def public(s: dict, full: bool = True) -> dict:

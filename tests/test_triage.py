@@ -293,3 +293,18 @@ def test_mixed_denials_are_not_danger_signs(text):
 
 def test_an_english_sign_after_a_shona_denial_of_something_else_still_counts():
     assert "chest_pain" in keys("Handina simba, ndine chest pain")
+
+
+@pytest.mark.parametrize("text", [
+    "she cannot drink",
+    "she can't drink",
+    "she can not drink",
+    "he won't drink anything",
+    "the baby cannot breastfeed",
+    "she is unable to drink",
+    "she is too weak to suck",
+    "My daughter has had diarrhoea since yesterday and now she cannot drink anything",   # ticket 9, word for word
+])
+def test_a_child_who_cannot_drink_is_an_emergency_in_plain_english(text):
+    """The rules must catch this with every model down. They missed "cannot drink" with no "to"."""
+    assert "cannot_drink" in keys(text, "en") and level(text, "en") == "emergency"

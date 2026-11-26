@@ -29,6 +29,9 @@ table("What the helper says to a patient at home (online visits)", "app/prompts.
       [(prompts.ONLINE_LINES["sn"][k], prompts.ONLINE_LINES["en"][k]) for k in prompts.ONLINE_LINES["sn"]])
 table("The status page a patient at home comes back to", "app/prompts.py",
       [(prompts.STATUS_SAY["sn"][k], prompts.STATUS_SAY["en"][k]) for k in prompts.STATUS_SAY["sn"]])
+table("First aid for a patient at home with a danger sign (NOT YET REVIEWED BY A CLINICIAN)", "app/prompts.py",
+      [(sn, en) for k in prompts.FIRST_AID["sn"] for sn, en in zip(prompts.FIRST_AID["sn"][k], prompts.FIRST_AID["en"][k])]
+      + [(prompts.NURSE_WILL_CALL["sn"], prompts.NURSE_WILL_CALL["en"])])
 table("What the helper says: the questions", "app/prompts.py",
       [(prompts.BANK["sn"][k], prompts.BANK["en"][k]) for k in prompts.BANK["sn"]])
 

@@ -80,6 +80,56 @@ STATUS_SAY = {
 }
 
 
+# First aid for a patient at home with a danger sign, shown under "go now" while they get help. One short
+# list per emergency rule (triage.py keys), written in advance like every other sentence: no model writes
+# them. Common first-aid advice; NO CLINICIAN HAS REVIEWED IT YET. "default" is for an alarm the interview
+# model raised, where no rule names the sign.
+FIRST_AID = {
+    "en": {
+        "breathing": ["Sit them upright. Do not let them lie flat.", "Loosen tight clothing and keep them calm."],
+        "convulsions": ["Lay them on their side, away from anything hard.",
+                        "Do not put anything in their mouth and do not hold them down."],
+        "unconscious": ["Lay them on their side so they can breathe.", "Do not give food or drink. Stay with them."],
+        "bleeding": ["Press firmly on the wound with a clean cloth and keep pressing.", "If you can, raise the bleeding part."],
+        "pregnancy_bleeding": ["Lie down on your left side and rest.", "Bring someone with you if you can."],
+        "poison": ["Do not make them vomit.", "For a snake bite, keep the bitten limb still. Do not cut or suck the bite.",
+                   "Bring the container or packet with you."],
+        "self_harm": ["Stay with them. Do not leave them alone.", "Remove anything they could use to hurt themselves."],
+        "cannot_drink": ["Give small sips of oral rehydration solution (ORS) or clean water, often, while you travel.",
+                         "If you breastfeed, keep breastfeeding.", "Keep the child warm."],
+        "stiff_neck_fever": ["Keep them lying down and cool.", "Do not wait for the fever to go down before you go."],
+        "default": ["Stay with the patient and keep them calm.",
+                    "Do not give food or medicine unless a health worker tells you to."],
+    },
+    "sn": {
+        "breathing": ["Mugarisei akatwasuka. Musamurega achirara pasi akatambarara.",
+                      "Sunungurai mbatya dzakasungirira mumuchengete akadzikama."],
+        "convulsions": ["Murarisei nerutivi, kure nezvinhu zvakaoma.",
+                        "Musaisa chinhu mumuromo make uye musamubata nesimba."],
+        "unconscious": ["Murarisei nerutivi kuti akwanise kufema.", "Musamupa chikafu kana kunwa. Garai naye."],
+        "bleeding": ["Dzvanyai pachironda nemachira akachena, murambe muchidzvanya.",
+                     "Kana zvichikwanisika, simudzai pari kubuda ropa."],
+        "pregnancy_bleeding": ["Rarai nerutivi rwekuruboshwe muzorore.", "Endai nemumwe munhu kana zvichikwanisika."],
+        "poison": ["Musamurutsisa.", "Kana iri snake bite, musazungunusa gumbo kana ruoko rwakarumwa. Musacheka kana kusveta pakarumwa.",
+                   "Endai nechigaba kana packet yazvo."],
+        "self_harm": ["Garai naye. Musamusiya ari ega.", "Bvisai zvinhu zvaangashandisa kuzvikuvadza."],
+        "cannot_drink": ["Mupei ORS kana mvura yakachena zvishoma zvishoma, kazhinji, muri munzira.",
+                         "Kana muchiyamwisa, rambai muchiyamwisa.", "Mudziyisei mwana."],
+        "stiff_neck_fever": ["Murarisei pasi mumutonhodze.", "Musamirira kuti fever idzike musati maenda."],
+        "default": ["Garai nemurwere mumuchengete akadzikama.",
+                    "Musamupa chikafu kana mushonga kunze kwekunge health worker akuudzai."],
+    },
+}
+# Under the first aid, so a frightened parent knows the clinic is acting too.
+NURSE_WILL_CALL = {"en": "The nurse has your case and will call you on {p}.",
+                   "sn": "Nurse ane case yenyu uye achakufonerai pa {p}."}
+
+
+def first_aid(lang: str, sign_key: str | None) -> list[str]:
+    table = FIRST_AID[lang if lang in FIRST_AID else "en"]
+    return table.get(sign_key or "", table["default"])
+
+
 def lines(lang: str, online: bool = False) -> dict:
     """The helper's fixed lines for this visit: the clinic's, or the online ones for a patient at home."""
     return {**LINES[lang], **ONLINE_LINES[lang]} if online else LINES[lang]

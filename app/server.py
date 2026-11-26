@@ -328,7 +328,9 @@ async def queue():
         # Waiting patients first, most urgent first; then those still speaking; then those seen.
         group = {"talking": 1, "seen": 2}.get(s["status"], 0)
         level = order.get((s.get("triage") or {}).get("level", "routine"), 2)
-        return (group, level if group == 0 else 0, s["created"])
+        # An emergency at home was told to call an ambulance: the nurse's call-back comes before anyone else.
+        home_first = 0 if (group == 0 and level == 0 and s.get("online")) else 1
+        return (group, level if group == 0 else 0, home_first, s["created"])
 
     return {"visits": [visits.public(s, full=False) for s in sorted(visits.SESSIONS.values(), key=key)],
             "now": time.time()}

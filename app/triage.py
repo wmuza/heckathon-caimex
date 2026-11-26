@@ -132,7 +132,9 @@ RULES: list[Rule] = [
                   r"\w*rutsa (zvese|zvose|zvinhu zvese|zvinhu zvose|zvaanodya zvese|zvaanodya zvose)",
                   r"\w*vh?omit\w* (zvese|zvose|zvinhu zvese|zvinhu zvose|everything)",
                   r"\w*rutsa everything"),
-         en=_alts(r"!(unable|cannot|can't|not able|too weak) to (drink|breastfeed|feed|suck)",
+         # "to" only after unable / not able / too weak: people say "she cannot drink", with no "to".
+         en=_alts(r"!((unable|not able|too weak) to|cannot|can't|can not|could not|couldn't|will not|won't) "
+                  r"(drink|breastfeed|feed|suck)",
                   r"!not (drinking|breastfeeding|feeding)", r"!(refus\w*|stopped) (to )?(drink\w*|breastfeed\w*|feed\w*)",
                   r"vomit\w* everything")),
     Rule("urgent", "chest_pain", "Chest pain", "iitt",

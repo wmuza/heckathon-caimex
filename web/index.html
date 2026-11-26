@@ -133,6 +133,10 @@
     background: var(--navy); color: var(--on-navy); border-radius: 22px; padding: 16px 28px 18px; border-bottom: 6px solid var(--brand-red); }
   #done { margin-top: 24px; }
   .ticket .big { font-size: 1.1875rem; font-weight: 600; max-width: 24ch; }
+  .aid { width: 100%; max-width: 420px; text-align: left; background: var(--panel-sunk); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .aid-h { font-weight: 700; }
+  .aid ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; line-height: 1.45; }
+  .aid-n { color: var(--ink-2); border-top: 1px solid var(--hairline); padding-top: 8px; }
 
   .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
   .pick button {
@@ -217,6 +221,11 @@
       <p class="n" id="num">1</p>
       <p class="big" id="doneText"></p>
       <a id="callEm" class="btn danger block" style="max-width:320px" hidden></a>
+      <div id="aidBox" class="aid" hidden>
+        <p class="aid-h" data-t="whileYouGo"></p>
+        <ul id="firstAid"></ul>
+        <p class="aid-n" id="nurseCalls"></p>
+      </div>
       <a id="statusLink" class="btn primary block" style="max-width:320px" hidden data-t="checkProgress"></a>
       <p class="quiet" id="keepLink" data-t="keepLink" style="max-width:30ch" hidden></p>
       <button id="again" class="btn block" style="max-width:320px" data-t="next"></button>
@@ -284,7 +293,7 @@ const T = {
     onNotdoctor: 'Helper iyi iComputer, haisi doctor. Kana iri emergency, fonerai {n} izvozvi.',
     onDone: 'Thank you. Clinic ichakufonerai pa {p} munguva pfupi.', onAlarmTag: 'Emergency',
     onAlarmText: 'Fonerai ambulance pa {n}, kana kuti endai kuClinic kana kuHospital iri pedyo izvozvi.', callEm: 'Fonerai {n}',
-    checkProgress: 'Ziva kuti case yenyu yasvika papi', lastVisit: 'Onai visit yenyu yekupedzisira', sampleRx: 'Onai sample e-prescription',
+    whileYouGo: 'Pamuri kuenda:', checkProgress: 'Ziva kuti case yenyu yasvika papi', lastVisit: 'Onai visit yenyu yekupedzisira', sampleRx: 'Onai sample e-prescription',
     keepLink: 'Chengetai link iyi. Muchada maDigits matatu ekupedzisira enumber yenyu yefoni.',
   },
   en: {
@@ -314,7 +323,7 @@ const T = {
     onNotdoctor: 'This helper is a computer, not a doctor. If it is serious, call {n} now.',
     onDone: 'Thank you. The clinic will call you on {p} soon.', onAlarmTag: 'This may be an emergency',
     onAlarmText: 'Call an ambulance on {n}, or go to the nearest clinic or hospital now.', callEm: 'Call {n}',
-    checkProgress: 'Check your progress', lastVisit: 'Check my last visit', sampleRx: 'See a sample e-prescription',
+    whileYouGo: 'While you get help:', checkProgress: 'Check your progress', lastVisit: 'Check my last visit', sampleRx: 'See a sample e-prescription',
     keepLink: 'Keep this link. You will need the last 3 digits of your phone number.',
   },
 };
@@ -337,7 +346,7 @@ function applyLang(l) {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-t]').forEach(el => { el.textContent = S[el.dataset.t]; });
   document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-  $('text').placeholder = S.placeholder;
+  $('text').placeholder = S.placeholder; $('text').setAttribute('aria-label', S.writeHere);
   if (online) {
     const say = (k, v) => document.querySelectorAll(`[data-t="${k}"]`).forEach(el => { el.textContent = v; });
     say('welcome', S.onWelcome); say('intro', S.onIntro); say('yourNumber', S.yourRef);
@@ -465,7 +474,8 @@ function mode(m, text) {
   $('stopIcon').toggleAttribute('hidden', m !== 'rec'); $('earIcon').toggleAttribute('hidden', m !== 'speak');
   $('status').textContent = text; $('status').classList.toggle('quiet-state', m === 'wait');
   $('typed').hidden = !(typing && !sample); $('micWrap').hidden = typing && !sample;
-  $('typed').querySelector('button').disabled = off; $('text').disabled = off;
+  // The answer box stays open while the helper speaks or thinks: what is typed then is kept and sent when it is ready.
+  $('typed').querySelector('button').disabled = !!sample; $('text').disabled = !!sample;
 }
 function setBusy(b) { busy = b; }
 let again = null;                            // what "Try again" does after a failure
@@ -536,9 +546,11 @@ async function begin(sampleInfo) {
   next('main');
 }
 
+let pending = null;                          // an answer typed while the helper was still speaking
 function next(topic) {
   if (!visit) return;
   if (sample) return sampleTurn(topic);
+  if (pending) { const fd = new FormData(); fd.append('text', pending); pending = null; return send(fd, true); }
   if (typing) { mode('idle', S.writeHere); $('text').focus(); return; }
   if (autoListen) { mode('idle', S.listen); startRec(true); } else mode('idle', S.idle);
 }
@@ -558,7 +570,7 @@ async function sampleTurn(topic) {
 async function send(fd, keepBubble, redo) {
   setBusy(true); mode('wait', S.hearing);
   if (!keepBubble) showSaid('…', true);
-  let done = false, alarm = false, topic = 'other', spoke = null, heard = null;
+  let done = false, alarm = false, topic = 'other', spoke = null, heard = null, help = null;
   const mine = visit;                       // the patient may press "I have finished" meanwhile
   try {
     const r = await fetch('/api/visits/' + visit.id + '/turn', { method: 'POST', body: fd });
@@ -582,7 +594,9 @@ async function send(fd, keepBubble, redo) {
           done = ev.done; alarm = ev.alarm; topic = ev.topic;
           if (heard) gloss($('saidEn'), ev.heard_en && ev.heard_en !== heard ? ev.heard_en : '');
           setQuestion(ev.text, ev.en, done ? 0 : ev.question); mode('speak', S.speaking);
-          picture(done ? (alarm ? 'nurse_coming' : 'wait') : ev.repeat ? 'repeat' : topic);
+          if (done && alarm && visit.online) $('pic').hidden = true;     // at home nobody is coming: no such picture
+          else picture(done ? (alarm ? 'nurse_coming' : 'wait') : ev.repeat ? 'repeat' : topic);
+          if (ev.first_aid) help = { steps: ev.first_aid, calls: ev.nurse_calls };
           if (!done && !ev.repeat) asked.push(topic);
           trail(done ? 0 : ev.question);
         } else if (ev.type === 'audio') spoke = play(ev.b64);
@@ -598,10 +612,10 @@ async function send(fd, keepBubble, redo) {
   }
   if (visit !== mine) return;
   setBusy(false);
-  if (done) finished(alarm); else next(topic);
+  if (done) { pending = null; finished(alarm, help); } else next(topic);
 }
 
-function finished(alarm) {
+function finished(alarm, help) {
   document.body.classList.remove('talking');
   $('talk').hidden = true; $('dock').hidden = true; $('done').hidden = false; $('sampleTag').hidden = true;
   $('num').textContent = visit.number;
@@ -609,7 +623,7 @@ function finished(alarm) {
   $('doneTag').className = 'tag lg ' + (alarm ? 'urgent' : 'routine');
   $('doneTagText').textContent = alarm ? S.alarmTag : S.done;
   $('doneText').textContent = alarm ? S.alarmText : S.doneText;
-  $('callEm').hidden = true; $('again').hidden = !!visit.online;
+  $('callEm').hidden = true; $('aidBox').hidden = true; $('again').hidden = !!visit.online;
   $('statusLink').hidden = $('keepLink').hidden = !visit.status_url;
   if (visit.status_url) {
     $('statusLink').href = visit.status_url;                          // the patient's own page, for the doctor's answer
@@ -623,6 +637,11 @@ function finished(alarm) {
     if (alarm) {
       $('callEm').href = 'tel:' + emergency; $('callEm').textContent = S.callEm.replace('{n}', emergency); $('callEm').hidden = false;
       $('doneTag').after($('doneText'), $('callEm'));                  // what to do, then the button, before the reference
+      if (help) {                                                     // first aid while they get help, and that the nurse knows
+        $('firstAid').innerHTML = ''; help.steps.forEach(t => { const li = document.createElement('li'); li.textContent = t; $('firstAid').append(li); });
+        $('nurseCalls').textContent = help.calls || '';
+        $('callEm').after($('aidBox')); $('aidBox').hidden = false;
+      }
     }
   }
   if (visit.online && alarm) $('ticketArt').hidden = true;          // no "nurse coming" picture: the call button leads
@@ -634,8 +653,9 @@ $('go').onclick = () => begin(null);
 $('mic').onclick = () => { if (rec) stopRec(true); else startRec(autoListen); };
 $('typed').onsubmit = e => {
   e.preventDefault();
-  const v = $('text').value.trim(); if (!v || busy) return;
+  const v = $('text').value.trim(); if (!v) return;
   $('text').value = '';
+  if (busy) { pending = v; showSaid(v); return; }      // typed while the helper speaks: sent the moment it is ready
   const fd = new FormData(); fd.append('text', v); send(fd);
 };
 $('retry').onclick = () => { const f = again; again = null; $('retry').hidden = true; if (f) f(); };

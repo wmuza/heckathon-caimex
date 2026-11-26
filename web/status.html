@@ -30,6 +30,7 @@
   .meds li { background: var(--panel-sunk); border-radius: 14px; padding: 12px 14px; }
   .meds b { display: block; }
   .meds span { color: var(--ink-2); }
+  .aidl { text-align: left; width: 100%; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; line-height: 1.45; }
   .help { width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: center; }
   .btn.block { width: 100%; max-width: 320px; }
 </style>
@@ -52,6 +53,7 @@
         <span class="tag lg emergency"><span class="dot"></span><span data-t="emTag"></span></span>
         <p class="say" id="emText"></p>
         <a id="emCall" class="btn danger block"></a>
+        <ul class="aidl" id="aidList" hidden></ul>
       </div>
       <p class="quiet" data-t="ref"></p>
       <p class="n" id="num"></p>
@@ -127,6 +129,8 @@ async function load(digits) {
   $('rx').hidden = $('download').hidden = !rx;
   $('sampleTag').hidden = !v.sample;
   $('help').hidden = !v.emergency;
+  $('aidList').innerHTML = ''; (v.first_aid || []).forEach(t => { const li = document.createElement('li'); li.textContent = t; $('aidList').append(li); });
+  $('aidList').hidden = !(v.first_aid || []).length;
   $('emText').textContent = S.emText.replace('{n}', emergency);
   $('emCall').href = 'tel:' + emergency; $('emCall').textContent = S.emCall.replace('{n}', emergency);
   clearInterval(timer); timer = setInterval(() => load(digits), 30000);
