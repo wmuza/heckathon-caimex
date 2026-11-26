@@ -13,6 +13,13 @@
   .band-in { flex-wrap: wrap; }
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 16px; align-items: start; margin-top: 16px; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  /* Side by side: the "What is rising" card takes the map card's height and its list scrolls inside it. */
+  @media (min-width: 901px) {
+    .layout { align-items: stretch; }
+    .sigpanel { display: flex; flex-direction: column; min-height: 80vh; }
+    .sigpanel #sigs { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 10px; margin-right: -6px; margin-top: 6px; border-top: 1px solid var(--divider); }
+    .sigpanel #sigs:focus-visible { outline: 2px solid var(--blue-fill); outline-offset: 2px; }
+  }
   .by { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
   .by .live { width: 10px; height: 10px; border-radius: 50%; background: var(--blue-fill); animation: pulse 1.2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: 0.3; } }
@@ -31,6 +38,26 @@
   .up i { width: 8px; height: 8px; border-radius: 50%; background: var(--warn-dot); }
   .say { margin-top: 14px; display: grid; gap: 6px; }
   .say p { max-width: 75ch; }
+
+  /* The CAIMEx briefing: folded behind its label, rolls open on press. */
+  .brief { border-radius: 16px; background: var(--panel-sunk); }
+  .brief-tg { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-radius: 16px; cursor: pointer; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); }
+  .brief-tg:hover .src.ai { filter: brightness(0.97); }
+  .brief-tg:focus-visible { outline: 2px solid var(--blue-fill); outline-offset: 2px; }
+  .brief-tg .hint { flex: 1; min-width: 160px; }
+  .brief-tg .chev { width: 18px; height: 18px; flex: none; color: var(--ink); transition: transform 380ms cubic-bezier(.2, .8, .2, 1); }
+  .brief.open .brief-tg .chev { transform: rotate(180deg); }
+  .brief-roll { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 520ms cubic-bezier(.2, .8, .2, 1); }
+  .brief.open .brief-roll { grid-template-rows: 1fr; }
+  .brief-in { overflow: hidden; min-height: 0; }
+  .brief-body { padding: 2px 16px 16px; display: grid; gap: 8px; max-width: 80ch; }
+  .brief-body > * { opacity: 0; transform: translateY(-6px); transition: opacity 260ms ease, transform 360ms cubic-bezier(.2, .8, .2, 1); }
+  .brief.open .brief-body > * { opacity: 1; transform: none; transition-delay: calc(120ms + var(--i, 0) * 60ms); }
+  .brief-body p, .brief-body li { text-align: justify; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto; line-height: 1.6; }
+  .brief-body ul { margin: 0; padding-left: 1.25em; display: grid; gap: 4px; }
+  .brief-body .note { font-size: 0.8125rem; color: var(--ink-2); text-align: left; }
+  .brief-body .strong { margin-top: 4px; }
+  @media (prefers-reduced-motion: reduce) { .brief-roll, .brief-body > *, .brief-tg .chev { transition: none !important; } }
   .say ul { padding-left: 20px; display: grid; gap: 2px; }
   .natl { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 14px; padding: 12px 14px; border-radius: 16px; background: var(--panel-sunk); }
   .natl .art { width: 44px; height: 44px; flex: none; }
@@ -150,9 +177,9 @@
         <span>The wards, their shapes and the cases before today are made up for the demonstration.</span></p>
     </section>
 
-    <section class="panel" aria-labelledby="sigT">
+    <section class="panel sigpanel" aria-labelledby="sigT">
       <h2 class="title" id="sigT">What is rising</h2>
-      <div id="sigs"></div>
+      <div id="sigs" tabindex="0" role="region" aria-labelledby="sigT"></div>
     </section>
   </div>
 
@@ -281,6 +308,7 @@ function sigHtml(s) {
   </article>`;
 }
 
+let briefOpen = false;
 function render() {
   const b = d.brief || {};
   $('todaySub').textContent = `${d.weekday}. Expected arrivals by symptom, from this clinic's own last twelve weeks.`;
@@ -291,10 +319,30 @@ function render() {
     <span style="flex:1;min-width:200px"><span class="tag ${w.level}"><span class="dot"></span>National warning for ${esc(d.province)}</span><br>
     <span class="strong">${esc(w.name)}: risk ${w.score} out of 100.</span> <span class="quiet">${esc(w.drivers[0].label)}: ${esc(w.drivers[0].value)}.</span></span>
     <a class="btn sm" href="/national">See the map</a></div>`).join('');
-  $('say').innerHTML = b.status === 'ready' ? `<div class="by"><span class="src ai">Written by CAIMEx · ${esc(b.model)}</span><span>from the numbers above. Any sentence with a number we did not compute is left out${b.dropped ? ', and one was' : ''}.</span></div>
-      ${[b.today, b.wards, b.national].filter(Boolean).map(x => `<p>${esc(x)}</p>`).join('')}
-      ${b.do_first && b.do_first.length ? `<p class="strong">Do first</p><ul>${b.do_first.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}`
-    : `<div class="by">${b.status === 'working' ? '<span class="live"></span>CAIMEx is putting these numbers into words.' : 'CAIMEx did not answer. The numbers above do not depend on it.'}</div>`;
+  if (b.status === 'ready') {
+    const paras = [b.today, b.wards, b.national].filter(Boolean), todo = b.do_first || [];
+    const hint = 'Read today\'s briefing' + (todo.length ? ` · ${todo.length} thing${todo.length === 1 ? '' : 's'} to do first` : '');
+    let i = 0;
+    $('say').innerHTML = `<div class="brief${briefOpen ? ' open' : ''}">
+      <button class="brief-tg" type="button" aria-expanded="${briefOpen}" aria-controls="briefBody">
+        <span class="src ai">Written by CAIMEx · ${esc(b.model)}</span><span class="hint">${hint}</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="brief-roll"><div class="brief-in" id="briefBody"${briefOpen ? '' : ' inert'}><div class="brief-body">
+        ${paras.map(x => `<p style="--i:${i++}">${esc(x)}</p>`).join('')}
+        ${todo.length ? `<p class="strong" style="--i:${i++}">Do first</p><ul style="--i:${i++}">${todo.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+        <p class="note" style="--i:${i++}">Put into words from the numbers above. Any sentence with a number we did not compute is left out${b.dropped ? ', and one was' : ''}.</p>
+      </div></div></div></div>`;
+    $('say').querySelector('.brief-tg').onclick = e => {
+      briefOpen = !briefOpen;
+      const box = e.currentTarget.parentElement;
+      box.classList.toggle('open', briefOpen);
+      e.currentTarget.setAttribute('aria-expanded', briefOpen);
+      box.querySelector('.brief-in').inert = !briefOpen;
+    };
+  } else {
+    $('say').innerHTML = `<div class="by">${b.status === 'working' ? '<span class="live"></span>CAIMEx is putting these numbers into words.' : 'CAIMEx did not answer. The numbers above do not depend on it.'}</div>`;
+  }
 
   $('map').innerHTML = mapSvg();
   $('map').querySelectorAll('.ward').forEach(w => {

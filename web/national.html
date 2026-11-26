@@ -14,6 +14,13 @@
   .band-in { flex-wrap: wrap; }
   .layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  /* Side by side: the warnings card takes the map card's height and its list scrolls inside it. */
+  @media (min-width: 901px) {
+    .layout { align-items: stretch; }
+    .warnpanel { display: flex; flex-direction: column; min-height: 80vh; }
+    .warnpanel #warns { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 10px; margin-right: -6px; margin-top: 6px; border-top: 1px solid var(--divider); }
+    .warnpanel #warns:focus-visible { outline: 2px solid var(--blue-fill); outline-offset: 2px; }
+  }
   .pick { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
   .pick .seg { flex-wrap: wrap; border-radius: 22px; }
   .map { width: 100%; height: auto; display: block; margin-top: 10px; }
@@ -91,10 +98,10 @@
       <p class="quiet small" id="credit" style="margin-top:12px"></p>
     </section>
 
-    <section class="panel" aria-labelledby="wT">
+    <section class="panel warnpanel" aria-labelledby="wT">
       <h2 class="title" id="wT">Warnings for clinics</h2>
       <p class="quiet small" id="wSub"></p>
-      <div id="warns"></div>
+      <div id="warns" tabindex="0" role="region" aria-labelledby="wT"></div>
     </section>
   </div>
 
