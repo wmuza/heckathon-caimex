@@ -1,26 +1,28 @@
-/* The footer at the bottom of every screen: one small navy line pinned to the bottom of the window,
-   written once here like the menu bar (menu.js). Load it as the last thing in <body>; it draws itself in place. Left out
-   inside the demo page's frames (?embed=1), and hidden while a patient is talking to the helper. */
+/* The bar that closes every screen, as on homesnappers.com: the name and one line, a rule, then
+   the appearance switch and the copyright. Written once here like the menu bar (menu.js); load it
+   as the last thing in <body>. On a short page it sits at the bottom of the window. Left out inside
+   the demo page's frames (?embed=1), and hidden while a patient is talking to the helper. */
 (function () {
   if (new URLSearchParams(location.search).get('embed') === '1') return;
+  var logo = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="var(--on-navy)"/>' +
+    '<g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path stroke="var(--navy)" d="M20 13h24a9 9 0 0 1 9 9v13a9 9 0 0 1-9 9H29l-13 8v-9a9 9 0 0 1-5-8V22a9 9 0 0 1 9-9z"/>' +
+    '<path stroke="var(--brand-red)" d="M32 21v15m-7.5-7.5h15"/></g></svg>';
   // data-t lets the patient's screen put these three words into Shona with the rest of its page.
   var html =
     '<footer class="site-foot noprint" id="siteFoot"><div class="sf-in">' +
-      '<p>© ' + new Date().getFullYear() + ' Mukoti. All rights reserved.</p>' +
-      '<div class="seg" role="group" aria-label="Appearance">' +
-        '<button data-theme-choice="light"><span data-t="light">Light</span></button>' +
-        '<button data-theme-choice="dark"><span data-t="dark">Dark</span></button>' +
-        '<button data-theme-choice="match"><span data-t="match">Match phone</span></button>' +
+      '<div class="sf-top"><a class="sf-brand" href="/welcome">' + logo + '<span>Mukoti</span></a>' +
+        '<p>Every patient heard. The most urgent seen first.</p></div>' +
+      '<div class="sf-base">' +
+        '<div class="seg" role="group" aria-label="Appearance">' +
+          '<button data-theme-choice="light"><span data-t="light">Light</span></button>' +
+          '<button data-theme-choice="dark"><span data-t="dark">Dark</span></button>' +
+          '<button data-theme-choice="match"><span data-t="match">Match phone</span></button>' +
+        '</div>' +
+        '<p>© ' + new Date().getFullYear() + ' Mukoti. All rights reserved.</p>' +
       '</div>' +
     '</div></footer>';
   var me = document.currentScript;
   if (me) me.insertAdjacentHTML('beforebegin', html);
   else document.body.insertAdjacentHTML('beforeend', html);
-  // The bar is pinned to the bottom of the window; the page keeps that much room at its end.
-  var bar = document.getElementById('siteFoot'), root = document.documentElement;
-  root.classList.add('has-foot');
-  function measure() { root.style.setProperty('--foot-h', bar.offsetHeight + 'px'); }
-  measure();
-  if (window.ResizeObserver) new ResizeObserver(measure).observe(bar);
-  else window.addEventListener('resize', measure);
 })();

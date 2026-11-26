@@ -16,7 +16,7 @@
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
   /* The queue: one panel that stays in view while the nurse reads a note */
   /* The queue: a card for each patient, as on the doctor's page. The column stays in view while a note is read. */
-  #listCol { position: sticky; top: 84px; max-height: calc(100dvh - 104px - var(--foot-h, 0px)); display: flex; flex-direction: column; }
+  #listCol { position: sticky; top: 84px; max-height: calc(100dvh - 104px); display: flex; flex-direction: column; }
   .q-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 2px 6px 6px; }
   .q-head h2 { font-size: 1.0625rem; font-weight: 700; }
   .list { display: flex; flex-direction: column; gap: 10px; padding: 4px 6px 12px; overflow-y: auto; min-height: 0; }
@@ -173,7 +173,7 @@
   #back { display: none; margin-bottom: 10px; }
 
   /* A new emergency: said at the top, without moving what the nurse is reading */
-  .toast { position: fixed; left: 50%; bottom: calc(18px + var(--foot-h, 0px)); transform: translateX(-50%); z-index: 30; width: min(560px, calc(100% - 24px)); background: var(--panel); border: 2px solid var(--red-fill); border-radius: 18px; box-shadow: var(--shadow-float); padding: 10px 12px; display: flex; gap: 12px; align-items: center; animation: drop 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 30; width: min(560px, calc(100% - 24px)); background: var(--panel); border: 2px solid var(--red-fill); border-radius: 18px; box-shadow: var(--shadow-float); padding: 10px 12px; display: flex; gap: 12px; align-items: center; animation: drop 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
   .toast .art { width: 52px; height: 52px; flex: none; }
   .toast .t { flex: 1; min-width: 0; font-weight: 600; }
   .toast .t small { display: block; font-weight: 400; color: var(--ink-2); }

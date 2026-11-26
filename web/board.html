@@ -19,7 +19,7 @@
 
   /* The screen fills the window: the call and the clock, the three counters, then notices and steps */
   .board { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-rows: minmax(250px, 1fr) auto auto; gap: 16px;
-    min-height: calc(100dvh - 240px - var(--foot-h, 0px)); }
+    min-height: calc(100dvh - 240px); }
   .board > .wide { grid-column: 1 / -1; }
 
   /* Now calling */
