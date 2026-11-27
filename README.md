@@ -19,6 +19,16 @@ echo 'CAIMEX_API_KEY=sk-or-...' > .env     # never commit this file
 ./run.sh                                    # or: uv run uvicorn app.server:app --port 8000
 ```
 
+**On Windows (VS Code):** open the folder in VS Code, open a terminal (Terminal → New Terminal) and run:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"   # once; then reopen VS Code
+Set-Content .env 'CAIMEX_API_KEY=sk-or-...' -Encoding ascii                          # not "echo >": it adds hidden bytes that hide the key
+uv run uvicorn app.server:app --port 8000
+```
+
+uv fetches Python and every package itself. Open <http://127.0.0.1:8000/welcome>; stop with Ctrl+C.
+
 | Screen | Address | Who it is for |
 |---|---|---|
 | Welcome | http://127.0.0.1:8000/welcome | Front page: start a visit or open a staff workspace |
